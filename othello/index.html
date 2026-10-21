@@ -234,14 +234,8 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .disc[data-el^="none"]::after{content:none}
 .cell.guard::before{content:"";position:absolute;inset:1%;border-radius:50%;border:2px solid #ffb04a;box-shadow:0 0 12px #ff5a1f,inset 0 0 10px #ff5a1f;z-index:2;pointer-events:none;animation:guardPulse 1s ease-in-out infinite}
 @keyframes guardPulse{50%{box-shadow:0 0 22px #ff8a1f,inset 0 0 14px #ff8a1f}}
-.flame.chain{
-  background:
-    repeating-linear-gradient(45deg,transparent 0 5px,#e9dfb0 5px 8px,transparent 8px 13px),
-    repeating-linear-gradient(-45deg,transparent 0 5px,#b8a76a 5px 8px,transparent 8px 13px),
-    #17140c;
-  box-shadow:0 0 14px #fff0b0,inset 0 0 10px #ffe9a0;animation:none;
-  place-items:center;font-family:var(--f-display);font-size:clamp(12px,3vw,20px);color:#fff7d6;text-shadow:0 0 6px #ffcf4a,0 0 2px #000;
-}
+.flame.chain{background:radial-gradient(circle,#2a2410cc,#0d0b06ee);box-shadow:0 0 12px #ffe9a088,inset 0 0 10px #000;animation:none;padding:0;place-items:stretch;overflow:visible}
+.flame.chain svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 1px 1px #000) drop-shadow(0 0 4px #fff1b066)}
 .cell.marked::after{content:"";position:absolute;inset:-8%;border-radius:50%;border:3px solid var(--mk,#fff);box-shadow:0 0 16px var(--mk,#fff),inset 0 0 12px var(--mk,#fff);z-index:3;pointer-events:none;animation:markPulse .42s ease-in-out infinite alternate}
 @keyframes markPulse{from{transform:scale(1.18);opacity:.55}to{transform:scale(.9);opacity:1}}
 #board.blind{background:#000;border-color:#1a0a2a;box-shadow:0 0 0 6px #000,0 0 0 7px #2a1040,inset 0 0 60px #4b12a0}
@@ -279,6 +273,7 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .d-timer{font-family:var(--f-latin);font-weight:700;font-size:28px;color:#ffd08a;font-variant-numeric:tabular-nums}
 .d-timer:empty{display:none}
 @media (max-width:480px){#dGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.card .c-desc,.pas .p-desc{display:none}.card,.pas{padding:7px 9px}.card .c-name{font-size:14px}}
 
 /* Skill guide dialog */
 #helpBox{position:fixed;inset:0;z-index:7;display:grid;place-items:center;background:#05040acc;backdrop-filter:blur(3px);
@@ -297,6 +292,11 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .h-rules{font-size:13px;line-height:1.7;color:var(--muted);margin:0;padding-left:1.2em}
 .h-rules strong{color:var(--ink)}
 @media (max-width:480px){.h-el{grid-template-columns:1fr}.h-el .hk{grid-row:auto}}
+
+/* 省ドパモード: keep the game, drop the spectacle */
+html.lite .aura,html.lite #aura{display:none!important}
+html.lite .disc,html.lite .flame,html.lite .cell.guard::before,html.lite .side.active .sigil,html.lite .cell.hint::before,html.lite .card.ready,html.lite .status.crit,html.lite #aura.pulse{animation:none!important}
+html.lite .disc{filter:none!important}
 
 /* Result overlay inside the board */
 #result{
@@ -441,6 +441,7 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
       </select>
     </label>
     <button id="snd" aria-pressed="true">効果音 ON</button>
+    <button id="lite" aria-pressed="false">省ドパモード OFF</button>
     <button id="help">スキル説明</button>
     <button id="demo">角の必殺技を見る</button>
     <button class="primary" id="newgame">新しい対局</button>
@@ -613,7 +614,7 @@ const rnd=(a,b)=>a+Math.random()*(b-a);
 const pick=arr=>arr[(Math.random()*arr.length)|0];
 const MAXP=2600;
 const P=[], RINGS=[], BOLTS=[], BEAMS=[], CIRCLES=[], HOLES=[], EMIT=[];
-function part(o){ if(P.length>=MAXP) return; P.push(Object.assign({x:0,y:0,vx:0,vy:0,g:0,drag:.97,life:1,t:0,size:3,color:'#fff',mode:'glow',tw:0},o)); }
+function part(o){ if(P.length>=MAXP || (cfg.lite && Math.random()>.1)) return; P.push(Object.assign({x:0,y:0,vx:0,vy:0,g:0,drag:.97,life:1,t:0,size:3,color:'#fff',mode:'glow',tw:0},o)); }
 function ring(x,y,o){ RINGS.push(Object.assign({x,y,r:4,vr:400,life:.6,t:0,w:4,color:'#fff'},o)); }
 function emit(dur,fn){ EMIT.push({t:0,dur,fn}); }
 function makeBolt(x1,y1,x2,y2,disp){
@@ -630,10 +631,10 @@ function rebolt(b){
   for(let k=0;k<b.nb;k++){ const p=main[(Math.random()*main.length*.8)|0]; const a=Math.atan2(b.y2-b.y1,b.x2-b.x1)+rnd(-1,1); const L=Math.hypot(b.x2-b.x1,b.y2-b.y1)*rnd(.15,.4); b.paths.push(makeBolt(p[0],p[1],p[0]+Math.cos(a)*L,p[1]+Math.sin(a)*L)); }
 }
 let shakeMag=0;
-function shake(m){ if(!RM) shakeMag=Math.max(shakeMag,m); }
+function shake(m){ if(!RM && !cfg.lite) shakeMag=Math.max(shakeMag,m); }
 const flashEl=$('flash'), dimEl=$('dim');
-function flash(color,peak,dur){ flashEl.style.background=color; flashEl.animate([{opacity:peak},{opacity:0}],{duration:dur*(RM?.5:1),easing:'ease-out'}); }
-function dim(color,dur){ dimEl.style.background=color; dimEl.animate([{opacity:getComputedStyle(dimEl).opacity},{opacity:1}],{duration:dur,fill:'forwards'}); }
+function flash(color,peak,dur){ if (cfg.lite) return; flashEl.style.background=color; flashEl.animate([{opacity:peak},{opacity:0}],{duration:dur*(RM?.5:1),easing:'ease-out'}); }
+function dim(color,dur){ if (cfg.lite) return; dimEl.style.background=color; dimEl.animate([{opacity:getComputedStyle(dimEl).opacity},{opacity:1}],{duration:dur,fill:'forwards'}); }
 function undim(dur){ dimEl.animate([{opacity:getComputedStyle(dimEl).opacity},{opacity:0}],{duration:dur,fill:'forwards',easing:'ease-in'}); }
 function edgePoint(m=0){
   const s=Math.random()*2*(W+H);
@@ -651,6 +652,7 @@ function loop(now){
 }
 function frame(now){
   cx.globalAlpha=1; cx.globalCompositeOperation='source-over';
+  if (cfg.lite){ BEAMS.length=0; CIRCLES.length=0; HOLES.length=0; BOLTS.length=0; }
   let dt=Math.min(.08,(now-lastT)/1000); lastT=now;
   // emitters
   for(let i=EMIT.length-1;i>=0;i--){ const e=EMIT[i]; e.t+=dt; e.fn(dt,e.t); if(e.t>=e.dur) EMIT.splice(i,1); }
@@ -806,6 +808,7 @@ async function ultimate(el,x,y,top='CORNER BREAK'){
   const E=ELS[el], R=Math.min(W,H);
   showBanner(E, top, E.ult, E.sub);
   sfx(el,'ult');
+  if (cfg.lite){ ring(x,y,{vr:400,life:.6,w:4,color:E.c1}); await wait(900); return; }
   CIRCLES.push({x,y,r:0,tr:R*.3,rot:0,life:2.8,t:0,color:E.c1,k:E.k});
   CIRCLES.push({x,y,r:0,tr:R*.16,rot:1,life:2.6,t:0,color:E.c2,k:E.k});
 
@@ -888,10 +891,11 @@ function updateAmbience(){
     const E=ELS[amb.el];
     auraEl.style.boxShadow=`inset 0 0 ${90+170*lv}px ${8+60*lv}px ${E.aura}`;
   }
-  auraEl.style.opacity = lv ? Math.min(1,.25+lv) : 0;
+  auraEl.style.opacity = lv && !cfg.lite ? Math.min(1,.25+lv) : 0;
   auraEl.classList.toggle('pulse', lv>0 && e<=10 && !RM);
 }
 function ambientTick(dt){
+  if (cfg.lite) return;
   if (!amb.level || !amb.el) return;
   ambAcc += dt*amb.level*70*FXQ;
   while (ambAcc>1){ ambAcc--; spawnAmbient(amb.el); }
@@ -933,12 +937,13 @@ const CARDS = {
   thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
 };
 const PASSIVES = {
-  light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計20枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、そのうち1マスを鎖で封じる。' },
+  light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計20枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、置ける場所3つにつき1マス（最低1マス）を鎖で封じる。' },
   dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の画面が1ターン真っ暗に。置ける場所だけは見える。' },
   fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'毎ターン、置いた石は相手の2ターンのあいだ裏返らず、スキルも効かない。' },
-  thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に10%の確率で、使った雷帝が稲妻とともに1回分よみがえる。' },
+  thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前のターンに裏返した枚数×3%。' },
 };
-const freshPas = () => ({1:{flips:0,turns:0,seraph:false,fireAt:-99},2:{flips:0,turns:0,seraph:false,fireAt:-99}});
+const freshPas = () => ({1:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0},2:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0}});
+const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
 const clone = o => JSON.parse(JSON.stringify(o));
 const cardOf = p => CARDS[cfg.el[p]];
 function fireReadyIn(p){
@@ -981,7 +986,7 @@ function pasState(p){
   const el=cfg.el[p], s=pas[p]||{};
   if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(20,s.flips||0)} / 20`;
   if (el==='fire') return '毎ターン発動';
-  if (el==='thunder') return 'ターン開始時 10%';
+  if (el==='thunder') return `次ターン ${Math.round(jinraiChance(s)*100)}%`;
   return '4枚以上で発動';
 }
 
@@ -1024,7 +1029,7 @@ function render(){
     cells[i].classList.toggle('guard', play && guards.some(g=>g.idx===i && board[i]===g.owner));
     cells[i].tabIndex = (lm.includes(i)||aimable) ? 0 : -1;
     flames[i].hidden = !b;
-    if (b){ flames[i].classList.toggle('chain', b.kind==='chain'); flames[i].textContent = b.kind==='chain' ? '封' : b.left; }
+    if (b) paintSeal(i,b);
   }
   const [a,w,e]=counts(board);
   for (const p of [1,2]){
@@ -1092,11 +1097,12 @@ function elementMote(el,x,y,n,spread){
 function viewerEl(){ const v=viewerSide(); return phase==='play' ? cfg.el[v] : (picks[v] || 'light'); }
 let lastPtr=0;
 addEventListener('pointermove',e=>{
-  if (RM) return;
+  if (RM || cfg.lite) return;
   const now=performance.now(); if (now-lastPtr<35) return; lastPtr=now;
   elementMote(viewerEl(), e.clientX, e.clientY, 2, 3);
 },{passive:true});
 addEventListener('pointerdown',e=>{
+  if (cfg.lite) return;
   const el=viewerEl(), E=ELS[el], x=e.clientX, y=e.clientY;
   elementMote(el,x,y,Math.round(12*FXQ),6);
   ring(x,y,{vr:220,life:.35,w:2,color:E.c1});
@@ -1105,11 +1111,11 @@ addEventListener('pointerdown',e=>{
 setInterval(()=>{
   if (document.hidden) return;
   for (const b of burns){
-    if (b.kind==='chain') continue;
+    if (b.kind==='chain' || cfg.lite) continue;
     const [x,y]=center(b.idx);
     for(let j=0;j<2*FXQ;j++) part({x:x+rnd(-12,12),y:y+rnd(-4,10),vx:rnd(-20,20),vy:rnd(-110,-40),g:-60,drag:.96,life:rnd(.4,.8),size:rnd(2,5),mode:'fire'});
   }
-  if (phase!=='play') return;
+  if (phase!=='play' || cfg.lite) return;
   if (blindView()){ hauntBoard(); return; }
   const filled=board.reduce((n,v)=>n+(v?1:0),0), chance=Math.min(.6,16/Math.max(1,filled))*FXQ;
   for (let i=0;i<64;i++){
@@ -1181,9 +1187,16 @@ function startTurnS(S,x){
   const o=3-x;
   if (cfg.el[o]==='light' && S.pas[o].seraph){
     const lm=legalS(S,x);
-    if (lm.length>=2){ const idx=pick(lm); S.burns.push({idx,owner:o,left:1,kind:'chain'}); S.ev.push('chain:'+idx); }
+    if (lm.length>=2){
+      // one chain per three playable squares (at least one), always leaving one square open
+      const n=Math.min(lm.length-1, Math.max(1, Math.floor(lm.length/3)));
+      for (const idx of shuffle(lm.slice()).slice(0,n)){ S.burns.push({idx,owner:o,left:1,kind:'chain'}); S.ev.push('chain:'+idx); }
+    }
   }
-  if (cfg.el[x]==='thunder' && (S.used[x]||0)>0 && Math.random()<.1){ S.used[x]--; S.ev.push('jinrai:'+x); }
+  if (cfg.el[x]==='thunder'){
+    if ((S.used[x]||0)>0 && Math.random()<jinraiChance(S.pas[x])){ S.used[x]--; S.ev.push('jinrai:'+x); }
+    S.pas[x].jin=0;
+  }
 }
 function advanceS(S,p){
   S.pass=0;
@@ -1205,6 +1218,7 @@ function placeS(S,idx,p){
   if (el==='light' && !ps.seraph && ps.flips>=20){ ps.seraph=true; S.ev.push('seraph:'+p); }
   if (el==='fire'){ S.guards.push({idx,owner:p,left:2}); S.ev.push('guard:'+idx); }
   if (el==='dark' && f.length>=4){ S.blind=3-p; S.ev.push('ghost:'+(3-p)); }
+  if (el==='thunder') ps.jin=(ps.jin||0)+f.length;
   return advanceS(S,p);
 }
 async function commit(S){
@@ -1570,6 +1584,33 @@ async function fxSeraph(p){
   await wait(2400);
   undim(900);
 }
+// two metal chains crossed over the square, locked in the middle
+function chainSvg(id){
+  const links=(rot)=>{
+    let out='';
+    for (let k=-6;k<=6;k++){
+      const t=k*8.4, flat=k%2!==0;
+      out += flat
+        ? `<rect x="${50+t-6.2}" y="48.4" width="12.4" height="3.2" rx="1.6" fill="url(#cm${id})" stroke="#2a2a30" stroke-width=".6"/>`
+        : `<ellipse cx="${50+t}" cy="50" rx="6.6" ry="3.9" fill="none" stroke="url(#cm${id})" stroke-width="2.4"/><ellipse cx="${50+t}" cy="50" rx="6.6" ry="3.9" fill="none" stroke="#1b1b20" stroke-width=".5"/>`;
+    }
+    return `<g transform="rotate(${rot} 50 50)">${out}</g>`;
+  };
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs>
+    <linearGradient id="cm${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f4f8"/><stop offset=".45" stop-color="#9ea2ae"/><stop offset=".55" stop-color="#5b5f6b"/><stop offset="1" stop-color="#d6d8e0"/></linearGradient>
+    <linearGradient id="cl${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2b8"/><stop offset=".5" stop-color="#d9a93a"/><stop offset="1" stop-color="#7a5410"/></linearGradient>
+  </defs>${links(45)}${links(-45)}
+  <path d="M41 49v-6a9 9 0 0 1 18 0v6" fill="none" stroke="url(#cm${id})" stroke-width="3.4"/>
+  <rect x="37" y="47" width="26" height="21" rx="3" fill="url(#cl${id})" stroke="#5a3e08" stroke-width="1"/>
+  <circle cx="50" cy="55.5" r="2.6" fill="#3a2604"/><rect x="49" y="56" width="2" height="6" rx="1" fill="#3a2604"/>
+</svg>`;
+}
+function paintSeal(i,b){
+  const f=flames[i], isChain=b.kind==='chain';
+  f.classList.toggle('chain', isChain);
+  if (isChain){ if (!f.firstElementChild) f.innerHTML=chainSvg(i); }
+  else f.textContent=b.left;
+}
 async function fxChain(idx){
   const [x,y]=center(idx), r=boardEl.getBoundingClientRect(), col='#ffe9a0';
   const anchors=[[r.left,y],[r.right,y],[x,r.top],[x,r.bottom]];
@@ -1579,9 +1620,11 @@ async function fxChain(idx){
   });
   [0,.12,.24].forEach(d=>{ tone('square',2400,1600,.07,.08,d); nz('highpass',5000,2500,.08,.12,d); });
   flash('#fff6d0',.25,250); shake(6);
-  flames[idx].hidden=false; flames[idx].classList.add('chain'); flames[idx].textContent='封';
-  toast('熾天使の鎖：このターン、1マスが封じられた');
-  await wait(900);
+  flames[idx].hidden=false; flames[idx].textContent=''; paintSeal(idx,{kind:'chain'});
+  flames[idx].animate([{transform:'scale(2.2) rotate(-25deg)',opacity:0},{transform:'scale(.92) rotate(4deg)',opacity:1,offset:.6},{transform:'scale(1) rotate(0)'}],{duration:420,easing:'cubic-bezier(.3,1.4,.5,1)'});
+  setTimeout(()=>{ for (let j=0;j<18*FXQ;j++){ const a=rnd(0,TAU), sp=rnd(120,420); part({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,drag:.88,life:rnd(.2,.45),size:rnd(1,2),color:pick(['#ffffff','#ffe9a0','#c8ccd8']),mode:'spark'}); } }, 250);
+  toast('熾天使の鎖：置ける場所が封じられた');
+  await wait(650);
 }
 async function fxGuard(idx){
   const [x,y]=center(idx), E=ELS.fire;
@@ -1611,7 +1654,7 @@ async function fxGhost(victim){
     if (Math.random()<dt*3) flash('rgba(120,0,0,1)',.25,120);
     shake(2+t*2);
   });
-  stage.animate([
+  if (!cfg.lite) stage.animate([
     {filter:'none'},{filter:'contrast(1.6) hue-rotate(-30deg) saturate(.4)',offset:.1},{filter:'none',offset:.14},
     {filter:'invert(1) hue-rotate(180deg)',offset:.42},{filter:'none',offset:.45},
     {filter:'contrast(2) saturate(0) brightness(.6)',offset:.7},{filter:'none'}
@@ -2003,6 +2046,18 @@ $('mode').addEventListener('change',e=>{
 $('lv').addEventListener('change',e=>{ cfg.lv=+e.target.value; saveCfg(); });
 const sndBtn=$('snd');
 function paintSnd(){ sndBtn.textContent=cfg.sound?'効果音 ON':'効果音 OFF'; sndBtn.setAttribute('aria-pressed',cfg.sound); }
+const liteBtn=$('lite');
+function paintLite(){
+  liteBtn.textContent = cfg.lite ? '省ドパモード ON' : '省ドパモード OFF';
+  liteBtn.setAttribute('aria-pressed', !!cfg.lite);
+  document.documentElement.classList.toggle('lite', !!cfg.lite);
+}
+liteBtn.addEventListener('click',()=>{
+  cfg.lite=!cfg.lite; saveCfg(); paintLite(); updateAmbience();
+  if (cfg.lite){ P.length=0; undim(150); stage.style.transform=''; shakeMag=0; }
+  toast(cfg.lite ? '省ドパモード：エフェクトを最小限にしました' : 'エフェクトを元に戻しました');
+});
+paintLite();
 sndBtn.addEventListener('click',()=>{ cfg.sound=!cfg.sound; saveCfg(); paintSnd(); if(cfg.sound) ac(); });
 paintSnd();
 $('newgame').addEventListener('click',()=>newGame());
