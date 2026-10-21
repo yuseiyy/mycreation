@@ -165,17 +165,20 @@ button.primary{background:linear-gradient(180deg,#3a2a66,#231a40);border-color:#
 }
 .disc[data-el="light"]{
   background:radial-gradient(circle at 34% 28%,#fff 0%,#fff7dc 42%,#e3c983 88%);
-  box-shadow:0 0 14px #fff1b0aa,0 3px 6px #0008,inset 0 -4px 8px #c9a65588;
+  box-shadow:0 0 18px #fff1b0,0 0 34px #ffd96a88,0 3px 6px #0008,inset 0 -4px 8px #c9a65588;
+  animation:divine 2.4s ease-in-out infinite;
   color:#b88a1a;
 }
 .disc[data-el="fire"]{
   background:radial-gradient(circle at 34% 28%,#ffe0a0 0%,#ff6a22 40%,#9c120a 86%);
-  box-shadow:0 0 14px #ff4a1aaa,0 3px 6px #000a,inset 0 -4px 8px #5a0500;
+  box-shadow:0 0 16px #ff4a1a,0 -6px 22px #ff8a1f99,0 3px 6px #000a,inset 0 -4px 8px #5a0500;
+  animation:ember .9s ease-in-out infinite alternate;
   color:#fff1c0;
 }
 .disc[data-el="thunder"]{
   background:radial-gradient(circle at 34% 28%,#fffde0 0%,#ffe31a 40%,#b88a00 88%);
   box-shadow:0 0 14px #ffe600aa,0 3px 6px #000a,inset 0 -4px 8px #7a5a00;
+  animation:charged 1.7s steps(1) infinite;
   color:#5b3f00;
 }
 
@@ -211,6 +214,19 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .aura[data-el="fire"]{inset:-16% 8% 22% 8%;border-radius:50% 50% 40% 40%;background:radial-gradient(ellipse 50% 60% at 50% 75%,#ffb04acc,#ff5a1f66 45%,transparent 72%);filter:blur(2px);transform-origin:50% 100%;animation:flicker .28s steps(2) infinite alternate}
 .aura[data-el="thunder"]{inset:1%;border:2px dashed #ffe600cc;box-shadow:0 0 10px #ffe60088;animation:auraSpin 1.2s linear infinite,zap .5s steps(2) infinite}
 @keyframes auraSpin{to{transform:rotate(360deg)}}
+@keyframes divine{50%{box-shadow:0 0 26px #ffffff,0 0 50px #ffd96acc,0 3px 6px #0008,inset 0 -4px 8px #c9a65588}}
+@keyframes ember{from{filter:brightness(1) saturate(1)}to{filter:brightness(1.35) saturate(1.3)}}
+@keyframes charged{0%,86%,100%{filter:none;box-shadow:0 0 14px #ffe600aa,0 3px 6px #000a,inset 0 -4px 8px #7a5a00}88%{filter:brightness(2.2);box-shadow:0 0 26px #fffbe0,0 0 40px #6ad8ff,inset 0 0 10px #fff}92%{filter:brightness(1.4)}95%{filter:brightness(2)}
+}
+.aura[data-el="light"]::after{content:"";position:absolute;left:22%;right:22%;top:-14%;height:16%;border-radius:50%;border:2px solid #fff6c8;box-shadow:0 0 8px #ffd96a,0 0 16px #fff3b0,inset 0 0 4px #fff;animation:halo 2.4s ease-in-out infinite}
+@keyframes halo{50%{transform:translateY(-3px);box-shadow:0 0 14px #ffe9a0,0 0 26px #fff6c8,inset 0 0 6px #fff}}
+.aura[data-el="fire"]::before,.aura[data-el="fire"]::after{content:"";position:absolute;bottom:20%;width:42%;height:120%;border-radius:50% 50% 30% 30%/70% 70% 30% 30%;
+  background:radial-gradient(ellipse 50% 70% at 50% 90%,#fff3b0,#ff8a1f 40%,#ff3a0a99 65%,transparent 80%);filter:blur(1.5px);transform-origin:50% 100%}
+.aura[data-el="fire"]::before{left:6%;animation:tongue .55s ease-in-out infinite alternate}
+.aura[data-el="fire"]::after{right:6%;animation:tongue .7s ease-in-out infinite alternate-reverse}
+@keyframes tongue{from{transform:scaleY(.75) rotate(-8deg);opacity:.75}to{transform:scaleY(1.15) rotate(6deg);opacity:1}}
+.aura[data-el="thunder"]::after{content:"";position:absolute;inset:-14%;border-radius:50%;border:1px solid #6ad8ff;opacity:0;animation:crackle 1.3s steps(1) infinite}
+@keyframes crackle{0%,70%{opacity:0;transform:rotate(0)}72%{opacity:1;transform:rotate(40deg) scale(1.05)}76%{opacity:.2}80%{opacity:.9;transform:rotate(-30deg)}84%{opacity:0}}
 @keyframes auraPulse{50%{opacity:.45}}
 @keyframes zap{50%{border-color:#6ad8ffcc;box-shadow:0 0 14px #6ad8ff}}
 .disc[data-el="none1"]{background:radial-gradient(circle at 34% 28%,#6a6578,#26232f 60%,#0e0d12);box-shadow:0 3px 6px #000}
@@ -332,7 +348,7 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
   #board{padding:6px;gap:2px}
 }
 @media (prefers-reduced-motion:reduce){
-  .side.active .sigil,.cell.hint::before,#aura.pulse,.status.crit,.flame,.card.ready,.aura,.cell.guard::before{animation:none}
+  .side.active .sigil,.cell.hint::before,#aura.pulse,.status.crit,.flame,.card.ready,.aura,.aura::before,.aura::after,.disc,.cell.guard::before{animation:none!important}
 }
 </style>
 
@@ -630,7 +646,12 @@ function fireCol(k){ return k<.18?'#fffbe0':k<.4?'#ffc04a':k<.7?'#ff5a1f':'#a315
 
 let lastT=performance.now();
 function loop(now){
-  let dt=Math.min(.05,(now-lastT)/1000); lastT=now;
+  try { frame(now); } catch(e){ console.error(e); cx.restore && cx.setTransform(DPR,0,0,DPR,0,0); }
+  requestAnimationFrame(loop);
+}
+function frame(now){
+  cx.globalAlpha=1; cx.globalCompositeOperation='source-over';
+  let dt=Math.min(.08,(now-lastT)/1000); lastT=now;
   // emitters
   for(let i=EMIT.length-1;i>=0;i--){ const e=EMIT[i]; e.t+=dt; e.fn(dt,e.t); if(e.t>=e.dur) EMIT.splice(i,1); }
   ambientTick(dt);
@@ -651,6 +672,8 @@ function loop(now){
   // smoke (darkening) pass
   cx.globalCompositeOperation='source-over';
   for(const p of P){ if(p.mode!=='smoke') continue; const k=p.t/p.life; cx.globalAlpha=(1-k)*(p.alpha??.5); cx.fillStyle=p.color; cx.beginPath(); cx.arc(p.x,p.y,p.size*(1+k*1.6),0,TAU); cx.fill(); }
+  for(const p of P){ if(p.mode==='ghost') drawGhost(p); }
+  cx.globalCompositeOperation='source-over';
   // black holes
   for(let i=HOLES.length-1;i>=0;i--){
     const h=HOLES[i]; h.t+=dt; if(h.t>=h.life){HOLES.splice(i,1);continue;}
@@ -680,12 +703,12 @@ function loop(now){
   for(let i=RINGS.length-1;i>=0;i--){
     const r=RINGS[i]; r.t+=dt; if(r.t>=r.life){RINGS.splice(i,1);continue;}
     const k=r.t/r.life; r.r+=r.vr*dt*(1-k*.6);
-    cx.globalAlpha=(1-k); cx.strokeStyle=r.color; cx.lineWidth=Math.max(.5,r.w*(1-k)); cx.beginPath(); cx.arc(r.x,r.y,r.r,0,TAU); cx.stroke();
+    cx.globalAlpha=(1-k); cx.strokeStyle=r.color; cx.lineWidth=Math.max(.5,r.w*(1-k)); cx.beginPath(); cx.arc(r.x,r.y,Math.max(.5,r.r),0,TAU); cx.stroke();
     cx.globalAlpha=(1-k)*.3; cx.lineWidth=r.w*3*(1-k); cx.stroke();
   }
   // glow particles
   for(const p of P){
-    if (p.mode==='smoke') continue;
+    if (p.mode==='smoke'||p.mode==='ghost') continue;
     const k=p.t/p.life; let a=1-k; let s=p.size;
     if (p.tw) { s*=.55+.45*Math.sin(p.t*p.tw+p.x); a*=Math.min(1,p.t*3); }
     const col = p.mode==='fire' ? fireCol(k) : p.color;
@@ -713,7 +736,6 @@ function loop(now){
     });
   }
   cx.globalAlpha=1; cx.globalCompositeOperation='source-over';
-  requestAnimationFrame(loop);
 }
 function drawCircle(c,a){
   cx.save(); cx.translate(c.x,c.y); cx.globalAlpha=a*.9; cx.strokeStyle=c.color; cx.fillStyle=c.color;
@@ -902,22 +924,30 @@ function spawnAmbient(el){
 /* ---------- skills ---------- */
 const LATE = 30;          // most cards unlock once this many empty squares remain
 const FIRE_OPEN = 3;      // the fire card unlocks after the fire side's third turn
+const FIRE_CD = 5;        // ...and then recharges after five of its own turns
+const THUNDER_EARLY = 7;  // 雷帝 unlocks seven squares before light/dark
 const CARDS = {
   light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。' },
   dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:3, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。' },
-  fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:2,      desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。' },
+  fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:0,      desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。5ターンに1回使える。' },
   thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
 };
 const PASSIVES = {
   light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計20枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、そのうち1マスを鎖で封じる。' },
   dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の画面が1ターン真っ暗に。置ける場所だけは見える。' },
-  fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'自分の偶数ターンに置いた石は、相手の2ターンのあいだ裏返らず、スキルも効かない。' },
+  fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'毎ターン、置いた石は相手の2ターンのあいだ裏返らず、スキルも効かない。' },
   thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に10%の確率で、使った雷帝が稲妻とともに1回分よみがえる。' },
 };
-const freshPas = () => ({1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}});
+const freshPas = () => ({1:{flips:0,turns:0,seraph:false,fireAt:-99},2:{flips:0,turns:0,seraph:false,fireAt:-99}});
 const clone = o => JSON.parse(JSON.stringify(o));
 const cardOf = p => CARDS[cfg.el[p]];
-const cardLeft = p => Math.max(0, cardOf(p).uses - (used[p]||0));
+function fireReadyIn(p){
+  const s=pas[p]||{}, t=s.turns||0;
+  if (t<FIRE_OPEN) return FIRE_OPEN-t;
+  return Math.max(0, FIRE_CD-(t-(s.fireAt??-99)));
+}
+const cardLeft = p => cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0) : Math.max(0, cardOf(p).uses - (used[p]||0));
+const cardOpenAt = el => el==='thunder' ? LATE+THUNDER_EARLY : LATE;
 const emptyCount = () => board.filter(v=>!v).length;
 const roleOf = p => p===1 ? '先手' : '後手';
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -929,9 +959,15 @@ function skillTargets(b,p,gs,el){
 }
 function cardBlock(p){
   const el=cfg.el[p];
-  if (cardLeft(p)<=0) return '使い切りました';
-  if (el==='fire'){ const t=(pas[p]&&pas[p].turns)||0; if (t<FIRE_OPEN) return `炎の手番があと${FIRE_OPEN-t}回で使用可能`; }
-  else { const e=emptyCount(); if (e>LATE) return `後半から使用可能（あと${e-LATE}マス）`; }
+  if (el==='fire'){
+    const t=(pas[p]&&pas[p].turns)||0, r=fireReadyIn(p);
+    if (t<FIRE_OPEN) return `炎の手番があと${FIRE_OPEN-t}回で使用可能`;
+    if (r>0) return `再使用まであと${r}ターン`;
+  } else {
+    if (cardLeft(p)<=0) return '使い切りました';
+    const e=emptyCount(), at=cardOpenAt(el);
+    if (e>at) return `空きマスがあと${e-at}減ると使用可能`;
+  }
   if ((el==='light'||el==='dark') && skillTargets(board,p,guards,el).n<3) return '狙える相手の石が3枚未満';
   if (el==='fire' && !board.some((v,i)=>!v && !burns.some(b=>b.idx===i))) return '燃やせるマスがありません';
   return '';
@@ -944,7 +980,7 @@ const canCard = p => cardAllowed(p) && isLocalTurn(p);
 function pasState(p){
   const el=cfg.el[p], s=pas[p]||{};
   if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(20,s.flips||0)} / 20`;
-  if (el==='fire') return ((s.turns||0)%2===1) ? '次の手で発動' : '待機中';
+  if (el==='fire') return '毎ターン発動';
   if (el==='thunder') return 'ターン開始時 10%';
   return '4枚以上で発動';
 }
@@ -1010,7 +1046,7 @@ function render(){
     const C=cardOf(p), ok=canCard(p);
     cb.querySelector('.c-name').textContent=C.name;
     cb.querySelector('.c-desc').textContent=C.desc;
-    cb.querySelector('.c-uses').textContent=`残り ${cardLeft(p)} / ${C.uses}`;
+    cb.querySelector('.c-uses').textContent = cfg.el[p]==='fire' ? '5ターンに1回' : `残り ${cardLeft(p)} / ${C.uses}`;
     cb.querySelector('.c-note').textContent=cardBlock(p);
     cb.disabled = !ok && aim!==p;
     cb.classList.toggle('ready', ok && aim!==p);
@@ -1073,13 +1109,62 @@ setInterval(()=>{
     const [x,y]=center(b.idx);
     for(let j=0;j<2*FXQ;j++) part({x:x+rnd(-12,12),y:y+rnd(-4,10),vx:rnd(-20,20),vy:rnd(-110,-40),g:-60,drag:.96,life:rnd(.4,.8),size:rnd(2,5),mode:'fire'});
   }
-  if (phase!=='play' || blindView()) return;
-  const occ=[]; for (let i=0;i<64;i++) if (board[i]) occ.push(i);
-  for (let k=0;k<Math.min(3,occ.length);k++){
-    const i=pick(occ); const r=cells[i].getBoundingClientRect();
-    elementMote(cfg.el[board[i]], r.left+r.width/2, r.top+r.height/2, 1, r.width*.3);
+  if (phase!=='play') return;
+  if (blindView()){ hauntBoard(); return; }
+  const filled=board.reduce((n,v)=>n+(v?1:0),0), chance=Math.min(.6,16/Math.max(1,filled))*FXQ;
+  for (let i=0;i<64;i++){
+    if (!board[i] || Math.random()>chance) continue;
+    const r=cells[i].getBoundingClientRect(); if (!r.width) continue;
+    stoneFx(cfg.el[board[i]], r.left+r.width/2, r.top+r.height/2, r.width*.4);
   }
 }, 110);
+function stoneFx(el,x,y,rad){
+  const E=ELS[el], q=Math.random();
+  if (el==='fire'){
+    part({x:x+rnd(-rad*.7,rad*.7),y:y-rad*.4,vx:rnd(-12,12),vy:rnd(-140,-60),g:-90,drag:.96,life:rnd(.35,.6),size:rnd(rad*.14,rad*.26),mode:'fire',wob:5});
+    if (q<.25) part({x:x+rnd(-rad*.5,rad*.5),y:y-rad*.6,vx:rnd(-30,30),vy:rnd(-160,-80),g:-30,drag:.98,life:rnd(.6,1.1),size:rnd(.8,1.6),color:pick(['#ffd08a','#fff3b0']),mode:'spark'});
+  } else if (el==='thunder'){
+    if (q<.28){ const a=rnd(0,TAU), b=a+rnd(.8,2.2); bolt(x+Math.cos(a)*rad,y+Math.sin(a)*rad,x+Math.cos(b)*rad*1.1,y+Math.sin(b)*rad*1.1,pick([E.c1,E.c3]),.1,.6,0); }
+    if (q<.5) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:rnd(-160,160),vy:rnd(-160,160),drag:.85,life:rnd(.08,.2),size:rnd(.8,1.4),color:pick([E.c2,E.c3]),mode:'spark'});
+  } else if (el==='light'){
+    if (q<.35) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad*.2),vx:rnd(-8,8),vy:rnd(-40,-15),drag:.99,life:rnd(.8,1.4),size:rnd(1,2.2),color:pick([E.c1,E.c2,E.c3]),tw:10});
+    if (q<.012) BEAMS.push({x,y,w:rad*.7,life:1.4,t:0,color:E.c3});
+  } else {
+    if (q<.4) part({x:x+rnd(-rad*.6,rad*.6),y:y+rnd(-rad*.3,rad*.3),vx:rnd(-10,10),vy:rnd(-30,-8),drag:.98,life:rnd(.8,1.3),size:rnd(rad*.25,rad*.45),color:'#000',mode:'smoke',alpha:.55});
+    if (q<.2) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:rnd(-10,10),vy:rnd(-25,-5),drag:.98,life:rnd(.6,1),size:rnd(1,2),color:pick([E.c1,E.c2])});
+  }
+}
+// what the blinded player sees: a black board with things moving on it
+function hauntBoard(){
+  const r=boardEl.getBoundingClientRect();
+  if (Math.random()<.18*FXQ){
+    const dir=Math.random()<.5?1:-1;
+    part({x:dir>0?r.left-20:r.right+20,y:rnd(r.top+r.height*.1,r.bottom-r.height*.1),vx:dir*rnd(40,110),vy:rnd(-10,10),drag:1,life:rnd(2.5,4),size:rnd(r.width*.05,r.width*.09),color:'#cfc2ff',mode:'ghost',wob:2,alpha:.35});
+  }
+  if (Math.random()<.5) part({x:rnd(r.left,r.right),y:rnd(r.top,r.bottom),vx:rnd(-10,10),vy:rnd(-12,-4),drag:.99,life:rnd(1.5,2.5),size:rnd(14,26),color:'#12001e',mode:'smoke',alpha:.6});
+}
+// a wraith: long translucent body with a torn hem, sunken eye sockets with a red glint, a gaping mouth
+function drawGhost(p){
+  const k=p.t/p.life, a=Math.min(1,p.t*2.5)*(1-k)*(p.alpha??.5), s=p.size, dir=Math.sign(p.vx)||1;
+  if (p.seed==null) p.seed=Math.random()*1000;
+  cx.save(); cx.translate(p.x,p.y); cx.rotate(-dir*.25+Math.sin(p.t*3+p.seed)*.12); cx.scale(1+Math.sin(p.t*7+p.seed)*.05,1);
+  cx.globalCompositeOperation='source-over';
+  const g=cx.createLinearGradient(0,-s,0,s*2.2); g.addColorStop(0,p.color); g.addColorStop(.45,p.color); g.addColorStop(1,'rgba(160,150,200,0)');
+  cx.globalAlpha=a*.75; cx.fillStyle=g;
+  cx.beginPath(); cx.moveTo(-s*.75,s*.1);
+  cx.quadraticCurveTo(-s*.9,-s*1.05,0,-s*1.05); cx.quadraticCurveTo(s*.9,-s*1.05,s*.75,s*.1);
+  const n=7, w=p.t*8+p.seed;
+  for (let j=0;j<=n;j++){ const xx=s*.75-j*(1.5*s/n); const len=s*(1.2+((j*37+p.seed)%5)*.22)+Math.sin(w+j*1.9)*s*.25; cx.lineTo(xx+Math.sin(w*.7+j)*s*.12, j%2?len:len*.55); }
+  cx.closePath(); cx.fill();
+  // sunken sockets
+  cx.globalAlpha=Math.min(1,a*1.8); cx.fillStyle='#000';
+  cx.beginPath(); cx.ellipse(-s*.3,-s*.38,s*.2,s*.34,.35,0,TAU); cx.ellipse(s*.3,-s*.38,s*.2,s*.34,-.35,0,TAU); cx.fill();
+  cx.beginPath(); cx.ellipse(0,s*.35,s*.13,s*.42+Math.sin(p.t*14+p.seed)*s*.1,0,0,TAU); cx.fill();
+  cx.globalCompositeOperation='lighter'; cx.fillStyle='#ff0d0d'; cx.globalAlpha=a*(.55+.45*Math.sin(p.t*18+p.seed));
+  cx.beginPath(); cx.arc(-s*.27,-s*.3,s*.045,0,TAU); cx.arc(s*.27,-s*.3,s*.045,0,TAU); cx.fill();
+  cx.globalAlpha=a*.25; cx.beginPath(); cx.arc(-s*.27,-s*.3,s*.14,0,TAU); cx.arc(s*.27,-s*.3,s*.14,0,TAU); cx.fill();
+  cx.restore();
+}
 
 /* ---------- pure state transitions (shared by local play, CPU and online) ---------- */
 const initBoard = () => { const b=new Array(64).fill(0); b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
@@ -1118,7 +1203,7 @@ function placeS(S,idx,p){
   const el=cfg.el[p], ps=S.pas[p];
   ps.flips+=f.length; ps.turns++;
   if (el==='light' && !ps.seraph && ps.flips>=20){ ps.seraph=true; S.ev.push('seraph:'+p); }
-  if (el==='fire' && ps.turns%2===0){ S.guards.push({idx,owner:p,left:2}); S.ev.push('guard:'+idx); }
+  if (el==='fire'){ S.guards.push({idx,owner:p,left:2}); S.ev.push('guard:'+idx); }
   if (el==='dark' && f.length>=4){ S.blind=3-p; S.ev.push('ghost:'+(3-p)); }
   return advanceS(S,p);
 }
@@ -1354,7 +1439,7 @@ async function castCard(p, target, remoteS, remoteTargets){
       targets.forEach(i=>S.board[i] = el==='light' ? 0 : p);
       S.guards=S.guards.filter(g=>S.board[g.idx]===g.owner);
     }
-    else if (el==='fire'){ targets=[target]; S.burns.push({idx:target,owner:p,left:3}); }
+    else if (el==='fire'){ targets=[target]; S.burns.push({idx:target,owner:p,left:3}); S.pas[p].fireAt=S.pas[p].turns; }
     else { targets=[]; S.extra=1; }
     S.used[p]=(S.used[p]||0)+1; S.cardThisTurn=true; S.pass=0;
     if (!legalS(S,p).length){
@@ -1371,7 +1456,7 @@ async function castCard(p, target, remoteS, remoteTargets){
 }
 // show exactly which stones a card is about to hit before it lands
 async function markTargets(targets,color,myGen){
-  targets.forEach(i=>{ cells[i].style.setProperty('--mk',color); cells[i].classList.add('marked'); const [x,y]=center(i); ring(x,y,{vr:-60,life:1.3,w:3,color}); });
+  targets.forEach(i=>{ cells[i].style.setProperty('--mk',color); cells[i].classList.add('marked'); const [x,y]=center(i); ring(x,y,{r:46,vr:-24,life:1.3,w:3,color}); });
   targets.forEach((i,k)=>tone('square',1760,1760,.06,.07,k*.09));
   tone('sawtooth',220,440,.5,.06,.1);
   await wait(1400);
@@ -1502,23 +1587,40 @@ async function fxGuard(idx){
   const [x,y]=center(idx), E=ELS.fire;
   for (let j=0;j<3;j++) ring(x,y,{vr:200+j*160,life:.7,w:6-j,color:j%2?E.c2:E.c1});
   burst('fire',x,y,1.3);
+  for (let j=0;j<40*FXQ;j++) part({x:x+rnd(-10,10),y,vx:rnd(-40,40),vy:rnd(-380,-160),g:-80,drag:.95,life:rnd(.5,.9),size:rnd(4,9),mode:'fire'});
   sfx('fire','flip',3);
-  toast(`${PASSIVES.fire.name}！ この石は相手の2ターンのあいだ裏返らない`);
-  await wait(600);
+  await wait(250);
 }
 async function fxGhost(victim){
-  const E=ELS.dark;
-  showBanner(E,'PASSIVE',PASSIVES.dark.name,PASSIVES.dark.sub);
-  sfx('dark','ult'); tone('triangle',620,280,1.6,.08,.2); tone('sine',930,410,1.6,.05,.4);
-  dim('radial-gradient(circle at 50% 50%, rgba(10,0,25,.85), rgba(0,0,0,.97))',400);
-  emit(2.2,()=>{
-    for (let j=0;j<2*FXQ;j++){
-      const y=rnd(H*.15,H*.85), dir=Math.random()<.5?1:-1, x=dir>0?-30:W+30;
-      part({x,y,vx:dir*rnd(160,320),vy:rnd(-20,20),drag:1,life:rnd(2,3),size:rnd(10,18),color:'#e6ccff',wob:3});
-      part({x,y:y+8,vx:dir*rnd(160,320),vy:0,drag:1,life:rnd(1.5,2.5),size:rnd(16,26),color:'#1a0630',mode:'smoke',alpha:.6});
+  const D={k:'闇', c1:'#ff1a1a', c2:'#ffb0b0', c3:'#3a0000', glow:'0 0 18px #ff0000, 0 0 50px #600000, 0 0 3px #000', fill:'linear-gradient(180deg,#ffffff,#ff3030 45%,#4a0000)'};
+  showBanner(D,'PASSIVE',PASSIVES.dark.name,'THE DEAD ARE MARCHING');
+  // drone, a choir of detuned voices, a scream and a heartbeat
+  sfx('dark','ult');
+  [196,207.6,233,246.9].forEach((f,k)=>{ tone('sine',f,f*.94,3.2,.07,k*.05); tone('triangle',f*2.01,f*1.88,2.8,.025,.1+k*.05); });
+  nz('bandpass',3200,380,1.4,.4,.7,6);
+  tone('sawtooth',880,140,1.2,.06,.75);
+  for (let k=0;k<4;k++){ tone('sine',58,30,.16,.9,1.2+k*.6); tone('sine',52,28,.16,.7,1.42+k*.6); }
+  dim('radial-gradient(circle at 50% 50%, rgba(60,0,0,.55), rgba(0,0,0,.985) 70%)',350);
+  const ghostColors=['#b9b4c8','#c9c2d8','#a9a3bb','#d0c4c4'];
+  emit(2.8,(dt,t)=>{
+    if (Math.random()<.7*FXQ){
+      const y=rnd(H*.1,H*.9), dir=Math.random()<.5?1:-1, x=dir>0?-60:W+60;
+      part({x,y,vx:dir*rnd(220,480),vy:rnd(-30,30),drag:1,life:rnd(2,3.2),size:rnd(22,52),color:pick(ghostColors),mode:'ghost',wob:4,alpha:.6});
     }
+    if (Math.random()<.5) part({x:rnd(0,W),y:H+20,vx:rnd(-20,20),vy:rnd(-160,-60),drag:.99,life:rnd(1.5,2.5),size:rnd(30,60),color:'#160008',mode:'smoke',alpha:.7});
+    if (Math.random()<dt*3) flash('rgba(120,0,0,1)',.25,120);
+    shake(2+t*2);
   });
-  await wait(2300);
+  stage.animate([
+    {filter:'none'},{filter:'contrast(1.6) hue-rotate(-30deg) saturate(.4)',offset:.1},{filter:'none',offset:.14},
+    {filter:'invert(1) hue-rotate(180deg)',offset:.42},{filter:'none',offset:.45},
+    {filter:'contrast(2) saturate(0) brightness(.6)',offset:.7},{filter:'none'}
+  ],{duration:2600});
+  await wait(1250);
+  // the face
+  part({x:W/2,y:H*.45,vx:0,vy:0,drag:1,life:.8,size:Math.min(W,H)*.34,color:'#dcd6e6',mode:'ghost',alpha:.95});
+  flash('rgba(160,0,0,1)',.55,500); shake(30); nz('highpass',4000,900,.6,.5,0,2);
+  await wait(1350);
   undim(900);
   if (viewerSide()===victim && cfg.mode!=='pvp') toast('ゴーストパレード：このターンは置ける場所しか見えない');
   else if (cfg.mode==='pvp') toast(`${roleOf(victim)}は次のターン、置ける場所しか見えない`);
@@ -1858,7 +1960,7 @@ function buildHelp(){
   const body=$('helpBody');
   body.innerHTML = `<ul class="h-rules">
     <li>対局の最初に、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
-    <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら</strong>、それ以外は<strong>空きマスが残り${LATE}以下の後半</strong>から使えます。</li>
+    <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
     <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
     <li>パッシブスキルは条件を満たすと自動で発動します。</li>
   </ul>` + EL_ORDER.map(k=>{
@@ -1867,7 +1969,7 @@ function buildHelp(){
       <div class="hk">${E.k}</div>
       <div class="hn">${E.name}</div>
       <dl>
-        <dt>カード</dt><dd>${C.name}<br><small>${C.desc}（${C.uses}回）</small></dd>
+        <dt>カード</dt><dd>${C.name}<br><small>${C.desc}${k==='fire'?'':`（${C.uses}回）`}</small></dd>
         <dt>パッシブ</dt><dd>${PS.name}<br><small>${PS.desc}</small></dd>
         <dt>角を取ると</dt><dd>${E.ult}<br><small>属性ごとの必殺演出</small></dd>
       </dl>
