@@ -204,6 +204,84 @@ button.primary{background:linear-gradient(180deg,#3a2a66,#231a40);border-color:#
 .net-msg strong{color:var(--ink)}
 button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 
+/* Stone auras, seals and statuses */
+.aura{position:absolute;inset:3%;border-radius:50%;pointer-events:none}
+.aura[data-el="dark"]{inset:-3%;background:conic-gradient(from 0deg,transparent 0 18%,#a259ff99 30%,transparent 46% 68%,#4b12a0bb 80%,transparent 94%);filter:blur(3px);animation:auraSpin 2.6s linear infinite}
+.aura[data-el="light"]{inset:-6%;background:repeating-conic-gradient(#fff3c099 0 5deg,transparent 5deg 30deg);-webkit-mask:radial-gradient(circle,transparent 40%,#000 50%,transparent 70%);mask:radial-gradient(circle,transparent 40%,#000 50%,transparent 70%);animation:auraSpin 9s linear infinite,auraPulse 2.2s ease-in-out infinite}
+.aura[data-el="fire"]{inset:-16% 8% 22% 8%;border-radius:50% 50% 40% 40%;background:radial-gradient(ellipse 50% 60% at 50% 75%,#ffb04acc,#ff5a1f66 45%,transparent 72%);filter:blur(2px);transform-origin:50% 100%;animation:flicker .28s steps(2) infinite alternate}
+.aura[data-el="thunder"]{inset:1%;border:2px dashed #ffe600cc;box-shadow:0 0 10px #ffe60088;animation:auraSpin 1.2s linear infinite,zap .5s steps(2) infinite}
+@keyframes auraSpin{to{transform:rotate(360deg)}}
+@keyframes auraPulse{50%{opacity:.45}}
+@keyframes zap{50%{border-color:#6ad8ffcc;box-shadow:0 0 14px #6ad8ff}}
+.disc[data-el="none1"]{background:radial-gradient(circle at 34% 28%,#6a6578,#26232f 60%,#0e0d12);box-shadow:0 3px 6px #000}
+.disc[data-el="none2"]{background:radial-gradient(circle at 34% 28%,#ffffff,#d8d4e2 55%,#9a95a8);box-shadow:0 3px 6px #0008}
+.disc[data-el^="none"]::after{content:none}
+.cell.guard::before{content:"";position:absolute;inset:1%;border-radius:50%;border:2px solid #ffb04a;box-shadow:0 0 12px #ff5a1f,inset 0 0 10px #ff5a1f;z-index:2;pointer-events:none;animation:guardPulse 1s ease-in-out infinite}
+@keyframes guardPulse{50%{box-shadow:0 0 22px #ff8a1f,inset 0 0 14px #ff8a1f}}
+.flame.chain{
+  background:
+    repeating-linear-gradient(45deg,transparent 0 5px,#e9dfb0 5px 8px,transparent 8px 13px),
+    repeating-linear-gradient(-45deg,transparent 0 5px,#b8a76a 5px 8px,transparent 8px 13px),
+    #17140c;
+  box-shadow:0 0 14px #fff0b0,inset 0 0 10px #ffe9a0;animation:none;
+  place-items:center;font-family:var(--f-display);font-size:clamp(12px,3vw,20px);color:#fff7d6;text-shadow:0 0 6px #ffcf4a,0 0 2px #000;
+}
+.cell.marked::after{content:"";position:absolute;inset:-8%;border-radius:50%;border:3px solid var(--mk,#fff);box-shadow:0 0 16px var(--mk,#fff),inset 0 0 12px var(--mk,#fff);z-index:3;pointer-events:none;animation:markPulse .42s ease-in-out infinite alternate}
+@keyframes markPulse{from{transform:scale(1.18);opacity:.55}to{transform:scale(.9);opacity:1}}
+#board.blind{background:#000;border-color:#1a0a2a;box-shadow:0 0 0 6px #000,0 0 0 7px #2a1040,inset 0 0 60px #4b12a0}
+#board.blind .cell{background:#030205;box-shadow:none}
+#board.blind .disc,#board.blind .aura,#board.blind .flame{visibility:hidden}
+#board.blind .cell.guard::before,#board.blind .cell.last::after{display:none}
+#board.blind .cell.hint::before{opacity:.95;animation:none;box-shadow:0 0 16px var(--hint)}
+.pas{width:100%;box-sizing:border-box;display:grid;gap:2px;text-align:left;padding:8px 12px;border-radius:10px;border:1px dashed color-mix(in srgb,var(--ec) 45%,#39344c);background:#0f0d16aa}
+.pas .p-top{display:flex;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:.16em;color:var(--muted)}
+.pas .p-state{color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.pas .p-name{font-weight:700;font-size:14px;color:var(--ec)}
+.pas .p-desc{font-size:11px;line-height:1.5;color:var(--muted)}
+.pas.awake{border-style:solid;box-shadow:0 0 18px -2px var(--ec)}
+.card .c-note{font-size:11px;color:#ffb4a0}
+.card .c-note:empty{display:none}
+
+/* Element draft */
+#draft{position:absolute;inset:0;z-index:3;display:grid;place-items:center;border-radius:12px;background:radial-gradient(ellipse at 50% 40%,#1a1530f0,#05040af5);text-align:center;padding:16px;box-sizing:border-box;overflow:auto}
+.d-inner{display:grid;gap:10px;justify-items:center;max-width:100%;perspective:600px}
+.d-eyebrow{font-family:var(--f-latin);font-size:11px;letter-spacing:.4em;color:var(--muted)}
+.d-title{font-family:var(--f-display);font-size:clamp(22px,5vw,34px);text-wrap:balance}
+.d-sub{font-size:13px;color:var(--muted);line-height:1.7}
+.d-sub strong{color:var(--ink)}
+.d-sub small{font-size:12px;color:var(--ink);letter-spacing:.06em}
+#dGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:min(100%,470px)}
+.d-el{--ec:#fff;display:grid;gap:3px;justify-items:center;padding:10px 4px;border-radius:10px;border:1px solid color-mix(in srgb,var(--ec) 55%,#39344c);background:linear-gradient(180deg,color-mix(in srgb,var(--ec) 18%,#0f0d16),#0f0d16);transition:transform .15s,box-shadow .15s}
+.d-el .k{font-family:var(--f-display);font-size:34px;line-height:1.1;color:var(--ec);text-shadow:0 0 14px var(--ec)}
+.d-el .n{font-weight:700;font-size:12px}
+.d-el .s{font-size:10px;line-height:1.45;color:var(--muted)}
+.d-el:hover:not(:disabled){box-shadow:0 0 18px var(--ec);transform:translateY(-2px)}
+.coin{width:96px;height:96px;position:relative;transform-style:preserve-3d}
+.coin-face{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;font-family:var(--f-display);font-size:22px;
+  background:radial-gradient(circle at 35% 30%,#fff6c8,#d9a93a 60%,#7a5410);color:#3a2604;box-shadow:inset 0 0 0 4px #f5d27a,inset 0 0 0 7px #8a6418,0 6px 20px #000a}
+.coin-face.back{transform:rotateY(180deg);background:radial-gradient(circle at 35% 30%,#f2f2f6,#a3a8b8 60%,#4a4f60);color:#1d2030;box-shadow:inset 0 0 0 4px #e0e3ec,inset 0 0 0 7px #5a6072,0 6px 20px #000a}
+.d-timer{font-family:var(--f-latin);font-weight:700;font-size:28px;color:#ffd08a;font-variant-numeric:tabular-nums}
+.d-timer:empty{display:none}
+@media (max-width:480px){#dGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Skill guide dialog */
+#helpBox{position:fixed;inset:0;z-index:7;display:grid;place-items:center;background:#05040acc;backdrop-filter:blur(3px);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:calc(env(safe-area-inset-top,0px) + 16px) calc(env(safe-area-inset-bottom,0px) + 16px);box-sizing:border-box}
+.h-panel{width:min(100%,760px);max-height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);background:linear-gradient(180deg,var(--stone-2),var(--stone));border:1px solid #3a3450;border-radius:14px;overflow:hidden}
+.h-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #2a2638}
+.h-head h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:22px}
+.h-body{overflow:auto;padding:14px 16px;display:grid;gap:12px}
+.h-el{--ec:#fff;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;padding:12px;border-radius:10px;border:1px solid color-mix(in srgb,var(--ec) 45%,#2a2638);background:color-mix(in srgb,var(--ec) 7%,#0f0d16)}
+.h-el .hk{grid-row:span 3;font-family:var(--f-display);font-size:40px;line-height:1;color:var(--ec);text-shadow:0 0 14px var(--ec);align-self:center}
+.h-el .hn{font-weight:700;font-size:15px}
+.h-el dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;font-size:13px;line-height:1.6}
+.h-el dt{color:var(--ec);font-weight:700;white-space:nowrap}
+.h-el dd{margin:0;color:var(--ink)}
+.h-el dd small{color:var(--muted)}
+.h-rules{font-size:13px;line-height:1.7;color:var(--muted);margin:0;padding-left:1.2em}
+.h-rules strong{color:var(--ink)}
+@media (max-width:480px){.h-el{grid-template-columns:1fr}.h-el .hk{grid-row:auto}}
+
 /* Result overlay inside the board */
 #result{
   position:absolute;inset:0;display:grid;place-items:center;border-radius:12px;
@@ -245,7 +323,7 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
   .ename{font-size:16px}
   .who{display:none}
   .sel{grid-column:1/-1}
-  .card{grid-column:1/-1}
+  .card,.pas{grid-column:1/-1}
   .board-wrap{width:100%;min-width:0}
 }
 @media (max-width:480px){
@@ -254,7 +332,7 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
   #board{padding:6px;gap:2px}
 }
 @media (prefers-reduced-motion:reduce){
-  .side.active .sigil,.cell.hint::before,#aura.pulse,.status.crit,.flame,.card.ready{animation:none}
+  .side.active .sigil,.cell.hint::before,#aura.pulse,.status.crit,.flame,.card.ready,.aura,.cell.guard::before{animation:none}
 }
 </style>
 
@@ -264,6 +342,12 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 <div id="flash"></div>
 <div id="banner"><div class="b-top">CORNER BREAK</div><div class="b-main"></div><div class="b-sub"></div></div>
 <div id="toast"></div>
+<div id="helpBox" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="h-panel">
+    <div class="h-head"><h2 id="helpTitle">スキル説明</h2><button id="helpClose" type="button">閉じる</button></div>
+    <div class="h-body" id="helpBody"></div>
+  </div>
+</div>
 
 <main id="stage">
   <header>
@@ -277,18 +361,27 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
       <div class="meta"><div class="role">先手</div><div class="ename" id="name1">闇属性</div></div>
       <div class="count" id="count1">2</div>
       <div class="who" id="who1"></div>
-      <label class="sel" for="el1"><span>属性</span>
-        <select id="el1"></select>
-      </label>
+      <div class="pas" id="pas1"><span class="p-top"><span>パッシブ</span><span class="p-state"></span></span><span class="p-name"></span><span class="p-desc"></span></div>
       <button class="card" id="card1" type="button">
         <span class="c-top"><span>必殺技カード</span><span class="c-uses"></span></span>
         <span class="c-name"></span>
         <span class="c-desc"></span>
+        <span class="c-note"></span>
       </button>
     </aside>
 
     <div class="board-wrap">
       <div id="board" role="grid" aria-label="オセロ盤"></div>
+      <div id="draft" hidden>
+        <div class="d-inner">
+          <div class="d-eyebrow">ELEMENT DRAFT</div>
+          <div class="d-title" id="dTitle">属性を選べ</div>
+          <div class="d-sub" id="dSub"></div>
+          <div class="coin" id="coin" hidden><div class="coin-face front">先手</div><div class="coin-face back">後手</div></div>
+          <div class="d-timer" id="dTimer"></div>
+          <div id="dGrid"></div>
+        </div>
+      </div>
       <div id="result" hidden>
         <div class="inner">
           <div class="big" id="resBig"></div>
@@ -303,13 +396,12 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
       <div class="meta"><div class="role">後手</div><div class="ename" id="name2">光属性</div></div>
       <div class="count" id="count2">2</div>
       <div class="who" id="who2"></div>
-      <label class="sel" for="el2"><span>属性</span>
-        <select id="el2"></select>
-      </label>
+      <div class="pas" id="pas2"><span class="p-top"><span>パッシブ</span><span class="p-state"></span></span><span class="p-name"></span><span class="p-desc"></span></div>
       <button class="card" id="card2" type="button">
         <span class="c-top"><span>必殺技カード</span><span class="c-uses"></span></span>
         <span class="c-name"></span>
         <span class="c-desc"></span>
+        <span class="c-note"></span>
       </button>
     </aside>
   </section>
@@ -333,6 +425,7 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
       </select>
     </label>
     <button id="snd" aria-pressed="true">効果音 ON</button>
+    <button id="help">スキル説明</button>
     <button id="demo">角の必殺技を見る</button>
     <button class="primary" id="newgame">新しい対局</button>
   </section>
@@ -375,24 +468,25 @@ try { const s = JSON.parse(localStorage.getItem('elemental-othello-cfg')||'null'
 function saveCfg(){ try { localStorage.setItem('elemental-othello-cfg', JSON.stringify(cfg)); } catch(e){} }
 
 let board, turn, busy = false, over = false, lastMove = -1, gen = 0;
-let burns = [], used = {1:0,2:0}, extra = 0, cardThisTurn = false, aim = 0;
+let burns = [], guards = [], used = {1:0,2:0}, extra = 0, cardThisTurn = false, aim = 0, blind = 0;
+let pas = {1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}}, phase = 'draft', picks = {1:'',2:''}, coinInfo = null;
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
 
 /* ---------- rules ---------- */
 const D8 = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
-function flipsFor(b, i, p){
+function flipsFor(b, i, p, gs=guards){
   if (b[i]) return [];
   const o = 3-p, r = i>>3, c = i&7, out = [];
   for (const [dr,dc] of D8){
     let rr=r+dr, cc=c+dc; const tmp=[];
     while (rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===o){ tmp.push(rr*8+cc); rr+=dr; cc+=dc; }
-    if (tmp.length && rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===p) out.push(...tmp);
+    if (tmp.length && rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===p) for (const k of tmp) if (!gs.some(g=>g.idx===k && g.owner===o)) out.push(k);
   }
   return out;
 }
-function legal(b, p, bs=burns){ const m=[]; for (let i=0;i<64;i++) if(!b[i] && !bs.some(x=>x.idx===i && x.owner!==p) && flipsFor(b,i,p).length) m.push(i); return m; }
+function legal(b, p, bs=burns, gs=guards){ const m=[]; for (let i=0;i<64;i++) if(!b[i] && !bs.some(x=>x.idx===i && x.owner!==p) && flipsFor(b,i,p,gs).length) m.push(i); return m; }
 function counts(b){ let a=0,w=0,e=0; for(const v of b){ if(v===1)a++; else if(v===2)w++; else e++; } return [a,w,e]; }
 const isCorner = i => i===0||i===7||i===56||i===63;
 const cpuSide = () => cfg.mode==='cpu2' ? 2 : cfg.mode==='cpu1' ? 1 : 0;
@@ -805,45 +899,85 @@ function spawnAmbient(el){
   }
 }
 
-/* ---------- skill cards ---------- */
+/* ---------- skills ---------- */
+const LATE = 30;          // most cards unlock once this many empty squares remain
+const FIRE_OPEN = 3;      // the fire card unlocks after the fire side's third turn
 const CARDS = {
-  light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。' },
-  dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。' },
-  fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:2, desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。' },
-  thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2, desc:'このターン、石を2つ続けて置ける。' },
+  light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。' },
+  dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:3, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。' },
+  fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:2,      desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。' },
+  thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
 };
+const PASSIVES = {
+  light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計20枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、そのうち1マスを鎖で封じる。' },
+  dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の画面が1ターン真っ暗に。置ける場所だけは見える。' },
+  fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'自分の偶数ターンに置いた石は、相手の2ターンのあいだ裏返らず、スキルも効かない。' },
+  thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に10%の確率で、使った雷帝が稲妻とともに1回分よみがえる。' },
+};
+const freshPas = () => ({1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}});
+const clone = o => JSON.parse(JSON.stringify(o));
 const cardOf = p => CARDS[cfg.el[p]];
 const cardLeft = p => Math.max(0, cardOf(p).uses - (used[p]||0));
+const emptyCount = () => board.filter(v=>!v).length;
+const roleOf = p => p===1 ? '先手' : '後手';
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
-function cardAllowed(p){
-  if (busy||over||turn!==p||cardThisTurn||cardLeft(p)<=0) return false;
+// opponent stones a light/dark card may touch, and how many it would actually hit
+function skillTargets(b,p,gs,el){
+  const opp=3-p, os=[]; let oc=0;
+  b.forEach((v,i)=>{ if (v===opp){ oc++; if (!gs.some(g=>g.idx===i && g.owner===opp)) os.push(i); } });
+  return {os, n:Math.min(CARDS[el].n||0, oc-1, os.length)};
+}
+function cardBlock(p){
   const el=cfg.el[p];
-  if ((el==='light'||el==='dark') && board.filter(v=>v===3-p).length<2) return false;
-  if (el==='fire' && !board.some((v,i)=>!v && !burns.some(b=>b.idx===i))) return false;
-  return true;
+  if (cardLeft(p)<=0) return '使い切りました';
+  if (el==='fire'){ const t=(pas[p]&&pas[p].turns)||0; if (t<FIRE_OPEN) return `炎の手番があと${FIRE_OPEN-t}回で使用可能`; }
+  else { const e=emptyCount(); if (e>LATE) return `後半から使用可能（あと${e-LATE}マス）`; }
+  if ((el==='light'||el==='dark') && skillTargets(board,p,guards,el).n<3) return '狙える相手の石が3枚未満';
+  if (el==='fire' && !board.some((v,i)=>!v && !burns.some(b=>b.idx===i))) return '燃やせるマスがありません';
+  return '';
+}
+function cardAllowed(p){
+  if (phase!=='play'||busy||over||turn!==p||cardThisTurn) return false;
+  return !cardBlock(p);
 }
 const canCard = p => cardAllowed(p) && isLocalTurn(p);
+function pasState(p){
+  const el=cfg.el[p], s=pas[p]||{};
+  if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(20,s.flips||0)} / 20`;
+  if (el==='fire') return ((s.turns||0)%2===1) ? '次の手で発動' : '待機中';
+  if (el==='thunder') return 'ターン開始時 10%';
+  return '4枚以上で発動';
+}
 
 /* ---------- board UI ---------- */
-const flames = [];
+const flames=[], auras=[];
 for (let i=0;i<64;i++){
   const c=document.createElement('button'); c.className='cell'+(isCorner(i)?' corner':''); c.type='button';
   c.setAttribute('aria-label', `${'ABCDEFGH'[i&7]}${(i>>3)+1}`);
+  const au=document.createElement('span'); au.className='aura'; au.hidden=true;
   const d=document.createElement('div'); d.className='disc'; d.hidden=true;
   const f=document.createElement('span'); f.className='flame'; f.hidden=true;
-  c.append(d,f); boardEl.appendChild(c); cells.push(c); discs.push(d); flames.push(f);
+  c.append(au,d,f); boardEl.appendChild(c); cells.push(c); discs.push(d); flames.push(f); auras.push(au);
   c.addEventListener('click',()=>cellClick(i));
 }
 function center(i){ const r=cells[i].getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]; }
 function paintDisc(i){
-  const v=board[i], d=discs[i];
-  if (!v){ d.hidden=true; return; }
-  const el=cfg.el[v]; d.hidden=false; d.dataset.el=el; d.dataset.k=ELS[el].k;
+  const v=board[i], d=discs[i], au=auras[i];
+  if (!v){ d.hidden=true; au.hidden=true; return; }
+  d.hidden=false;
+  if (phase!=='play'){ d.dataset.el='none'+v; d.dataset.k=''; au.hidden=true; return; }
+  const el=cfg.el[v]; d.dataset.el=el; d.dataset.k=ELS[el].k;
+  au.hidden=false; au.dataset.el=el;
 }
+function viewerSide(){ if (online()) return net.side||1; if (cfg.mode==='pvp') return turn; return 3-cpuSide(); }
+const blindView = () => phase==='play' && !over && !!blind && turn===blind && viewerSide()===blind;
 function render(){
-  const human = !over && !busy && isLocalTurn(turn);
+  const play = phase==='play';
+  const bv = blindView();
+  const human = play && !over && !busy && isLocalTurn(turn);
   const lm = human && !aim ? legal(board,turn) : [];
-  boardEl.style.setProperty('--hint', ELS[cfg.el[turn]].c1);
+  boardEl.classList.toggle('blind', bv);
+  boardEl.style.setProperty('--hint', play ? ELS[cfg.el[turn]].c1 : '#cbb8ff');
   for (let i=0;i<64;i++){
     paintDisc(i);
     const b=burns.find(x=>x.idx===i);
@@ -851,66 +985,156 @@ function render(){
     cells[i].classList.toggle('hint', lm.includes(i));
     cells[i].classList.toggle('aim', aimable);
     cells[i].classList.toggle('last', i===lastMove);
+    cells[i].classList.toggle('guard', play && guards.some(g=>g.idx===i && board[i]===g.owner));
     cells[i].tabIndex = (lm.includes(i)||aimable) ? 0 : -1;
-    flames[i].hidden = !b; if (b) flames[i].textContent = b.left;
+    flames[i].hidden = !b;
+    if (b){ flames[i].classList.toggle('chain', b.kind==='chain'); flames[i].textContent = b.kind==='chain' ? '封' : b.left; }
   }
   const [a,w,e]=counts(board);
   for (const p of [1,2]){
-    const E=ELS[cfg.el[p]], side=$('side'+p);
+    const side=$('side'+p), cb=$('card'+p), pb=$('pas'+p);
+    $('count'+p).textContent = p===1?a:w;
+    $('who'+p).textContent = online() ? (net.side ? (net.side===p ? 'あなた' : (net.opp ? '相手' : '待機中…')) : '') : cpuSide()===p ? 'CPU' : (cfg.mode==='pvp' ? `プレイヤー${p}` : 'あなた');
+    cb.hidden = pb.hidden = !play;
+    if (!play){
+      side.style.setProperty('--ec', '#cbb8ff');
+      side.classList.remove('active');
+      $('sig'+p).textContent='？';
+      $('name'+p).textContent = picks[p] ? '属性 決定済み' : '属性 選択中…';
+      continue;
+    }
+    const E=ELS[cfg.el[p]];
     side.style.setProperty('--ec', E.c1);
     side.classList.toggle('active', !over && turn===p);
     $('sig'+p).textContent=E.k; $('name'+p).textContent=E.name;
-    $('count'+p).textContent = p===1?a:w;
-    $('who'+p).textContent = online() ? (net.side ? (net.side===p ? 'あなた' : (net.opp ? '相手' : '待機中…')) : '') : cpuSide()===p ? 'CPU' : (cfg.mode==='pvp' ? `プレイヤー${p}` : 'あなた');
-    $('el'+p).value=cfg.el[p];
-    $('el'+p).disabled = online() && !!net.kind && p!==net.side;
-    const C=cardOf(p), cb=$('card'+p), ok=canCard(p);
+    const C=cardOf(p), ok=canCard(p);
     cb.querySelector('.c-name').textContent=C.name;
     cb.querySelector('.c-desc').textContent=C.desc;
     cb.querySelector('.c-uses').textContent=`残り ${cardLeft(p)} / ${C.uses}`;
+    cb.querySelector('.c-note').textContent=cardBlock(p);
     cb.disabled = !ok && aim!==p;
     cb.classList.toggle('ready', ok && aim!==p);
     cb.classList.toggle('armed', aim===p || (!over && extra>0 && turn===p));
+    const PS=PASSIVES[cfg.el[p]];
+    pb.querySelector('.p-name').textContent=PS.name;
+    pb.querySelector('.p-desc').textContent=PS.desc;
+    pb.querySelector('.p-state').textContent=pasState(p);
+    pb.classList.toggle('awake', cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph));
   }
+  renderDraft();
   const st=$('status');
   if (over){ st.innerHTML=''; st.className='status'; return; }
+  if (!play){ st.innerHTML='属性を選択中<small>決まったら対局開始</small>'; st.className='status'; return; }
   const E=ELS[cfg.el[turn]];
   const who = online()
     ? (!net.kind ? '合言葉で部屋に入ってください' : !net.opp ? '相手の参加を待っています' : turn===net.side ? 'あなたの番' : '相手の番')
     : cpuSide()===turn ? 'CPU思考中…' : (cfg.mode==='pvp' ? '' : 'あなたの番');
-  const hot = aim ? '燃やすマスを選択（カードをもう一度押すと取り消し）' : extra>0 ? '雷帝：もう1手置ける' : '';
+  const hot = bv ? 'ゴーストパレード：置ける場所しか見えない' : aim ? '燃やすマスを選択（カードをもう一度押すと取り消し）' : extra>0 ? '雷帝：もう1手置ける' : '';
   st.innerHTML = `<span style="color:${E.c1};text-shadow:${E.glow}">${E.k}</span>のターン${who?`<small>${who}</small>`:''}${hot?`<small class="hot">${hot}</small>`:''}${e<=10?'<small>終盤戦</small>':''}`;
   st.className = 'status' + (e<=10 ? ' crit' : '');
 }
 const toastEl=$('toast'); let toastT;
-function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>toastEl.classList.remove('show'),2000); }
-// burning cells keep smouldering
-setInterval(()=>{ if (document.hidden) return; for (const b of burns){ const [x,y]=center(b.idx); for(let j=0;j<2*FXQ;j++) part({x:x+rnd(-12,12),y:y+rnd(-4,10),vx:rnd(-20,20),vy:rnd(-110,-40),g:-60,drag:.96,life:rnd(.4,.8),size:rnd(2,5),mode:'fire'}); } }, 90);
+function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>toastEl.classList.remove('show'),2200); }
+
+/* ---------- element effects that follow stones and the pointer ---------- */
+function elementMote(el,x,y,n,spread){
+  const E=ELS[el];
+  for (let j=0;j<n;j++){
+    const px=x+rnd(-spread,spread), py=y+rnd(-spread,spread);
+    if (el==='dark'){
+      part({x:px,y:py,vx:rnd(-30,30),vy:rnd(-35,15),drag:.95,life:rnd(.4,.8),size:rnd(1.2,2.6),color:pick([E.c1,E.c2])});
+      if (Math.random()<.4) part({x:px,y:py,vx:rnd(-15,15),vy:rnd(-20,5),drag:.96,life:.7,size:rnd(5,9),color:'#000',mode:'smoke',alpha:.5});
+    } else if (el==='light'){
+      part({x:px,y:py,vx:rnd(-30,30),vy:rnd(-60,-10),drag:.95,life:rnd(.5,1),size:rnd(1,2.4),color:pick([E.c1,E.c2,E.c3]),tw:14});
+    } else if (el==='fire'){
+      part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-120,-40),g:-80,drag:.96,life:rnd(.35,.65),size:rnd(2.5,5),mode:'fire'});
+    } else {
+      part({x:px,y:py,vx:rnd(-220,220),vy:rnd(-220,220),drag:.86,life:rnd(.12,.3),size:rnd(.8,1.6),color:pick([E.c1,E.c3]),mode:'spark'});
+    }
+  }
+}
+function viewerEl(){ const v=viewerSide(); return phase==='play' ? cfg.el[v] : (picks[v] || 'light'); }
+let lastPtr=0;
+addEventListener('pointermove',e=>{
+  if (RM) return;
+  const now=performance.now(); if (now-lastPtr<35) return; lastPtr=now;
+  elementMote(viewerEl(), e.clientX, e.clientY, 2, 3);
+},{passive:true});
+addEventListener('pointerdown',e=>{
+  const el=viewerEl(), E=ELS[el], x=e.clientX, y=e.clientY;
+  elementMote(el,x,y,Math.round(12*FXQ),6);
+  ring(x,y,{vr:220,life:.35,w:2,color:E.c1});
+  if (el==='thunder') bolt(x+rnd(-30,30),y-rnd(60,120),x,y,E.c1,.15,.8,0);
+},{passive:true});
+setInterval(()=>{
+  if (document.hidden) return;
+  for (const b of burns){
+    if (b.kind==='chain') continue;
+    const [x,y]=center(b.idx);
+    for(let j=0;j<2*FXQ;j++) part({x:x+rnd(-12,12),y:y+rnd(-4,10),vx:rnd(-20,20),vy:rnd(-110,-40),g:-60,drag:.96,life:rnd(.4,.8),size:rnd(2,5),mode:'fire'});
+  }
+  if (phase!=='play' || blindView()) return;
+  const occ=[]; for (let i=0;i<64;i++) if (board[i]) occ.push(i);
+  for (let k=0;k<Math.min(3,occ.length);k++){
+    const i=pick(occ); const r=cells[i].getBoundingClientRect();
+    elementMote(cfg.el[board[i]], r.left+r.width/2, r.top+r.height/2, 1, r.width*.3);
+  }
+}, 110);
 
 /* ---------- pure state transitions (shared by local play, CPU and online) ---------- */
 const initBoard = () => { const b=new Array(64).fill(0); b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
-const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0});
-function curState(){ return {board:board.slice(), turn, over, lastMove, burns:burns.map(b=>({...b})), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0}; }
-// a burn counts down each time its owner's opponent finishes a turn
-function tickBurns(S,ended){ S.burns.forEach(b=>{ if (b.owner!==ended) b.left--; }); S.burns=S.burns.filter(b=>b.left>0); }
+const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], guards:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0, blind:0, pas:freshPas(), ev:[]});
+function curState(){ return {board:board.slice(), turn, over, lastMove, burns:clone(burns), guards:clone(guards), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0, blind, pas:clone(pas), ev:[]}; }
+const legalS = (S,p) => legal(S.board,p,S.burns,S.guards);
+// seals and guards count down each time their owner's opponent finishes a turn
+function endTurnS(S,ended){
+  S.burns.forEach(b=>{ if (b.owner!==ended) b.left--; }); S.burns=S.burns.filter(b=>b.left>0);
+  S.guards.forEach(g=>{ if (g.owner!==ended) g.left--; }); S.guards=S.guards.filter(g=>g.left>0);
+  if (S.blind===ended) S.blind=0;
+}
+function startTurnS(S,x){
+  const o=3-x;
+  if (cfg.el[o]==='light' && S.pas[o].seraph){
+    const lm=legalS(S,x);
+    if (lm.length>=2){ const idx=pick(lm); S.burns.push({idx,owner:o,left:1,kind:'chain'}); S.ev.push('chain:'+idx); }
+  }
+  if (cfg.el[x]==='thunder' && (S.used[x]||0)>0 && Math.random()<.1){ S.used[x]--; S.ev.push('jinrai:'+x); }
+}
 function advanceS(S,p){
   S.pass=0;
   S.burns=S.burns.filter(b=>!S.board[b.idx]);
-  if (S.extra>0){ S.extra--; if (legal(S.board,p,S.burns).length){ S.turn=p; return S; } }
+  S.guards=S.guards.filter(g=>S.board[g.idx]===g.owner);
+  if (S.extra>0){ S.extra--; if (legalS(S,p).length){ S.turn=p; return S; } }
   S.extra=0; S.cardThisTurn=false;
   const nt=3-p;
-  tickBurns(S,p);
-  if (legal(S.board,nt,S.burns).length){ S.turn=nt; return S; }
-  tickBurns(S,nt);
-  if (legal(S.board,p,S.burns).length){ S.turn=p; S.pass=nt; return S; }
+  endTurnS(S,p);
+  if (legalS(S,nt).length){ S.turn=nt; startTurnS(S,nt); return S; }
+  endTurnS(S,nt);
+  if (legalS(S,p).length){ S.turn=p; S.pass=nt; startTurnS(S,p); return S; }
   S.over=true; return S;
 }
-function placeS(S,idx,p){ const f=flipsFor(S.board,idx,p); S.board[idx]=p; for(const k of f) S.board[k]=p; S.lastMove=idx; return advanceS(S,p); }
-function commit(S){
+function placeS(S,idx,p){
+  const f=flipsFor(S.board,idx,p,S.guards); S.board[idx]=p; for(const k of f) S.board[k]=p; S.lastMove=idx;
+  const el=cfg.el[p], ps=S.pas[p];
+  ps.flips+=f.length; ps.turns++;
+  if (el==='light' && !ps.seraph && ps.flips>=20){ ps.seraph=true; S.ev.push('seraph:'+p); }
+  if (el==='fire' && ps.turns%2===0){ S.guards.push({idx,owner:p,left:2}); S.ev.push('guard:'+idx); }
+  if (el==='dark' && f.length>=4){ S.blind=3-p; S.ev.push('ghost:'+(3-p)); }
+  return advanceS(S,p);
+}
+async function commit(S){
   board=S.board.slice(); turn=S.turn; lastMove=S.lastMove??-1;
-  burns=(S.burns||[]).map(b=>({...b})); used={1:(S.used&&S.used[1])||0, 2:(S.used&&S.used[2])||0};
-  extra=S.extra||0; cardThisTurn=!!S.cardThisTurn;
+  burns=clone(S.burns||[]); guards=clone(S.guards||[]);
+  used={1:(S.used&&S.used[1])||0, 2:(S.used&&S.used[2])||0};
+  extra=S.extra||0; cardThisTurn=!!S.cardThisTurn; blind=S.blind||0;
+  pas=S.pas ? clone(S.pas) : freshPas();
   if (S.pass) toast(`${ELS[cfg.el[S.pass]].k}は置ける場所がないのでパス`);
+  const ev=(Array.isArray(S.ev)?S.ev:[]).filter(x=>typeof x==='string');
+  if (ev.length && !S.over && phase==='play'){
+    busy=true; updateAmbience(); render();
+    const g=gen; await playEvents(ev); if (g!==gen) return;
+    busy=false;
+  }
   if (S.over){ if (!over) gameOver(); }
   else if (over){ over=false; $('result').hidden=true; }
   updateAmbience(); render(); maybeCPU(); drainNet();
@@ -918,13 +1142,137 @@ function commit(S){
 function resetLocal(S){
   gen++; busy=false; aim=0; over=false; $('result').hidden=true; net.queue=[];
   P.length=0; RINGS.length=0; BOLTS.length=0; BEAMS.length=0; CIRCLES.length=0; HOLES.length=0; EMIT.length=0;
+  cells.forEach(c=>c.classList.remove('marked'));
   undim(200);
-  commit(S);
+  commit({...S, ev:[]});
 }
-function newGame(){
+
+/* ---------- element draft (with coin toss on a clash) ---------- */
+let draftTimers=[], countdownT=null;
+function clearDraftTimers(){ draftTimers.forEach(clearTimeout); draftTimers=[]; clearInterval(countdownT); $('dTimer').textContent=''; }
+const isResolver = () => !online() || net.side===1;
+const localSide = p => online() ? (!!net.kind && p===net.side) : cfg.mode==='pvp' ? true : p!==cpuSide();
+function draftChooser(){
+  if (over) return 0;
+  if (phase==='draft'){
+    if (!online() && cfg.mode==='pvp') return !picks[1]?1:!picks[2]?2:0;
+    for (const p of [1,2]) if (localSide(p) && !picks[p]) return p;
+    return 0;
+  }
+  if (phase==='coin' && coinInfo && coinInfo.stage==='choose' && localSide(coinInfo.loser) && picks[coinInfo.loser]===coinInfo.el) return coinInfo.loser;
+  return 0;
+}
+function renderDraft(){
+  const dr=$('draft');
+  if (phase==='play' || over || (online() && !net.kind)){ dr.hidden=true; return; }
+  dr.hidden=false;
+  const ch=draftChooser();
+  let title='', sub='', excl='';
+  if (phase==='draft'){
+    title='属性を選べ';
+    const st=p=>`${roleOf(p)}：${picks[p]?'決定済み':'選択中…'}`;
+    sub = ch ? (!online() && cfg.mode==='pvp' ? `<strong>${roleOf(ch)}</strong>の人が選んでください（相手には見えません）` : `<strong>${roleOf(ch)}</strong>のあなたが選んでください`) : '相手の選択を待っています…';
+    sub += `<br><small>${st(1)}　/　${st(2)}</small>`;
+  } else if (coinInfo){
+    const c=coinInfo, E=ELS[c.el];
+    if (c.stage==='spin'){ title='属性がかぶった！'; sub=`どちらも<strong>${E.k}</strong>を選びました。コインで決めます…`; }
+    else {
+      title=`${roleOf(c.winner)}が${E.k}を獲得`; excl=c.el;
+      sub = ch ? `<strong>${roleOf(c.loser)}</strong>は5秒以内に別の属性を選んでください` : `${roleOf(c.loser)}が選び直しています…`;
+    }
+  }
+  $('dTitle').textContent=title; $('dSub').innerHTML=sub;
+  $('coin').hidden = phase!=='coin';
+  const grid=$('dGrid'); grid.hidden=!ch;
+  grid.querySelectorAll('button').forEach(b=>{ b.disabled = b.dataset.el===excl; });
+}
+EL_ORDER.forEach(k=>{
+  const E=ELS[k], b=document.createElement('button');
+  b.type='button'; b.className='d-el'; b.dataset.el=k; b.style.setProperty('--ec',E.c1);
+  b.innerHTML=`<span class="k">${E.k}</span><span class="n">${E.name}</span><span class="s">${CARDS[k].name}<br>${PASSIVES[k].name}</span>`;
+  b.addEventListener('click',()=>{ const c=draftChooser(); if (c){ ac(); choose(c,k); } });
+  $('dGrid').appendChild(b);
+});
+function startDraft(){
+  clearDraftTimers();
+  phase='draft'; picks={1:'',2:''}; coinInfo=null;
   const S=freshState();
   resetLocal(S);
-  sendState(S,null);
+  if (online() && net.kind){ net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'draft', picks:{1:'',2:''}, coin:null, updated:Date.now()}); }
+  cpuDraftPick();
+}
+const newGame = startDraft;
+function cpuDraftPick(){
+  const c=cpuSide();
+  if (!online() && c && phase==='draft' && !picks[c]) draftTimers.push(setTimeout(()=>{ if (phase==='draft' && !picks[c]) choose(c, pick(EL_ORDER)); }, 700));
+}
+function choose(p, el){
+  if (phase==='draft'){ if (picks[p]) return; picks[p]=el; }
+  else if (phase==='coin' && coinInfo && coinInfo.stage==='choose' && p===coinInfo.loser && el!==coinInfo.el && picks[p]===coinInfo.el){ picks[p]=el; clearInterval(countdownT); $('dTimer').textContent=''; }
+  else return;
+  if (localSide(p)) sfx(el,'place');
+  if (online() && net.kind) netWrite({picks:{[p]:el}, updated:Date.now()});
+  maybeResolve(); render();
+}
+function maybeResolve(){
+  if (!isResolver()) return;
+  if (phase==='draft' && picks[1] && picks[2]){ if (picks[1]!==picks[2]) finishDraft(); else startCoin(); }
+  else if (phase==='coin' && coinInfo && picks[coinInfo.loser] && picks[coinInfo.loser]!==coinInfo.el) finishDraft();
+}
+function startCoin(){
+  const winner = Math.random()<.5 ? 1 : 2;
+  coinInfo={winner, loser:3-winner, el:picks[winner], stage:'spin'};
+  phase='coin';
+  if (online() && net.kind) netWrite({phase:'coin', coin:{winner, loser:3-winner, el:coinInfo.el}, updated:Date.now()});
+  playCoin();
+}
+function playCoin(){
+  const c=coinInfo; render();
+  for (let k=0;k<10;k++) tone('triangle',1400+k*60,1400+k*60,.05,.05,k*.18);
+  $('coin').animate([
+    {transform:'translateY(0) rotateY(0deg)'},
+    {transform:`translateY(-80px) rotateY(1080deg)`,offset:.45},
+    {transform:`translateY(0) rotateY(${2160+(c.winner===1?0:180)}deg)`}
+  ],{duration:2200,easing:'cubic-bezier(.25,.6,.3,1)',fill:'forwards'});
+  draftTimers.push(setTimeout(()=>{
+    if (phase!=='coin' || coinInfo!==c) return;
+    c.stage='choose';
+    const E=ELS[c.el]; flash(E.c1,.3,300); sfx(c.el,'flip'); shake(8);
+    toast(`${roleOf(c.winner)}の勝ち！ ${E.k}を獲得`);
+    render();
+    if (draftChooser()===c.loser) startCountdown(c);
+    else if (!online() && c.loser===cpuSide()) draftTimers.push(setTimeout(()=>choose(c.loser, pick(EL_ORDER.filter(k=>k!==c.el))), 900));
+    else if (online() && isResolver()) draftTimers.push(setTimeout(()=>{
+      if (phase==='coin' && coinInfo===c && picks[c.loser]===c.el){ picks[c.loser]=pick(EL_ORDER.filter(k=>k!==c.el)); netWrite({picks:{[c.loser]:picks[c.loser]}}); maybeResolve(); }
+    }, 9000));
+  }, 2300));
+}
+function startCountdown(c){
+  let left=5; const t=$('dTimer'); t.textContent=`あと ${left} 秒`;
+  clearInterval(countdownT);
+  countdownT=setInterval(()=>{
+    if (phase!=='coin' || coinInfo!==c){ clearInterval(countdownT); t.textContent=''; return; }
+    left--;
+    if (left<=0){ clearInterval(countdownT); t.textContent=''; choose(c.loser, pick(EL_ORDER.filter(k=>k!==c.el))); toast('時間切れ。属性はランダムで決まりました'); }
+    else { t.textContent=`あと ${left} 秒`; tone('square',880,880,.06,.06); }
+  },1000);
+}
+function finishDraft(){
+  clearDraftTimers();
+  cfg.el={1:picks[1],2:picks[2]};
+  phase='play'; coinInfo=null;
+  const S=freshState();
+  if (online() && net.kind){ net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'play', el:{...cfg.el}, coin:null, updated:Date.now()}); }
+  resetLocal(S);
+  revealFx();
+}
+function revealFx(){
+  toast(`${ELS[cfg.el[1]].k}（先手） vs ${ELS[cfg.el[2]].k}（後手）　対局開始！`);
+  for (const p of [1,2]){
+    const r=$('sig'+p).getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2, el=cfg.el[p];
+    burst(el,x,y,1.2); sfx(el,'flip',p);
+  }
+  flash('#ffffff',.25,300);
 }
 
 /* ---------- moves ---------- */
@@ -1000,15 +1348,16 @@ async function castCard(p, target, remoteS, remoteTargets){
   if (remoteS){ S=remoteS; targets=remoteTargets||[]; }
   else {
     S=curState();
-    const opp=3-p, os=[];
-    S.board.forEach((v,i)=>{ if(v===opp) os.push(i); });
-    shuffle(os);
-    if (el==='light'){ targets=os.slice(0,Math.min(5,os.length-1)); targets.forEach(i=>S.board[i]=0); }
-    else if (el==='dark'){ targets=os.slice(0,Math.min(3,os.length-1)); targets.forEach(i=>S.board[i]=p); }
+    if (el==='light'||el==='dark'){
+      const {os,n}=skillTargets(S.board,p,S.guards,el);
+      targets=shuffle(os).slice(0,n);
+      targets.forEach(i=>S.board[i] = el==='light' ? 0 : p);
+      S.guards=S.guards.filter(g=>S.board[g.idx]===g.owner);
+    }
     else if (el==='fire'){ targets=[target]; S.burns.push({idx:target,owner:p,left:3}); }
     else { targets=[]; S.extra=1; }
     S.used[p]=(S.used[p]||0)+1; S.cardThisTurn=true; S.pass=0;
-    if (!legal(S.board,p,S.burns).length){
+    if (!legalS(S,p).length){
       S.extra=0; advanceS(S,p);
       if (!S.over && S.turn!==p && !S.pass) S.pass=p;
     }
@@ -1020,6 +1369,14 @@ async function castCard(p, target, remoteS, remoteTargets){
   busy=false;
   commit(S);
 }
+// show exactly which stones a card is about to hit before it lands
+async function markTargets(targets,color,myGen){
+  targets.forEach(i=>{ cells[i].style.setProperty('--mk',color); cells[i].classList.add('marked'); const [x,y]=center(i); ring(x,y,{vr:-60,life:1.3,w:3,color}); });
+  targets.forEach((i,k)=>tone('square',1760,1760,.06,.07,k*.09));
+  tone('sawtooth',220,440,.5,.06,.1);
+  await wait(1400);
+  return myGen===gen;
+}
 async function playCard(el,p,targets,myGen){
   const E=ELS[el], C=CARDS[el];
   const r=boardEl.getBoundingClientRect(), bx=r.left+r.width/2, by=r.top+r.height/2;
@@ -1029,40 +1386,45 @@ async function playCard(el,p,targets,myGen){
   if (el==='light'){
     dim('radial-gradient(circle at 50% 20%, rgba(255,250,220,.22), rgba(30,20,0,.62))',300);
     flash('#ffffff',.75,700); shake(8);
-    CIRCLES.push({x:bx,y:by,r:0,tr:r.width*.5,rot:0,life:2.2+targets.length*.26,t:0,color:E.c3,k:E.k});
-    emit(1.2+targets.length*.26,()=>{ for(let j=0;j<5*FXQ;j++) part({x:rnd(r.left,r.right),y:r.top-40,vx:rnd(-15,15),vy:rnd(260,520),drag:1,life:rnd(.7,1.2),size:rnd(1,2.6),color:pick([E.c1,E.c2,E.c3]),mode:'spark'}); });
-    await wait(800);
-    targets.forEach((i,k)=>setTimeout(()=>{
-      if(!alive()) return;
-      const [x,y]=center(i);
+    CIRCLES.push({x:bx,y:by,r:0,tr:r.width*.5,rot:0,life:3.4+targets.length*.28,t:0,color:E.c3,k:E.k});
+    emit(2.6+targets.length*.28,()=>{ for(let j=0;j<5*FXQ;j++) part({x:rnd(r.left,r.right),y:r.top-40,vx:rnd(-15,15),vy:rnd(260,520),drag:1,life:rnd(.7,1.2),size:rnd(1,2.6),color:pick([E.c1,E.c2,E.c3]),mode:'spark'}); });
+    await wait(700);
+    if (!await markTargets(targets,E.c3,myGen)) return;
+    for (let k=0;k<targets.length;k++){
+      const i=targets[k]; const [x,y]=center(i);
+      cells[i].classList.remove('marked');
       BEAMS.push({x,y,w:r.width*.14,life:.95,t:0,color:E.c3}); BEAMS.push({x,y,w:r.width*.05,life:.75,t:0,color:'#ffffff'});
       burst('light',x,y,1.7,k); ring(x,y,{vr:520,life:.6,w:6,color:'#fff'});
       flash('#fffbe8',.35,180); shake(12); sfx('light','flip',k);
       vanish(i);
-    }, k*280));
-    await wait(targets.length*280+800);
+      await wait(280); if (!alive()) return;
+    }
+    await wait(700);
     undim(900);
   } else if (el==='dark'){
     dim('radial-gradient(circle at 50% 50%, rgba(25,0,50,.75), rgba(0,0,0,.95))',350);
-    HOLES.push({x:bx,y:by,r:0,tr:r.width*.1,life:1.6+targets.length*.4,t:0});
-    CIRCLES.push({x:bx,y:by,r:0,tr:r.width*.42,rot:0,life:2+targets.length*.4,t:0,color:E.c1,k:E.k});
-    emit(1.1+targets.length*.35,(dt)=>{
+    HOLES.push({x:bx,y:by,r:0,tr:r.width*.1,life:3+targets.length*.4,t:0});
+    CIRCLES.push({x:bx,y:by,r:0,tr:r.width*.42,rot:0,life:3.4+targets.length*.4,t:0,color:E.c1,k:E.k});
+    emit(2.4+targets.length*.35,()=>{
       for(let j=0;j<8*FXQ;j++){ const a=rnd(0,TAU), R=r.width*rnd(.55,.8); part({x:bx+Math.cos(a)*R,y:by+Math.sin(a)*R,vx:-Math.sin(a)*240,vy:Math.cos(a)*240,attract:{x:bx,y:by,s:9},drag:.96,life:rnd(.8,1.3),size:rnd(1.5,3.5),color:pick([E.c1,E.c2,E.c3])}); }
       shake(3);
     });
-    await wait(900);
-    targets.forEach((i,k)=>setTimeout(()=>{
-      if(!alive()) return;
-      const [x,y]=center(i);
+    await wait(800);
+    if (!await markTargets(targets,E.c1,myGen)) return;
+    for (let k=0;k<targets.length;k++){
+      const i=targets[k]; const [x,y]=center(i);
+      cells[i].classList.remove('marked');
       bolt(bx,by,x,y,E.c1,.55,2,3);
       for(let j=0;j<26*FXQ;j++){ const t=Math.random(); part({x:bx+(x-bx)*t,y:by+(y-by)*t,vx:rnd(-40,40),vy:rnd(-40,40),drag:.95,life:rnd(.5,.9),size:rnd(8,16),color:'#000',mode:'smoke',alpha:.7}); }
       flipDisc(i,p,1.9,k); flash(E.c1,.25,220); shake(16);
-    }, k*380));
-    await wait(targets.length*380+700);
+      await wait(380); if (!alive()) return;
+    }
+    await wait(600);
     undim(900);
   } else if (el==='fire'){
     const i=targets[0]; const [x,y]=center(i);
     dim('radial-gradient(circle at 50% 60%, rgba(90,20,0,.5), rgba(20,2,0,.9))',300);
+    cells[i].style.setProperty('--mk',E.c1); cells[i].classList.add('marked');
     const sx = x<W/2 ? W+120 : -120, sy=-160, dur=.7;
     emit(dur,(dt,t)=>{
       const k=Math.min(1,t/dur), e2=k*k, mx=sx+(x-sx)*e2, my=sy+(y-sy)*e2;
@@ -1071,12 +1433,13 @@ async function playCard(el,p,targets,myGen){
       shake(2+k*6);
     });
     await wait(dur*1000+30);
+    cells[i].classList.remove('marked');
     if (!alive()) return;
     flash('#ff8a2a',.8,700); shake(34);
     for(let j=0;j<4;j++) ring(x,y,{vr:420+j*240,life:.9,w:10-j*2,color:j%2?E.c2:E.c1});
     for(let j=0;j<240*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,700); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-160,g:-160,drag:.92,life:rnd(.6,1.3),size:rnd(4,12),mode:'fire'}); }
     for(let j=0;j<60*FXQ;j++) part({x:x+rnd(-10,10),y,vx:rnd(-30,30),vy:rnd(-600,-250),g:-100,drag:.95,life:rnd(.6,1.1),size:rnd(5,10),mode:'fire'});
-    flames[i].hidden=false; flames[i].textContent='3';
+    flames[i].hidden=false; flames[i].classList.remove('chain'); flames[i].textContent='3';
     await wait(800);
     undim(900);
   } else {
@@ -1096,27 +1459,101 @@ async function playCard(el,p,targets,myGen){
   }
 }
 
+/* ---------- passive skill events ---------- */
+async function playEvents(ev){
+  for (const e of ev){
+    const [k,v]=e.split(':'); const n=+v;
+    if (!Number.isInteger(n)) continue;
+    if (k==='seraph' && (n===1||n===2)) await fxSeraph(n);
+    else if (k==='guard' && n>=0 && n<64) await fxGuard(n);
+    else if (k==='ghost' && (n===1||n===2)) await fxGhost(n);
+    else if (k==='chain' && n>=0 && n<64) await fxChain(n);
+    else if (k==='jinrai' && (n===1||n===2)) await fxJinrai(n);
+  }
+}
+async function fxSeraph(p){
+  const E=ELS.light, r=boardEl.getBoundingClientRect(), bx=r.left+r.width/2, by=r.top+r.height/2;
+  showBanner(E,'PASSIVE AWAKENED',PASSIVES.light.name,PASSIVES.light.sub);
+  sfx('light','ult');
+  dim('radial-gradient(circle at 50% 10%, rgba(255,250,220,.35), rgba(20,15,0,.7))',300);
+  CIRCLES.push({x:bx,y:r.top+r.height*.2,r:0,tr:r.width*.32,rot:0,life:2.6,t:0,color:'#ffffff',k:'契'});
+  for (let j=0;j<6;j++) BEAMS.push({x:bx+(j-2.5)*r.width*.16,y:r.bottom,w:r.width*.08,life:1.8,t:0,color:E.c3});
+  emit(2.2,()=>{
+    for (let j=0;j<4*FXQ;j++){ const side=Math.random()<.5?-1:1; part({x:bx+side*rnd(20,r.width*.5),y:r.top+rnd(0,r.height*.3),vx:side*rnd(20,80),vy:rnd(30,90),drag:.99,life:rnd(1.2,2),size:rnd(1.5,3),color:pick(['#ffffff',E.c1]),mode:'spark',tw:6}); }
+  });
+  flash('#ffffff',.8,800); shake(10);
+  await wait(2400);
+  undim(900);
+}
+async function fxChain(idx){
+  const [x,y]=center(idx), r=boardEl.getBoundingClientRect(), col='#ffe9a0';
+  const anchors=[[r.left,y],[r.right,y],[x,r.top],[x,r.bottom]];
+  anchors.forEach(([ax,ay],k)=>{
+    const L=Math.hypot(x-ax,y-ay), n=Math.max(4,Math.round(L/14));
+    for (let j=0;j<=n;j++){ const t=j/n; setTimeout(()=>part({x:ax+(x-ax)*t,y:ay+(y-ay)*t,life:1.1,size:3,color:j%2?col:'#b8a76a'}), k*60+j*12); }
+  });
+  [0,.12,.24].forEach(d=>{ tone('square',2400,1600,.07,.08,d); nz('highpass',5000,2500,.08,.12,d); });
+  flash('#fff6d0',.25,250); shake(6);
+  flames[idx].hidden=false; flames[idx].classList.add('chain'); flames[idx].textContent='封';
+  toast('熾天使の鎖：このターン、1マスが封じられた');
+  await wait(900);
+}
+async function fxGuard(idx){
+  const [x,y]=center(idx), E=ELS.fire;
+  for (let j=0;j<3;j++) ring(x,y,{vr:200+j*160,life:.7,w:6-j,color:j%2?E.c2:E.c1});
+  burst('fire',x,y,1.3);
+  sfx('fire','flip',3);
+  toast(`${PASSIVES.fire.name}！ この石は相手の2ターンのあいだ裏返らない`);
+  await wait(600);
+}
+async function fxGhost(victim){
+  const E=ELS.dark;
+  showBanner(E,'PASSIVE',PASSIVES.dark.name,PASSIVES.dark.sub);
+  sfx('dark','ult'); tone('triangle',620,280,1.6,.08,.2); tone('sine',930,410,1.6,.05,.4);
+  dim('radial-gradient(circle at 50% 50%, rgba(10,0,25,.85), rgba(0,0,0,.97))',400);
+  emit(2.2,()=>{
+    for (let j=0;j<2*FXQ;j++){
+      const y=rnd(H*.15,H*.85), dir=Math.random()<.5?1:-1, x=dir>0?-30:W+30;
+      part({x,y,vx:dir*rnd(160,320),vy:rnd(-20,20),drag:1,life:rnd(2,3),size:rnd(10,18),color:'#e6ccff',wob:3});
+      part({x,y:y+8,vx:dir*rnd(160,320),vy:0,drag:1,life:rnd(1.5,2.5),size:rnd(16,26),color:'#1a0630',mode:'smoke',alpha:.6});
+    }
+  });
+  await wait(2300);
+  undim(900);
+  if (viewerSide()===victim && cfg.mode!=='pvp') toast('ゴーストパレード：このターンは置ける場所しか見えない');
+  else if (cfg.mode==='pvp') toast(`${roleOf(victim)}は次のターン、置ける場所しか見えない`);
+}
+async function fxJinrai(p){
+  const E=ELS.thunder, cr=$('card'+p).getBoundingClientRect(), x=cr.left+cr.width/2, y=cr.top+cr.height/2;
+  for (let j=0;j<4;j++) bolt(x+rnd(-60,60),-30,x,y,j%2?E.c3:E.c1,.5,2.4,3);
+  flash('#fffbe0',.6,300); shake(14); sfx('thunder','crack');
+  for (let j=0;j<80*FXQ;j++){ const a=rnd(0,TAU), s=rnd(200,700); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.88,life:rnd(.3,.7),size:rnd(1,2.4),color:pick([E.c1,E.c3]),mode:'spark'}); }
+  $('card'+p).animate([{transform:'scale(1.12)',filter:'brightness(2.5)'},{transform:'scale(1)',filter:'brightness(1)'}],{duration:700,easing:'ease-out'});
+  toast(`${PASSIVES.thunder.name}！ 雷帝が1回分よみがえった`);
+  await wait(900);
+}
+
 /* ---------- CPU ---------- */
 function cpuCardChoice(p){
   if (!cardAllowed(p)) return null;
   if (cfg.lv==1 && Math.random()<.5) return null;
-  const el=cfg.el[p], opp=3-p, [a,w,e]=counts(board), oc=p===1?w:a;
+  const el=cfg.el[p], opp=3-p, e=emptyCount();
   if (el==='light'||el==='dark'){
-    if ((e<=14 && oc>=4) || (e<=40 && oc>=8 && Math.random()<.22)) return {};
+    if (e<=14 || Math.random()<.35) return {};
   } else if (el==='fire'){
     const om=legal(board,opp), corner=om.find(isCorner);
     if (corner!==undefined) return {target:corner};
-    if (e<=44 && om.length && Math.random()<.2){ const best=om.slice().sort((x,y)=>WT[y]-WT[x])[0]; if (WT[best]>=15) return {target:best}; }
+    if (om.length && Math.random()<.2){ const best=om.slice().sort((x,y)=>WT[y]-WT[x])[0]; if (WT[best]>=15) return {target:best}; }
   } else {
-    if (legal(board,p).some(isCorner) || (e<=20 && Math.random()<.4)) return {};
+    if (legal(board,p).some(isCorner) || Math.random()<.4) return {};
   }
   return null;
 }
 function maybeCPU(){
-  if (over||busy||aim||turn!==cpuSide()) return;
+  if (phase!=='play'||over||busy||aim||turn!==cpuSide()) return;
   const myGen=gen;
   setTimeout(()=>{
-    if (myGen!==gen||over||busy||turn!==cpuSide()) return;
+    if (myGen!==gen||phase!=='play'||over||busy||turn!==cpuSide()) return;
     const p=turn, c=cpuCardChoice(p);
     if (c){ castCard(p,c.target); return; }
     const m=cpuPick(board,p);
@@ -1144,9 +1581,10 @@ async function gameOver(){
 /* ---------- online play ----------
    Inside Claude the room is a shared db document games/<code>.
    Anywhere else (a normal website) the two browsers connect directly over WebRTC (PeerJS),
-   the code becomes the host's peer id, and both sides mirror the same document shape. */
+   the code becomes the host's peer id, and both sides mirror the same document shape.
+   The host (先手) settles the element draft and the coin toss. */
 const online = () => cfg.mode==='online';
-function isLocalTurn(p){ return online() ? (!!net.kind && net.opp && p===net.side) : p!==cpuSide(); }
+function isLocalTurn(p){ if (phase!=='play') return false; return online() ? (!!net.kind && net.opp && p===net.side) : p!==cpuSide(); }
 const inClaude = () => !!(window.claude && typeof window.claude.use==='function');
 const PEER_PREFIX='zokusei-othello-v1-';
 const STALE_MS = 30*60*1000;
@@ -1174,7 +1612,7 @@ function deepMerge(t,s){
   for (const k of Object.keys(s)){
     const v=s[k];
     if (v && typeof v==='object' && !Array.isArray(v) && t[k] && typeof t[k]==='object' && !Array.isArray(t[k])) deepMerge(t[k],v);
-    else t[k] = (v && typeof v==='object') ? JSON.parse(JSON.stringify(v)) : v;
+    else t[k] = (v && typeof v==='object') ? clone(v) : v;
   }
   return t;
 }
@@ -1183,31 +1621,47 @@ async function netWrite(patch){
     try { await net.ref.update(patch); }
     catch(e){
       if (e && e.code==='invalid_argument') netMsg('このページに書き込む権限がないため、手を送れません。共有元に「Contributor」以上の権限をもらってください。');
-      else toast('通信に失敗しました。もう一度置いてみてください');
+      else toast('通信に失敗しました。もう一度試してください');
     }
   } else if (net.kind==='p2p' && net.shared){
     deepMerge(net.shared,patch);
     if (net.conn && net.conn.open) net.conn.send({t:'patch',p:patch});
   }
 }
+function stateFields(S){
+  return {board:S.board.slice(), turn:S.turn, over:!!S.over, lastMove:S.lastMove??-1, burns:clone(S.burns||[]), guards:clone(S.guards||[]),
+    used:{1:S.used[1]||0,2:S.used[2]||0}, extra:S.extra||0, cardThisTurn:!!S.cardThisTurn, pass:S.pass||0, blind:S.blind||0,
+    pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice()};
+}
 function sendState(S,act){
   if (!online() || !net.kind) return;
   net.seq++;
-  netWrite({board:S.board.slice(), turn:S.turn, over:!!S.over, lastMove:S.lastMove??-1, burns:S.burns.map(b=>({...b})),
-    used:{1:S.used[1]||0,2:S.used[2]||0}, extra:S.extra||0, cardThisTurn:!!S.cardThisTurn, pass:S.pass||0,
-    act, seq:net.seq, updated:Date.now()});
+  netWrite({...stateFields(S), act, seq:net.seq, updated:Date.now()});
 }
 function validDoc(d){ return d && Array.isArray(d.board) && d.board.length===64 && d.board.every(v=>v===0||v===1||v===2) && (d.turn===1||d.turn===2); }
+function syncPhase(d){
+  if (d.picks && typeof d.picks==='object') picks={1:EL_ORDER.includes(d.picks[1])?d.picks[1]:'', 2:EL_ORDER.includes(d.picks[2])?d.picks[2]:''};
+  const ph = ['draft','coin','play'].includes(d.phase) ? d.phase : 'play';
+  if (ph==='draft' && phase!=='draft'){ clearDraftTimers(); phase='draft'; coinInfo=null; }
+  else if (ph==='coin' && phase!=='coin' && d.coin && EL_ORDER.includes(d.coin.el)){
+    phase='coin'; coinInfo={winner:d.coin.winner===2?2:1, loser:d.coin.winner===2?1:2, el:d.coin.el, stage:'spin'}; playCoin();
+  }
+  else if (ph==='play' && phase!=='play' && d.el && EL_ORDER.includes(d.el[1]) && EL_ORDER.includes(d.el[2])){
+    clearDraftTimers(); phase='play'; coinInfo=null; cfg.el={1:d.el[1],2:d.el[2]}; setTimeout(revealFx,60);
+  }
+  if (phase==='play' && d.el && EL_ORDER.includes(d.el[1]) && EL_ORDER.includes(d.el[2])) cfg.el={1:d.el[1],2:d.el[2]};
+  maybeResolve();
+}
 function onNet(d){
   if (!net.kind || !d) return;
   const seats=d.seats||{};
   if (seats[net.side] && seats[net.side]!==ME){ netMsg('この席にほかの人が入りました。別の数字で部屋を作ってください。'); leaveRoom(true); return; }
   const hadOpp=net.opp;
   net.opp=!!(seats[1] && seats[2]);
-  if (net.opp && !hadOpp) toast('相手が入室しました。対戦開始！');
+  if (net.opp && !hadOpp) toast('相手が入室しました。属性を選んでください');
   if (!net.opp && hadOpp) toast('相手が退出しました');
-  if (d.el && EL_ORDER.includes(d.el[1]) && EL_ORDER.includes(d.el[2]) && (d.el[1]!==cfg.el[1] || d.el[2]!==cfg.el[2])){ cfg.el={1:d.el[1],2:d.el[2]}; updateAmbience(); }
-  if ((d.seq||0) > net.seq && validDoc(d)){ net.seq=d.seq; net.queue.push(JSON.parse(JSON.stringify(d))); drainNet(); }
+  syncPhase(d);
+  if ((d.seq||0) > net.seq && validDoc(d)){ net.seq=d.seq; net.queue.push(clone(d)); drainNet(); }
   paintNetStatus();
   if (!busy) render();
 }
@@ -1216,10 +1670,10 @@ function drainNet(){
 }
 function applyRemote(d){
   const a=Array.isArray(d.act) ? d.act : null;
-  d.burns=Array.isArray(d.burns)?d.burns:[]; d.used=d.used||{1:0,2:0};
+  d.burns=Array.isArray(d.burns)?d.burns:[]; d.guards=Array.isArray(d.guards)?d.guards:[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas();
   if (!a){ resetLocal(d); return; }
   const kind=a[0], p=a[1];
-  if (p!==net.side && turn===p && !over){
+  if (phase==='play' && p!==net.side && turn===p && !over){
     if (kind==='place'){
       const idx=a[2];
       if (legal(board,p).includes(idx)){
@@ -1234,12 +1688,13 @@ function applyRemote(d){
 }
 function paintNetStatus(){
   if (!net.kind) return;
-  const me=ELS[cfg.el[net.side]];
+  const tail = phase==='play' ? `（<strong>${ELS[cfg.el[net.side]].k}</strong>）` : '';
   netMsg(net.opp
-    ? `部屋 <strong>${net.code}</strong> で対戦中。あなたは${net.side===1?'先手':'後手'}（<strong>${me.k}</strong>）です。`
+    ? `部屋 <strong>${net.code}</strong> で対戦中。あなたは${roleOf(net.side)}${tail}です。`
     : `部屋 <strong>${net.code}</strong> を作りました。相手が同じ数字で「部屋に入る」を押すのを待っています…`);
 }
-function roomDoc(S,seats){ return {...S, act:null, seq:net.seq, seats, el:{1:cfg.el[1],2:cfg.el[2]}, updated:Date.now()}; }
+function roomDoc(S,seats){ return {...stateFields(S), act:null, seq:net.seq, seats, el:{1:cfg.el[1],2:cfg.el[2]}, phase:'draft', picks:{1:'',2:''}, coin:null, updated:Date.now()}; }
+function enterHostDraft(){ clearDraftTimers(); phase='draft'; picks={1:'',2:''}; coinInfo=null; }
 
 /* db transport (inside Claude) */
 let dbP=null, userP=null;
@@ -1270,7 +1725,7 @@ async function hostDb(code){
     net.seq=(d && d.seq || 0)+1;
     await ref.set(roomDoc(S,{1:ME,2:''}));
     Object.assign(net,{kind:'db',ref,code,side:1,opp:false,queue:[]});
-    resetLocal(S); attachDb();
+    enterHostDraft(); resetLocal(S); attachDb();
   } catch(e){ netMsg('部屋を作れませんでした。少し待ってからもう一度試してください。'); }
 }
 async function joinDb(code){
@@ -1289,13 +1744,10 @@ async function joinDb(code){
     if (seats[1]===ME) side=1;
     else if (seats[2]===ME || !seats[2] || !fresh) side=2;
     else { netMsg('この部屋はもう2人そろっています。'); return; }
-    const els={1:d.el?.[1]||'dark', 2:d.el?.[2]||'light'};
-    if (side===2 && els[2]===els[1]) els[2]=EL_ORDER.find(k=>k!==els[1]);
-    cfg.el={...els};
-    await ref.update({seats:{[side]:ME}, el:{[side]:els[side]}, updated:Date.now()});
+    await ref.update({seats:{[side]:ME}, updated:Date.now()});
     Object.assign(net,{kind:'db',ref,code,side,opp:false,queue:[],seq:d.seq||0});
-    d.burns=d.burns||[]; d.used=d.used||{1:0,2:0};
-    resetLocal(d); attachDb();
+    d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
+    phase=''; syncPhase(d); resetLocal(d); attachDb();
   } catch(e){ netMsg('部屋に入れませんでした。少し待ってからもう一度試してください。'); }
 }
 function attachDb(){
@@ -1333,7 +1785,7 @@ async function hostP2P(code){
     net.seq=1;
     net.shared=roomDoc(S,{1:ME,2:''});
     Object.assign(net,{kind:'p2p',code,side:1,opp:false,queue:[]});
-    resetLocal(S); paintOnline(); paintNetStatus(); render();
+    enterHostDraft(); resetLocal(S); paintOnline(); paintNetStatus(); render();
   });
   peer.on('connection',conn=>{
     if (net.conn && net.conn.open){ conn.on('open',()=>{ conn.send({t:'full'}); setTimeout(()=>conn.close(),500); }); return; }
@@ -1341,9 +1793,7 @@ async function hostP2P(code){
     conn.on('data',msg=>{
       if (!msg || typeof msg!=='object' || !net.shared) return;
       if (msg.t==='hello'){
-        let el2 = EL_ORDER.includes(msg.el) ? msg.el : 'light';
-        if (el2===net.shared.el[1]) el2=EL_ORDER.find(k=>k!==net.shared.el[1]);
-        deepMerge(net.shared,{seats:{2:String(msg.me||'guest').slice(0,40)}, el:{2:el2}, updated:Date.now()});
+        deepMerge(net.shared,{seats:{2:String(msg.me||'guest').slice(0,40)}, updated:Date.now()});
         conn.send({t:'state', d:net.shared});
         onNet(net.shared);
       } else if (msg.t==='patch' && msg.p && typeof msg.p==='object'){
@@ -1366,17 +1816,16 @@ async function joinP2P(code){
   peer.on('open',()=>{
     const conn=peer.connect(PEER_PREFIX+code,{reliable:true}); net.conn=conn;
     timer=setTimeout(()=>{ if(!net.kind){ netMsg(`合言葉 <strong>${code}</strong> の部屋に入れませんでした。相手が「部屋を作る」を押したまま待っているか確かめてください。`); cleanupPeer(); } },12000);
-    conn.on('open',()=>conn.send({t:'hello',me:ME,el:cfg.el[2]}));
+    conn.on('open',()=>conn.send({t:'hello',me:ME}));
     conn.on('data',msg=>{
       if (!msg || typeof msg!=='object') return;
       if (msg.t==='full'){ clearTimeout(timer); netMsg('この部屋はもう2人そろっています。'); cleanupPeer(); return; }
       if (msg.t==='state' && !net.kind && validDoc(msg.d)){
         clearTimeout(timer);
-        const d=msg.d; d.burns=d.burns||[]; d.used=d.used||{1:0,2:0};
-        net.shared=JSON.parse(JSON.stringify(d));
+        const d=msg.d; d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
+        net.shared=clone(d);
         Object.assign(net,{kind:'p2p',code,side:2,opp:false,queue:[],seq:d.seq||0});
-        if (d.el) cfg.el={1:d.el[1],2:d.el[2]};
-        resetLocal(d); onNet(net.shared); paintOnline(); paintNetStatus();
+        phase=''; syncPhase(d); resetLocal(d); onNet(net.shared); paintOnline(); paintNetStatus();
         return;
       }
       if (msg.t==='patch' && net.shared && msg.p && typeof msg.p==='object'){ deepMerge(net.shared,msg.p); onNet(net.shared); }
@@ -1404,22 +1853,38 @@ $('leave').addEventListener('click',()=>{ leaveRoom(); newGame(); });
 $('code').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/g,'').slice(0,4); });
 addEventListener('pagehide',()=>{ if (net.kind==='db' && net.ref && net.side) net.ref.update({seats:{[net.side]:''}, updated:Date.now()}).catch(()=>{}); try { net.peer && net.peer.destroy(); } catch(e){} });
 
+/* ---------- skill guide ---------- */
+function buildHelp(){
+  const body=$('helpBody');
+  body.innerHTML = `<ul class="h-rules">
+    <li>対局の最初に、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
+    <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら</strong>、それ以外は<strong>空きマスが残り${LATE}以下の後半</strong>から使えます。</li>
+    <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
+    <li>パッシブスキルは条件を満たすと自動で発動します。</li>
+  </ul>` + EL_ORDER.map(k=>{
+    const E=ELS[k], C=CARDS[k], PS=PASSIVES[k];
+    return `<section class="h-el" style="--ec:${E.c1}">
+      <div class="hk">${E.k}</div>
+      <div class="hn">${E.name}</div>
+      <dl>
+        <dt>カード</dt><dd>${C.name}<br><small>${C.desc}（${C.uses}回）</small></dd>
+        <dt>パッシブ</dt><dd>${PS.name}<br><small>${PS.desc}</small></dd>
+        <dt>角を取ると</dt><dd>${E.ult}<br><small>属性ごとの必殺演出</small></dd>
+      </dl>
+    </section>`;
+  }).join('');
+}
+buildHelp();
+let helpReturn=null;
+function openHelp(){ helpReturn=document.activeElement; $('helpBox').hidden=false; $('helpClose').focus(); }
+function closeHelp(){ $('helpBox').hidden=true; if (helpReturn && helpReturn.focus) helpReturn.focus(); }
+$('help').addEventListener('click',openHelp);
+$('helpClose').addEventListener('click',closeHelp);
+$('helpBox').addEventListener('click',e=>{ if (e.target.id==='helpBox') closeHelp(); });
+addEventListener('keydown',e=>{ if (e.key==='Escape' && !$('helpBox').hidden) closeHelp(); });
+
 /* ---------- controls ---------- */
 for (const p of [1,2]){
-  const s=$('el'+p);
-  EL_ORDER.forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=`${ELS[k].k}（${ELS[k].name}）`; s.appendChild(o); });
-  s.addEventListener('change',()=>{
-    const v=s.value, other=3-p;
-    aim=0;
-    if (online() && net.kind){
-      if (cfg.el[other]===v){ toast('相手と同じ属性は選べません'); s.value=cfg.el[p]; return; }
-      cfg.el[p]=v; updateAmbience(); render();
-      netWrite({el:{[p]:v}, updated:Date.now()});
-      return;
-    }
-    if (cfg.el[other]===v) cfg.el[other]=cfg.el[p];
-    cfg.el[p]=v; saveCfg(); updateAmbience(); render();
-  });
   $('card'+p).addEventListener('click',()=>{
     if (aim===p){ aim=0; render(); return; }
     if (!canCard(p)) return;
@@ -1438,8 +1903,8 @@ const sndBtn=$('snd');
 function paintSnd(){ sndBtn.textContent=cfg.sound?'効果音 ON':'効果音 OFF'; sndBtn.setAttribute('aria-pressed',cfg.sound); }
 sndBtn.addEventListener('click',()=>{ cfg.sound=!cfg.sound; saveCfg(); paintSnd(); if(cfg.sound) ac(); });
 paintSnd();
-$('newgame').addEventListener('click',newGame);
-$('again').addEventListener('click',newGame);
+$('newgame').addEventListener('click',()=>newGame());
+$('again').addEventListener('click',()=>newGame());
 let demoIdx=0;
 $('demo').addEventListener('click',async()=>{
   if (busy) return; ac();
@@ -1456,12 +1921,12 @@ $('demo').addEventListener('click',async()=>{
 /* ---------- boot (keeps a local game alive across page updates) ---------- */
 function start(data){
   paintOnline();
-  if (!online() && data && validDoc(data)){
-    const S={...freshState(), ...data, burns:Array.isArray(data.burns)?data.burns:[], used:data.used||{1:0,2:0}, pass:0};
-    resetLocal(S);
+  if (!online() && data && data.phase==='play' && validDoc(data) && data.el && EL_ORDER.includes(data.el[1]) && EL_ORDER.includes(data.el[2])){
+    cfg.el={1:data.el[1],2:data.el[2]}; phase='play';
+    resetLocal({...freshState(), ...data, burns:data.burns||[], guards:data.guards||[], used:data.used||{1:0,2:0}, pas:data.pas||freshPas(), pass:0, ev:[]});
   } else newGame();
 }
-window.claude?.hot?.snapshot?.(()=>curState());
+window.claude?.hot?.snapshot?.(()=>({...curState(), phase, el:{...cfg.el}}));
 const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 })();
