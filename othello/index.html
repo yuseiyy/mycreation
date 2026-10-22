@@ -528,7 +528,12 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
     radial-gradient(circle at 40% 35%,#fffdf0 0%,#efe2b8 55%,#c8a96a 80%,#8a6420 92%);
   box-shadow:0 0 0 2px #b8862e,0 0 12px #e6c26a88,0 3px 6px #000a;color:#5a3e08;
 }
-.aura[data-el="ninja"]{inset:-4%;border:1px dashed #7bd88f88;animation:auraSpin 6s linear infinite}
+.aura[data-el="ninja"]{inset:-16%;background:linear-gradient(135deg,#e8ecf4,#7a8090);clip-path:polygon(50% 0,57% 43%,100% 50%,57% 57%,50% 100%,43% 57%,0 50%,43% 43%);opacity:.6;animation:auraSpin 2.4s linear infinite}
+.dragonfly,.ninjafly{will-change:transform}
+.ninjafly{position:fixed;left:0;top:0;z-index:5;pointer-events:none;filter:drop-shadow(0 0 6px #7bd88f88)}
+.ninjafly svg{width:100%;height:auto;display:block}
+.scene.kuji{display:grid;place-items:center;background:radial-gradient(circle,#0a160ecc,#000c 70%)}
+.scene.kuji .kj{font-family:"Yuji Syuku","Yuji Boku",serif;font-size:min(46vw,46vh);line-height:1;color:#e8f5e0;text-shadow:0 0 30px #7bd88f,0 0 60px #2b3a67,0 6px 0 #000}
 .aura[data-el="dragon"]{inset:-16% 6% 22% 6%;border-radius:50% 50% 40% 40%;background:radial-gradient(ellipse 50% 60% at 50% 75%,#bff0ffcc,#3fb6ff77 45%,transparent 72%);filter:blur(2px);transform-origin:50% 100%;animation:flicker .3s steps(2) infinite alternate}
 .aura[data-el="dragon"]::before,.aura[data-el="dragon"]::after{content:"";position:absolute;bottom:20%;width:42%;height:120%;border-radius:50% 50% 30% 30%/70% 70% 30% 30%;background:radial-gradient(ellipse 50% 70% at 50% 90%,#ffffff,#3fb6ff 40%,#1a3fa0aa 65%,transparent 80%);filter:blur(1.5px);transform-origin:50% 100%}
 .aura[data-el="dragon"]::before{left:6%;animation:tongue .55s ease-in-out infinite alternate}
@@ -921,7 +926,7 @@ function cpuPick(b,p){
 }
 
 /* ---------- audio ---------- */
-let AC=null, master=null, NB=null;
+let AC=null, master=null, NB=null, pageAway=false, lastFrameAt=performance.now();
 function ac(){
   if (!cfg.sound) return null;
   if (!AC){
@@ -931,7 +936,7 @@ function ac(){
       master = AC.createGain(); master.gain.value = 0.55; master.connect(comp).connect(AC.destination);
     } catch(e){ AC=null; return null; }
   }
-  if (AC.state==='suspended') AC.resume();
+  if (AC.state==='suspended' && !pageAway) AC.resume();
   return AC;
 }
 function noiseBuf(a){ if(!NB){ NB=a.createBuffer(1,a.sampleRate*2,a.sampleRate); const d=NB.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; } return NB; }
@@ -1058,6 +1063,7 @@ function fireCol(k){ return k<.18?'#fffbe0':k<.4?'#ffc04a':k<.7?'#ff5a1f':'#a315
 
 let lastT=performance.now();
 function loop(now){
+  lastFrameAt=performance.now();
   try { frame(now); } catch(e){ console.error(e); cx.restore && cx.setTransform(DPR,0,0,DPR,0,0); }
   requestAnimationFrame(loop);
 }
@@ -1087,10 +1093,11 @@ function frame(now){
   for(const p of P){ if(p.mode!=='smoke') continue; const k=p.t/p.life; cx.globalAlpha=(1-k)*(p.alpha??.5); cx.fillStyle=p.color; cx.beginPath(); cx.arc(p.x,p.y,p.size*(1+k*1.6),0,TAU); cx.fill(); }
   for(const p of P){ if(p.mode==='ghost') drawGhost(p); }
   for(const p of P){
-    if (p.mode!=='chunk' && p.mode!=='coin' && p.mode!=='shuriken' && p.mode!=='leaf') continue;
+    if (p.mode!=='chunk' && p.mode!=='coin' && p.mode!=='shuriken' && p.mode!=='leaf' && p.mode!=='kunai') continue;
     const k=p.t/p.life; cx.globalAlpha=Math.min(1,(1-k)*2); cx.save(); cx.translate(p.x,p.y); cx.rotate((p.rot||0)+p.t*(p.spin||6));
     if (p.mode==='coin'){ cx.scale(Math.cos(p.t*9+(p.rot||0)),1); cx.fillStyle=p.color; cx.beginPath(); cx.arc(0,0,p.size,0,TAU); cx.fill(); cx.strokeStyle='#7a5410'; cx.lineWidth=Math.max(.5,p.size*.2); cx.stroke(); }
     else if (p.mode==='shuriken'){ cx.fillStyle=p.color; cx.beginPath(); for (let j=0;j<8;j++){ const rr=j%2?p.size*.28:p.size, an=j*Math.PI/4; cx.lineTo(Math.cos(an)*rr,Math.sin(an)*rr); } cx.closePath(); cx.fill(); cx.fillStyle='#16161c'; cx.beginPath(); cx.arc(0,0,p.size*.18,0,TAU); cx.fill(); }
+    else if (p.mode==='kunai'){ const z=p.size; cx.fillStyle='#d8dce6'; cx.beginPath(); cx.moveTo(z,0); cx.lineTo(0,-z*.24); cx.lineTo(-z*.2,0); cx.lineTo(0,z*.24); cx.closePath(); cx.fill(); cx.fillStyle='#2a2a30'; cx.fillRect(-z*.95,-z*.08,z*.78,z*.16); cx.strokeStyle='#2a2a30'; cx.lineWidth=1.2; cx.beginPath(); cx.arc(-z*1.12,0,z*.16,0,TAU); cx.stroke(); }
     else if (p.mode==='leaf'){ cx.fillStyle=p.color; cx.beginPath(); cx.ellipse(0,0,p.size,p.size*.3,0,0,TAU); cx.fill(); cx.strokeStyle='#2e6b45'; cx.lineWidth=.6; cx.beginPath(); cx.moveTo(-p.size,0); cx.lineTo(p.size,0); cx.stroke(); }
     else { cx.fillStyle=p.color; cx.beginPath(); cx.moveTo(-p.size,-p.size*.4); cx.lineTo(-p.size*.2,-p.size); cx.lineTo(p.size,-p.size*.3); cx.lineTo(p.size*.6,p.size); cx.lineTo(-p.size*.7,p.size*.7); cx.closePath(); cx.fill(); }
     cx.restore();
@@ -1130,7 +1137,7 @@ function frame(now){
   }
   // glow particles
   for(const p of P){
-    if (p.mode==='smoke'||p.mode==='ghost'||p.mode==='chunk'||p.mode==='coin'||p.mode==='shuriken'||p.mode==='leaf') continue;
+    if (p.mode==='smoke'||p.mode==='ghost'||p.mode==='chunk'||p.mode==='coin'||p.mode==='shuriken'||p.mode==='leaf'||p.mode==='kunai') continue;
     const k=p.t/p.life; let a=1-k; let s=p.size;
     if (p.tw) { s*=.55+.45*Math.sin(p.t*p.tw+p.x); a*=Math.min(1,p.t*3); }
     const col = p.mode==='fire' ? fireCol(k) : p.mode==='bfire' ? bfireCol(k) : p.color;
@@ -1231,6 +1238,7 @@ function burst(el,x,y,pw=1,i=0){
     ring(x,y,{vr:260*pw,life:.4,w:5*pw,color:E.c1});
   } else if (el==='ninja'){
     for(let j=0;j<8*n;j++){ const a=rnd(0,TAU), s=rnd(200,520)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.93,life:rnd(.35,.7),size:rnd(4,7),color:pick(['#c8ccd8','#9aa0aa']),mode:'shuriken',rot:rnd(0,TAU),spin:22}); }
+    for(let j=0;j<5*n;j++){ const a=rnd(0,TAU), s=rnd(300,640)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.94,life:rnd(.3,.55),size:rnd(7,10),color:'#d8dce6',mode:'kunai',rot:a,spin:.001}); }
     for(let j=0;j<14*n;j++){ const a=rnd(0,TAU), s=rnd(60,240)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,g:160,drag:.96,life:rnd(.7,1.3),size:rnd(4,8),color:pick(['#7bd88f','#9be8a6','#4fa868']),mode:'leaf',rot:rnd(0,TAU),spin:rnd(-6,6)}); }
     for(let j=0;j<8*n;j++){ const a=rnd(0,TAU), s=rnd(20,90); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.95,life:rnd(.6,1),size:rnd(10,18)*pw,color:'#8a8f98',mode:'smoke',alpha:.4}); }
     LINES.push({x1:x-30*pw,y1:y+20*pw,x2:x+30*pw,y2:y-20*pw,t:0,delay:0,life:.3,draw:.06,color:'#ffffff',w:2});
@@ -1363,6 +1371,7 @@ async function ultimate(el,x,y,top='CORNER BREAK'){
     undim(1700);
   } else if (el==='ninja'){
     dim('radial-gradient(circle at 50% 70%, rgba(20,50,30,.5), rgba(5,10,8,.9))',300);
+    await kujiIn();
     await bambooScene();
     flash('#e8f5e0',.5,400); shake(30);
     for(let i=0;i<40*FXQ;i++){ const a=rnd(0,TAU), s=rnd(300,900); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.93,life:rnd(.4,.8),size:rnd(5,9),color:pick(['#c8ccd8','#9aa0aa']),mode:'shuriken',rot:rnd(0,TAU),spin:24}); }
@@ -1371,9 +1380,14 @@ async function ultimate(el,x,y,top='CORNER BREAK'){
     dim('radial-gradient(circle at 50% 50%, rgba(10,30,80,.6), rgba(0,4,16,.95))',300);
     roar(1.4);
     flyDragon(-W*.4,H*.85,W*1.4,H*.15,1300,Math.min(W,H)*.75);
-    await wait(900);
-    flyDragon(W*1.4,H*.6,-W*.4,y,1100,Math.min(W,H)*.6);
-    await wait(900);
+    setTimeout(()=>flyDragon(W*1.4,H*.25,-W*.4,H*.75,1200,Math.min(W,H)*.55),350);
+    setTimeout(()=>flyDragon(-W*.3,H*.15,W*1.3,H*.55,1100,Math.min(W,H)*.45),700);
+    await wait(1300);
+    roar(1.7);
+    flyDragon(W*1.7,H*.55,-W*.7,H*.42,1700,Math.max(W,H)*1.35,{alpha:.94});
+    await wait(1350);
+    flyDragon(W*1.4,H*.6,-W*.4,y,900,Math.min(W,H)*.6);
+    await wait(700);
     flash('#bff0ff',.8,700); shake(44);
     for(let i=0;i<5;i++) ring(x,y,{vr:650+i*320,life:1.1,w:12-i*2,color:i%2?E.c2:E.c1});
     for(let i=0;i<380*FXQ;i++){ const a=rnd(0,TAU), s=rnd(150,1000); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-120,g:-100,drag:.92,life:rnd(.6,1.4),size:rnd(4,14),mode:'bfire'}); }
@@ -1452,9 +1466,12 @@ function spawnAmbient(el){
     if (Math.random()<.1) part({x,y:H+10,vx:rnd(-10,10),vy:-rnd(20,50),drag:.995,life:rnd(2,3),size:rnd(20,40),color:'#2a2016',mode:'smoke',alpha:.4});
   } else if (el==='ninja'){
     part({x,y,vx:ix*40+rnd(-20,20),vy:rnd(10,50),g:40,drag:.99,life:rnd(2,3),size:rnd(4,7),color:pick(['#7bd88f','#9be8a6','#4fa868']),mode:'leaf',rot:rnd(0,TAU),spin:rnd(-3,3)});
+    if (Math.random()<.04*amb.level){ const fromL=Math.random()<.5, yy=rnd(H*.1,H*.9); part({x:fromL?-10:W+10,y:yy,vx:(fromL?1:-1)*rnd(600,900),vy:rnd(-40,40),drag:1,life:2,size:7,color:'#c8ccd8',mode:'shuriken',spin:30}); }
+    if (Math.random()<.004*amb.level){ const h=Math.min(W,H)*.12, yy=H-h*.6; ninjaDash(-h,yy,W+h,yy,900,h,{alpha:.5,quiet:true}); }
   } else if (el==='dragon'){
     if (Math.random()<.6){ x=rnd(0,W); y=H+5; }
     part({x,y,vx:ix*30+rnd(-20,20),vy:-rnd(50,160),g:-20,drag:.995,life:rnd(1.6,3),size:rnd(1.5,4.5),mode:'bfire',wob:3});
+    if (Math.random()<.006*amb.level){ const w=Math.min(W,H)*.3, fromL=Math.random()<.5, yy=rnd(H*.08,H*.35); flyDragon(fromL?-w:W+w,yy,fromL?W+w:-w,yy+rnd(-60,60),2600,w,{alpha:.4,quiet:true}); }
   } else if (el==='time'){
     part({x,y,vx:ix*20+rnd(-8,8),vy:iy*20+rnd(-8,8),drag:.998,life:rnd(2,3),size:rnd(1.4,2.6),color:pick([E.c1,E.c3]),tw:6});
   } else {
@@ -2264,6 +2281,10 @@ async function doMove(idx, remoteS){
   discs[idx].animate([{transform:'translateZ(120px) scale(2.2)',opacity:0},{transform:'translateZ(0) scale(.92)',opacity:1,offset:.75},{transform:'scale(1)'}],{duration:corner?520:260,easing:'cubic-bezier(.3,1.4,.5,1)'});
   sfx(el,'place');
   if (strike) thunderStrike(x,y);
+  if (!corner && !cfg.lite){
+    if (el==='dragon'){ const fromL=Math.random()<.5, w=Math.min(W,H)*.34; flyDragon(fromL?-w:W+w, y+rnd(-140,-60), fromL?W+w:-w, y+rnd(-50,30), 1000, w); tone('sawtooth',110,60,.5,.07); }
+    if (el==='ninja') shadowClones(x,y,cells[idx].getBoundingClientRect().width);
+  }
   if (corner){
     shake(14);
     await ultimate(el,x,y);
@@ -2512,6 +2533,7 @@ async function playCard(el,p,targets,myGen){
     await wait(650); if (!alive()) return;
     [[ax,ay],[bx2,by2]].forEach(([x,y])=>{ for (let j=0;j<22*FXQ;j++){ const ang=rnd(0,TAU), s=rnd(30,150); part({x,y,vx:Math.cos(ang)*s,vy:Math.sin(ang)*s,drag:.94,life:rnd(.7,1.2),size:rnd(14,26),color:'#8a8f98',mode:'smoke',alpha:.55}); } });
     nz('lowpass',1500,120,.35,.5); tone('sine',160,70,.25,.5);
+    { const ch=cells[a].getBoundingClientRect().height*1.7; ninjaDash(ax,ay-ch*.2,bx2,by2-ch*.2,520,ch); ninjaDash(bx2,by2-ch*.2,ax,ay-ch*.2,520,ch,{quiet:true}); }
     const da=discs[a], db=discs[b];
     da.animate([{transform:'none'},{transform:`translate(${(bx2-ax)/2}px,${(by2-ay)/2-40}px) scale(.6)`,opacity:.4,offset:.5},{transform:`translate(${bx2-ax}px,${by2-ay}px)`}],{duration:520,easing:'cubic-bezier(.5,0,.5,1)'});
     db.animate([{transform:'none'},{transform:`translate(${(ax-bx2)/2}px,${(ay-by2)/2+40}px) scale(.6)`,opacity:.4,offset:.5},{transform:`translate(${ax-bx2}px,${ay-by2}px)`}],{duration:520,easing:'cubic-bezier(.5,0,.5,1)'});
@@ -2532,6 +2554,9 @@ async function playCard(el,p,targets,myGen){
     const ang=Math.atan2(by2-ay,bx2-ax), ext=Math.max(W,H)*.65;
     const x0=ax-Math.cos(ang)*ext, y0=ay-Math.sin(ang)*ext, x1=bx2+Math.cos(ang)*ext, y1=by2+Math.sin(ang)*ext, L=Math.hypot(x1-x0,y1-y0), dur=1300;
     flyDragon(x0,y0,x1,y1,dur,Math.min(W,H)*.55);
+    { const off=cells[line[0]].getBoundingClientRect().width*1.8, nx=-Math.sin(ang)*off, ny=Math.cos(ang)*off;
+      setTimeout(()=>flyDragon(x0+nx,y0+ny,x1+nx,y1+ny,dur,Math.min(W,H)*.32,{alpha:.8}),140);
+      setTimeout(()=>flyDragon(x0-nx,y0-ny,x1-nx,y1-ny,dur,Math.min(W,H)*.32,{alpha:.8}),260); }
     line.forEach((i,k)=>{
       const [cx2,cy2]=center(i), d=Math.hypot(cx2-x0,cy2-y0);
       setTimeout(()=>{
@@ -2975,31 +3000,103 @@ async function fxQuake(idx, movesTxt){
 }
 /* ---------- 忍・竜・時: scenes and passive effects ---------- */
 function bfireCol(k){ return k<.18?'#ffffff':k<.4?'#bff0ff':k<.7?'#3fb6ff':'#1a3fa0'; }
-// an eastern dragon, head to the right, wreathed in blue
+// an eastern dragon, head to the right: horns, mane, whiskers, clawed legs, tail fin
 function dragonSvg(){
-  return `<svg viewBox="0 0 400 140" aria-hidden="true"><defs><linearGradient id="dgb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a1f5a" stop-opacity="0"/><stop offset=".25" stop-color="#1a3fa0"/><stop offset=".8" stop-color="#3fb6ff"/><stop offset="1" stop-color="#d8f4ff"/></linearGradient></defs>
-  <path d="M4 78 C 50 34, 92 112, 140 70 S 226 26, 276 66 C 300 84, 322 78, 336 62 L 352 50 L 394 56 L 370 64 L 396 74 L 364 76 C 352 88, 324 100, 294 88 C 256 72, 208 116, 156 94 S 66 48, 18 90 Z" fill="url(#dgb)" stroke="#bff0ff" stroke-width="1.2"/>
-  <path d="M60 56 l6 -14 l6 12 M100 70 l6 -14 l6 13 M170 58 l6 -15 l6 13 M220 46 l6 -15 l6 14 M262 56 l6 -14 l6 13" stroke="#bff0ff" stroke-width="2" fill="none"/>
-  <path d="M346 52 L330 22 L352 46 Z M354 50 L356 18 L362 48 Z" fill="#d8f4ff"/>
-  <circle cx="370" cy="58" r="6" fill="#3fb6ff" opacity=".5"/><circle cx="370" cy="58" r="3" fill="#fff"/>
-  <path d="M388 70 C402 82,404 104,390 116 M380 74 C388 92,382 110,368 120" stroke="#9fe0ff" stroke-width="1.6" fill="none"/>
-  <path d="M120 92 l-8 18 l14 -10 M200 84 l-8 18 l14 -10" stroke="#9fe0ff" stroke-width="2" fill="none"/>
+  return `<svg viewBox="0 0 410 150" aria-hidden="true"><defs>
+    <linearGradient id="dgb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a1f5a" stop-opacity="0"/><stop offset=".22" stop-color="#1a3fa0"/><stop offset=".78" stop-color="#3fb6ff"/><stop offset="1" stop-color="#d8f4ff"/></linearGradient>
+    <linearGradient id="dgm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#3fb6ff"/></linearGradient></defs>
+  <path d="M12 82 l-12 -16 l16 8 l-4 -18 l14 20 Z" fill="#3fb6ff" opacity=".85"/>
+  <path d="M150 96 q-8 14 -18 22 m18 -22 q2 14 10 22 M266 80 q-6 14 -16 22 m16 -22 q4 14 12 20" stroke="#9fe0ff" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M130 118 l-6 4 l2 -6 M164 118 l6 4 l-2 -6 M248 102 l-6 4 l2 -6 M280 100 l6 4 l-2 -6" stroke="#ffffff" stroke-width="2" fill="none"/>
+  <path d="M8 80 C 50 36, 92 114, 140 72 S 226 28, 276 68 C 300 86, 322 80, 336 64 L 352 52 L 400 58 L 374 66 L 404 76 L 368 78 C 356 90, 326 102, 294 90 C 256 74, 208 118, 156 96 S 66 50, 20 92 Z" fill="url(#dgb)" stroke="#bff0ff" stroke-width="1.4"/>
+  <path d="M40 74 C 80 50, 110 96, 150 70 S 230 44, 280 74" stroke="#ffffff" stroke-opacity=".35" stroke-width="2" fill="none" stroke-dasharray="3 6"/>
+  <path d="M60 58 l6 -15 l6 13 M100 72 l6 -15 l6 14 M170 60 l6 -16 l6 14 M220 48 l6 -16 l6 15 M262 58 l6 -15 l6 14" stroke="#bff0ff" stroke-width="2.2" fill="none"/>
+  <path d="M334 62 l-16 -12 l5 13 l-16 -6 l8 13 l-14 -2 l12 11" fill="url(#dgm)" opacity=".95"/>
+  <path d="M346 54 L328 20 L353 48 Z M355 52 L357 14 L364 50 Z" fill="#e8faff" stroke="#3fb6ff" stroke-width=".8"/>
+  <circle cx="374" cy="61" r="7" fill="#3fb6ff" opacity=".5"/><circle cx="374" cy="61" r="3.4" fill="#fff"/><circle cx="375" cy="61" r="1.4" fill="#06123a"/>
+  <path d="M392 72 C408 86,410 110,394 124 M382 76 C392 96,384 116,368 128" stroke="#9fe0ff" stroke-width="1.8" fill="none"/>
+  <path d="M396 74 l10 -2 l-6 6 z" fill="#ffffff"/>
   </svg>`;
 }
-function flyDragon(x0,y0,x1,y1,dur,w){
+function flyDragon(x0,y0,x1,y1,dur,w,opt={}){
   const el=document.createElement('div'); el.className='dragonfly'; el.innerHTML=dragonSvg(); el.style.width=w+'px';
+  if (opt.alpha) el.style.opacity=opt.alpha;
   document.body.appendChild(el);
-  const ang=Math.atan2(y1-y0,x1-x0), deg=ang*180/Math.PI, h=w*140/400;
+  const ang=Math.atan2(y1-y0,x1-x0), deg=ang*180/Math.PI, h=w*150/410;
   el.style.left=(-w/2)+'px'; el.style.top=(-h/2)+'px';
   el.animate([{transform:`translate(${x0}px,${y0}px) rotate(${deg}deg)`},{transform:`translate(${x1}px,${y1}px) rotate(${deg}deg)`}],{duration:dur,easing:'linear',fill:'forwards'});
-  el.firstElementChild.animate([{transform:'scaleY(1)'},{transform:'scaleY(.82)'},{transform:'scaleY(1.08)'},{transform:'scaleY(1)'}],{duration:600,iterations:Infinity});
+  el.firstElementChild.animate([{transform:'scaleY(1) skewX(0deg)'},{transform:'scaleY(.82) skewX(4deg)'},{transform:'scaleY(1.08) skewX(-4deg)'},{transform:'scaleY(1) skewX(0deg)'}],{duration:620,iterations:Infinity});
+  const q = opt.quiet ? .25 : 1;
   emit(dur/1000,(dt,t)=>{
     const k=Math.min(1,t/(dur/1000)), cx0=x0+(x1-x0)*k, cy0=y0+(y1-y0)*k;
-    const hx=cx0+Math.cos(ang)*w*.46, hy=cy0+Math.sin(ang)*w*.46;
-    for (let j=0;j<9*FXQ;j++) part({x:hx+rnd(-6,6),y:hy+rnd(-6,6),vx:Math.cos(ang)*rnd(250,560)+rnd(-80,80),vy:Math.sin(ang)*rnd(250,560)+rnd(-80,80),drag:.92,life:rnd(.3,.65),size:rnd(6,15),mode:'bfire'});
-    for (let j=0;j<4*FXQ;j++){ const s=rnd(-.45,.4); part({x:cx0+Math.cos(ang)*w*s+rnd(-10,10),y:cy0+Math.sin(ang)*w*s+rnd(-10,10),vx:rnd(-30,30),vy:rnd(-60,-10),drag:.95,life:rnd(.4,.8),size:rnd(4,9),mode:'bfire'}); }
+    const hx=cx0+Math.cos(ang)*w*.47, hy=cy0+Math.sin(ang)*w*.47;
+    for (let j=0;j<9*FXQ*q;j++) part({x:hx+rnd(-6,6),y:hy+rnd(-6,6),vx:Math.cos(ang)*rnd(250,560)+rnd(-80,80),vy:Math.sin(ang)*rnd(250,560)+rnd(-80,80),drag:.92,life:rnd(.3,.65),size:rnd(6,15)*(w/300),mode:'bfire'});
+    for (let j=0;j<4*FXQ*q;j++){ const s=rnd(-.45,.4); part({x:cx0+Math.cos(ang)*w*s+rnd(-10,10),y:cy0+Math.sin(ang)*w*s+rnd(-10,10),vx:rnd(-30,30),vy:rnd(-60,-10),drag:.95,life:rnd(.4,.8),size:rnd(4,9)*(w/300),mode:'bfire'}); }
   });
   setTimeout(()=>el.remove(), dur+60);
+}
+// a running ninja in silhouette: hood, red headband tails, katana on the back, kunai in hand
+function ninjaSvg(c='#0c0f1a'){
+  return `<svg viewBox="0 0 120 100" aria-hidden="true"><g fill="none" stroke="${c}" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M58 27 L28 8" stroke="#9aa0aa" stroke-width="2.6"/>
+    <path d="M66 32 L52 58" stroke-width="16"/><path d="M64 37 L82 41 L96 35" stroke-width="8.5"/><path d="M62 37 L46 45 L36 39" stroke-width="8.5"/>
+    <path d="M52 58 L66 74 L84 80" stroke-width="10"/><path d="M52 58 L40 76 L24 76" stroke-width="10"/>
+    <path d="M60 30 C 48 34, 40 30, 30 36" stroke="#2b3a67" stroke-width="5"/></g>
+    <circle cx="70" cy="22" r="11" fill="${c}"/><rect x="68" y="19" width="11" height="3.2" rx="1.6" fill="#e8f5e0"/>
+    <path d="M62 18 C 50 13, 40 22, 24 15 M62 21 C 52 23, 44 31, 28 29" stroke="#d0303a" stroke-width="3" fill="none" stroke-linecap="round"><animate attributeName="d" dur=".35s" repeatCount="indefinite" values="M62 18 C 50 13, 40 22, 24 15 M62 21 C 52 23, 44 31, 28 29;M62 18 C 50 19, 40 12, 24 19 M62 21 C 52 17, 44 33, 28 25;M62 18 C 50 13, 40 22, 24 15 M62 21 C 52 23, 44 31, 28 29"/></path>
+    <path d="M96 35 l12 -5 l-9 9 z" fill="#d8dce6"/>
+  </svg>`;
+}
+// a ninja dashes across, leaving afterimages behind
+function ninjaDash(x0,y0,x1,y1,dur,h,opt={}){
+  const w=h*1.2, flip=x1<x0 ? -1 : 1, make=(op)=>{ const el=document.createElement('div'); el.className='ninjafly'; el.innerHTML=ninjaSvg(); el.style.width=w+'px'; el.style.left=(-w/2)+'px'; el.style.top=(-h/2)+'px'; el.style.opacity=op; document.body.appendChild(el); return el; };
+  const el=make(opt.alpha||1);
+  el.animate([{transform:`translate(${x0}px,${y0}px) scaleX(${flip})`},{transform:`translate(${x1}px,${y1}px) scaleX(${flip})`}],{duration:dur,easing:'cubic-bezier(.6,0,.4,1)',fill:'forwards'});
+  const n=Math.max(3,Math.floor(dur/60));
+  for (let k=1;k<n;k++) setTimeout(()=>{
+    const t=k/n, e=t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2, ghost=make(.4*(opt.alpha||1));
+    ghost.style.transform=`translate(${x0+(x1-x0)*e}px,${y0+(y1-y0)*e}px) scaleX(${flip})`; ghost.style.filter='brightness(.6) blur(.5px)';
+    ghost.animate([{opacity:.4*(opt.alpha||1)},{opacity:0}],{duration:280,fill:'forwards'}); setTimeout(()=>ghost.remove(),300);
+  }, k*dur/n);
+  setTimeout(()=>el.remove(), dur+40);
+  if (!opt.quiet) nz('bandpass',600,3600,Math.min(.3,dur/1000),.2,0,1.6);
+}
+// three shadow clones flicker round a square and vanish in smoke
+function shadowClones(x,y,cw){
+  const h=cw*1.4;
+  [[-1,-.6],[1,-.5],[0,.9]].forEach(([dx,dy],k)=>setTimeout(()=>{
+    const el=document.createElement('div'); el.className='ninjafly'; el.innerHTML=ninjaSvg('#1d2846'); const w=h*1.2;
+    el.style.width=w+'px'; el.style.left=(x+dx*cw*.9-w/2)+'px'; el.style.top=(y+dy*cw*.9-h/2)+'px';
+    document.body.appendChild(el);
+    el.animate([{opacity:0,transform:'scale(.6)'},{opacity:.75,transform:'none',offset:.3},{opacity:.75,offset:.7},{opacity:0,transform:'scale(1.1)'}],{duration:520,fill:'forwards'});
+    setTimeout(()=>{ for (let j=0;j<6*FXQ;j++) part({x:x+dx*cw*.9,y:y+dy*cw*.9,vx:rnd(-40,40),vy:rnd(-40,10),drag:.94,life:rnd(.5,.8),size:rnd(8,14),color:'#8a8f98',mode:'smoke',alpha:.4}); el.remove(); }, 540);
+  }, k*70));
+  tone('triangle',3800,2600,.08,.04);
+}
+// 九字: 臨兵闘者皆陣烈在前, then the grid cut in the air
+async function kujiIn(){
+  const ov=document.createElement('div'); ov.className='scene kuji'; ov.innerHTML='<div class="kj"></div>'; document.body.appendChild(ov);
+  ov.animate([{opacity:0},{opacity:1}],{duration:180,fill:'forwards'});
+  const kj=ov.firstElementChild, chars='臨兵闘者皆陣烈在前';
+  for (let k=0;k<chars.length;k++){
+    kj.textContent=chars[k];
+    kj.animate([{transform:'scale(1.8)',opacity:0,filter:'blur(6px)'},{transform:'scale(1)',opacity:1,filter:'none',offset:.4},{transform:'scale(.96)',opacity:.9}],{duration:130,fill:'forwards'});
+    tone('sine',90-k*3,45,.18,.55); tone('triangle',2600+k*120,2200,.06,.04);
+    await wait(125);
+  }
+  kj.textContent='';
+  const s=Math.min(W,H)*.5, x0=W/2-s/2, y0=H/2-s/2;
+  for (let k=0;k<9;k++){
+    const vert=k%2===0, i=Math.floor(k/2), pos=(vert ? i/4 : (i+.5)/4.5);
+    setTimeout(()=>{
+      if (vert) LINES.push({x1:x0+s*pos,y1:y0,x2:x0+s*pos,y2:y0+s,t:0,delay:0,life:.7,draw:.06,color:'#e8f5e0',w:3});
+      else LINES.push({x1:x0,y1:y0+s*pos,x2:x0+s,y2:y0+s*pos,t:0,delay:0,life:.7,draw:.06,color:'#e8f5e0',w:3});
+      nz('highpass',7000,3500,.06,.2);
+    }, k*45);
+  }
+  await wait(480);
+  flash('#e8f5e0',.35,200);
+  ov.animate([{opacity:1},{opacity:0}],{duration:250,fill:'forwards'}); setTimeout(()=>ov.remove(),270);
 }
 function roar(len=1){
   tone('sawtooth',120,55,1.1*len,.16); tone('sawtooth',90,42,1.2*len,.12,.02);
@@ -3024,6 +3121,7 @@ async function bambooScene(){
   [[-.1,.62,1.1,.38],[1.1,.55,-.1,.45],[-.1,.48,1.1,.52]].forEach(([a,b,c,d],k)=>setTimeout(()=>{
     LINES.push({x1:W*a,y1:H*b,x2:W*c,y2:H*d,t:0,delay:0,life:.45,draw:.08,color:'#ffffff',w:3});
     tone('triangle',4200,2600,.18,.08); nz('highpass',8000,4000,.12,.25); flash('#ffffff',.25,120);
+    ninjaDash(W*a,H*b-30,W*c,H*d-30,300,Math.min(W,H)*.2,{quiet:true});
   }, k*110));
   await wait(420);
   ov.querySelectorAll('.stop').forEach(s=>s.animate([{transform:'none'},{transform:`translate(${rnd(-60,60)}px,${rnd(260,360)}px) rotate(${rnd(-70,70)}deg)`,opacity:0}],{duration:1100,easing:'cubic-bezier(.5,0,.9,.6)',fill:'forwards'}));
@@ -3059,7 +3157,8 @@ async function clockScene(dir,dur){
   ov.animate([{opacity:.95},{opacity:0,transform:'scale(1.3)'}],{duration:450,fill:'forwards'}); setTimeout(()=>ov.remove(),490);
 }
 async function fxTrap(idx,victim){
-  const [x,y]=center(idx), E=ELS.ninja;
+  const [x,y]=center(idx), E=ELS.ninja, cw=cells[idx].getBoundingClientRect().width;
+  ninjaDash(x,y-H*.6,x,y-cw*.4,360,cw*2.2);
   for (let j=0;j<10;j++) setTimeout(()=>part({x:x+rnd(-80,80),y:y-rnd(160,260),vx:0,vy:0,attract:{x,y,s:22},drag:.98,life:.5,size:rnd(6,10),color:pick(['#c8ccd8','#9aa0aa']),mode:'shuriken',rot:rnd(0,TAU),spin:20}), j*40);
   await wait(380);
   for (let j=0;j<26*FXQ;j++){ const a=rnd(0,TAU), s=rnd(40,200); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.94,life:rnd(.8,1.4),size:rnd(16,30),color:'#8a8f98',mode:'smoke',alpha:.55}); }
@@ -3074,6 +3173,8 @@ async function fxRage(d){
   const E=ELS.dragon, sr=$('side'+d).getBoundingClientRect(), x=sr.left+sr.width/2, y=sr.top+Math.min(60,sr.height/2);
   showBanner(E,'PASSIVE',PASSIVES.dragon.name,PASSIVES.dragon.sub);
   roar(1.1);
+  flyDragon(-W*.35,y+120,W*1.35,y-80,1200,Math.min(W,H)*.6);
+  setTimeout(()=>flyDragon(W*1.35,y-40,-W*.35,y+60,1100,Math.min(W,H)*.45),450);
   flash('#3fb6ff',.35,400); shake(18);
   for (let j=0;j<80*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,500); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-80,drag:.93,life:rnd(.5,1.1),size:rnd(5,13),mode:'bfire'}); }
   for (let j=0;j<3;j++) ring(x,y,{vr:300+j*160,life:.7,w:6-j*1.5,color:j%2?E.c2:E.c1});
@@ -3082,6 +3183,7 @@ async function fxRage(d){
 async function fxWrath(idx,cellsTxt){
   const E=ELS.dragon, list=cellsTxt.split('.').map(Number).filter(i=>Number.isInteger(i)&&i>=0&&i<64);
   roar(.7);
+  { const r=boardEl.getBoundingClientRect(), w=Math.min(W,H)*.5; flyDragon(-w,r.top+r.height*.3,W+w,r.top+r.height*.7,1000,w); }
   list.forEach((i,k)=>setTimeout(()=>{
     const [x,y]=center(i);
     for (let j=0;j<24*FXQ;j++) part({x:x+rnd(-8,8),y:y+rnd(-6,6),vx:rnd(-60,60),vy:rnd(-260,-60),g:-120,drag:.95,life:rnd(.4,.8),size:rnd(5,11),mode:'bfire'});
@@ -3728,6 +3830,20 @@ function countUp(el,n){
     if (k<1) requestAnimationFrame(stepCount);
   })(t0);
 }
+
+// pause every sound while the page is hidden, closed, or no longer being drawn
+function checkAway(){
+  const away = document.hidden || innerWidth===0 || innerHeight===0 || performance.now()-lastFrameAt>2500;
+  if (away===pageAway) return;
+  pageAway=away;
+  if (!AC) return;
+  if (away) AC.suspend().catch(()=>{});
+  else if (cfg.sound) AC.resume().catch(()=>{});
+}
+setInterval(checkAway,500);
+document.addEventListener('visibilitychange',checkAway);
+addEventListener('pagehide',()=>{ pageAway=true; bgmStop(); if (AC) AC.suspend().catch(()=>{}); });
+addEventListener('pageshow',()=>{ pageAway=false; checkAway(); if (cfg.sound && AC) bgmStart(); });
 
 /* ---------- boot (keeps a local game alive across page updates) ---------- */
 function start(data){
