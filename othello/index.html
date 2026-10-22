@@ -260,7 +260,7 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .d-sub{font-size:13px;color:var(--muted);line-height:1.7}
 .d-sub strong{color:var(--ink)}
 .d-sub small{font-size:12px;color:var(--ink);letter-spacing:.06em}
-#dGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:min(100%,470px)}
+#dGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:8px;width:min(100%,520px)}
 .d-el{--ec:#fff;display:grid;gap:3px;justify-items:center;padding:10px 4px;border-radius:10px;border:1px solid color-mix(in srgb,var(--ec) 55%,#39344c);background:linear-gradient(180deg,color-mix(in srgb,var(--ec) 18%,#0f0d16),#0f0d16);transition:transform .15s,box-shadow .15s}
 .d-el .k{font-family:var(--f-display);font-size:34px;line-height:1.1;color:var(--ec);text-shadow:0 0 14px var(--ec)}
 .d-el .n{font-weight:700;font-size:12px}
@@ -272,7 +272,7 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .coin-face.back{transform:rotateY(180deg);background:radial-gradient(circle at 35% 30%,#f2f2f6,#a3a8b8 60%,#4a4f60);color:#1d2030;box-shadow:inset 0 0 0 4px #e0e3ec,inset 0 0 0 7px #5a6072,0 6px 20px #000a}
 .d-timer{font-family:var(--f-latin);font-weight:700;font-size:28px;color:#ffd08a;font-variant-numeric:tabular-nums}
 .d-timer:empty{display:none}
-@media (max-width:480px){#dGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){#dGrid{grid-template-columns:repeat(4,minmax(0,1fr))}.d-el .k{font-size:26px}}
 @media (max-width:520px){.card .c-desc,.pas .p-desc{display:none}.card,.pas{padding:7px 9px}.card .c-name{font-size:14px}}
 
 /* Skill guide dialog */
@@ -293,8 +293,84 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .h-rules strong{color:var(--ink)}
 @media (max-width:480px){.h-el{grid-template-columns:1fr}.h-el .hk{grid-row:auto}}
 
+/* 星・王・岩 stones */
+.disc[data-el="star"]{
+  background:
+    radial-gradient(circle at 30% 30%,#fff 0 1px,transparent 2px),
+    radial-gradient(circle at 66% 38%,#fff 0 1px,transparent 2px),
+    radial-gradient(circle at 44% 70%,#ffe9a0 0 1px,transparent 2px),
+    radial-gradient(circle at 72% 72%,#fff 0 .8px,transparent 1.6px),
+    radial-gradient(circle at 34% 28%,#3b4fb0 0%,#141a5a 50%,#05061e 90%);
+  box-shadow:0 0 14px #6f8cffaa,0 3px 6px #000a,inset 0 -4px 8px #000,inset 0 2px 6px #9db8ff66;
+  color:#ffe9a0;animation:twinkle 2.2s ease-in-out infinite;
+}
+@keyframes twinkle{50%{box-shadow:0 0 22px #9db8ff,0 0 34px #ffd86a55,0 3px 6px #000a,inset 0 -4px 8px #000,inset 0 2px 6px #9db8ff99}}
+.disc[data-el="king"]{
+  background:radial-gradient(circle at 34% 28%,#c77dff 0%,#6a1fb0 45%,#2a0650 88%);
+  box-shadow:0 0 0 2px #e6b43a,0 0 0 3px #7a5410,0 0 14px #ffd34d88,0 3px 6px #000a,inset 0 -4px 8px #1a0030,inset 0 2px 5px #e3b3ff66;
+  color:#ffe08a;
+}
+.disc[data-el="rock"]{
+  background:
+    radial-gradient(circle at 30% 36%,#0003 0 2px,transparent 3px),
+    radial-gradient(circle at 62% 58%,#0004 0 2.5px,transparent 3.5px),
+    radial-gradient(circle at 48% 24%,#fff4 0 1.5px,transparent 2.5px),
+    radial-gradient(circle at 70% 30%,#0003 0 1.5px,transparent 2.5px),
+    radial-gradient(circle at 34% 28%,#d6c3a0 0%,#8a7458 45%,#3e3226 90%);
+  box-shadow:0 3px 6px #000c,inset 0 -5px 8px #1e170f,inset 0 2px 4px #f5e6c855;
+  color:#2a2018;
+}
+.aura[data-el="star"]{inset:-7%;background:repeating-conic-gradient(#9db8ff88 0 2deg,transparent 2deg 24deg,#ffd86a88 24deg 26deg,transparent 26deg 45deg);-webkit-mask:radial-gradient(circle,transparent 44%,#000 52%,transparent 68%);mask:radial-gradient(circle,transparent 44%,#000 52%,transparent 68%);animation:auraSpin 14s linear infinite}
+.aura[data-el="king"]{inset:-6%;background:radial-gradient(circle,transparent 48%,#ffd34d66 56%,transparent 70%);animation:auraPulse 2.6s ease-in-out infinite}
+.aura[data-el="rock"]{inset:6%;box-shadow:0 5px 0 #1a130c,0 0 0 1px #5a4a36}
+
+/* 闇: black flame over every dark stone, and a curse on stones taken by 地獄門 */
+.disc[data-el="dark"]{animation:voidPulse 2.8s ease-in-out infinite}
+@keyframes voidPulse{50%{box-shadow:0 0 22px #a259ff,0 0 38px #4b12a0aa,0 3px 6px #000,inset 0 -4px 8px #000,inset 0 2px 8px #b48bffaa}}
+.aura[data-el="dark"]::after{content:"";position:absolute;inset:-14% 12% 34% 12%;border-radius:50% 50% 40% 40%;background:radial-gradient(ellipse 50% 70% at 50% 85%,#12001fee,#4b12a077 50%,transparent 75%);filter:blur(2px);transform-origin:50% 100%;animation:tongue .9s ease-in-out infinite alternate}
+.cell.cursed .aura{inset:-20%!important;background:conic-gradient(from 0deg,#000 0 10%,#a259ffdd 20%,#000 35%,#6a1fd0cc 55%,#000 70%,#a259ffdd 85%,#000)!important;-webkit-mask:none!important;mask:none!important;filter:blur(4px);animation:auraSpin .9s linear infinite!important;opacity:.95}
+.cell.cursed .disc{box-shadow:0 0 24px #a259ff,0 0 44px #000,inset 0 0 16px #a259ff!important}
+.cell.cursed::before{content:"呪";position:absolute;right:1px;top:-2px;z-index:5;font-family:var(--f-display);font-size:clamp(9px,1.8vw,14px);color:#f0dcff;text-shadow:0 0 6px #a259ff,0 0 10px #a259ff,0 0 2px #000;pointer-events:none;animation:hintPulse 1s ease-in-out infinite}
+
+/* 炎: sealed squares are a roaring fire */
+.flame:not(.chain){
+  inset:-4% -4% 0 -4%;overflow:visible;
+  background:radial-gradient(ellipse 60% 85% at 50% 96%,#fff6c8 0%,#ffb04a 22%,#ff5a1f 48%,#b3120b 70%,transparent 86%),#3a0d05;
+  box-shadow:0 0 22px #ff5a1f,0 0 44px #ff3a0a99,inset 0 0 14px #ff8a1f;
+  animation:flicker .2s steps(2) infinite alternate;z-index:2;
+}
+.flame:not(.chain)::before,.flame:not(.chain)::after{content:"";position:absolute;bottom:35%;width:50%;height:170%;border-radius:50% 50% 30% 30%/70% 70% 30% 30%;background:radial-gradient(ellipse 50% 70% at 50% 90%,#fff3b0,#ff8a1f 40%,#ff3a0aaa 65%,transparent 82%);filter:blur(1.5px);transform-origin:50% 100%;pointer-events:none;z-index:-1}
+.flame:not(.chain)::before{left:0;animation:tongue .42s ease-in-out infinite alternate}
+.flame:not(.chain)::after{right:0;animation:tongue .58s ease-in-out infinite alternate-reverse}
+
+/* 岩: the frame around the board, with three rocks */
+.cell.ring{display:none}
+#board.ext{grid-template-columns:repeat(10,1fr)}
+#board.ext .cell{grid-row:var(--gr);grid-column:var(--gc)}
+#board.ext .cell.ring{display:block;visibility:hidden}
+#board.ext .cell.ring.rock{visibility:visible;background:radial-gradient(circle at 30% 30%,#a8977c,#5e4e3b 55%,#2e251b);box-shadow:inset 0 0 0 1px #8a7a60,inset 0 -3px 6px #000a,0 0 10px #c08a4a66;border-radius:32% 42% 36% 46%}
+#board.blind .cell.ring.rock{background:#030205;box-shadow:none}
+
+/* 王: the crown, the decree */
+.deco{position:absolute;inset:0;pointer-events:none;z-index:4}
+.deco svg{position:absolute;left:10%;width:80%;top:-40%;overflow:visible;filter:drop-shadow(0 2px 2px #000) drop-shadow(0 0 6px #ffd34d)}
+.deco.crowned svg{animation:crownFloat 2.4s ease-in-out infinite}
+@keyframes crownFloat{50%{transform:translateY(-2px)}}
+.deco.forced{border-radius:4px;box-shadow:inset 0 0 0 2px #ffd34d,0 0 18px #ffd34d;background:radial-gradient(circle,#ffd34d33,transparent 70%);animation:decreePulse 1s ease-in-out infinite}
+.deco.forced::after{content:"王命";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--f-display);font-size:clamp(9px,1.9vw,14px);color:#fff4c2;text-shadow:0 0 6px #b8860b,0 0 2px #000;white-space:nowrap}
+.cell.decree{cursor:pointer;box-shadow:inset 0 0 0 2px #ffd34d,0 0 14px #ffd34d88;animation:decreePulse .9s ease-in-out infinite}
+@keyframes decreePulse{50%{box-shadow:inset 0 0 0 3px #fff4c2,0 0 22px #ffd34d}}
+#board.blind .deco{visibility:hidden}
+#board.blind .deco.forced{visibility:visible}
+
+/* 星座封印 on a panel */
+.side.hushed{border-color:#9db8ff!important;box-shadow:0 0 0 1px #9db8ff,0 0 26px -4px #6f8cff!important;
+  background-image:radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 70% 20%,#cfe0ff 0 1px,transparent 1.5px),radial-gradient(circle at 50% 80%,#fff 0 1px,transparent 1.5px),linear-gradient(180deg,#1b2050,#0c0e26)}
+.side.hushed .card,.side.hushed .pas{filter:grayscale(.85) brightness(.75)}
+
 /* 省ドパモード: keep the game, drop the spectacle */
 html.lite .aura,html.lite #aura{display:none!important}
+html.lite .flame:not(.chain)::before,html.lite .flame:not(.chain)::after{animation:none!important}
 html.lite .disc,html.lite .flame,html.lite .cell.guard::before,html.lite .side.active .sigil,html.lite .cell.hint::before,html.lite .card.ready,html.lite .status.crit,html.lite #aura.pulse{animation:none!important}
 html.lite .disc{filter:none!important}
 
@@ -476,8 +552,14 @@ const ELS = {
              glow:'0 0 18px #ff5a1f, 0 0 70px #b3120b', fill:'linear-gradient(180deg,#fff1b0,#ff8a1f 50%,#c4210f)' },
   thunder: { k:'雷', name:'雷属性', ult:'万雷轟臨', sub:'THOUSAND THUNDERS',  c1:'#ffe600', c2:'#fffbe0', c3:'#6ad8ff', aura:'rgba(255,225,0,0.7)',
              glow:'0 0 16px #ffe600, 0 0 60px #6ad8ff', fill:'linear-gradient(180deg,#ffffff,#ffe600 50%,#d19a00)' },
+  star:    { k:'星', name:'星属性', ult:'天球の調べ', sub:'CELESTIAL HYMN',      c1:'#9db8ff', c2:'#ffffff', c3:'#ffd86a', aura:'rgba(70,100,255,0.85)',
+             glow:'0 0 18px #9db8ff, 0 0 60px #3b4fb0', fill:'linear-gradient(180deg,#ffffff,#cfe0ff 45%,#6f8cff 75%,#ffd86a)' },
+  king:    { k:'王', name:'王属性', ult:'王権神授', sub:'DIVINE RIGHT OF KINGS', c1:'#ffd34d', c2:'#fff4c2', c3:'#9b30ff', aura:'rgba(255,200,60,0.8)',
+             glow:'0 0 18px #ffd34d, 0 0 60px #9b30ff', fill:'linear-gradient(180deg,#fff8d8,#ffd34d 45%,#b8860b 80%,#7a5410)' },
+  rock:    { k:'岩', name:'岩属性', ult:'地殻崩壊', sub:'TECTONIC RUPTURE',     c1:'#d0a066', c2:'#f0dcb4', c3:'#6b5238', aura:'rgba(160,110,60,0.85)',
+             glow:'0 0 16px #d0a066, 0 0 50px #6b5238', fill:'linear-gradient(180deg,#f5e6c8,#c9a46a 45%,#7a5c3a 80%,#3e3226)' },
 };
-const EL_ORDER = ['dark','light','fire','thunder'];
+const EL_ORDER = ['dark','light','fire','thunder','star','king','rock'];
 
 /* ---------- state ---------- */
 let cfg = { el:{1:'dark',2:'light'}, mode:'cpu2', lv:2, sound:true };
@@ -487,24 +569,40 @@ function saveCfg(){ try { localStorage.setItem('elemental-othello-cfg', JSON.str
 let board, turn, busy = false, over = false, lastMove = -1, gen = 0;
 let burns = [], guards = [], used = {1:0,2:0}, extra = 0, cardThisTurn = false, aim = 0, blind = 0;
 let pas = {1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}}, phase = 'draft', picks = {1:'',2:''}, coinInfo = null;
+let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, quake = 0, curses = [], winOverride = 0, prot = [];
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
 
 /* ---------- rules ---------- */
 const D8 = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
-function flipsFor(b, i, p, gs=guards){
-  if (b[i]) return [];
-  const o = 3-p, r = i>>3, c = i&7, out = [];
+/* Indices 0-63 are the 8x8 board. 64-99 are the 36-square frame around it, used only by
+   岩's 母なる大地: -1 is void, 0 an empty rock, 1/2 a stone standing on a rock. */
+const N = 100;
+const RC = [], GRID = new Array(100).fill(-1);
+for (let i=0;i<64;i++){ RC[i]=[i>>3,i&7]; GRID[((i>>3)+1)*10+(i&7)+1]=i; }
+{ let k=64; for (let r=-1;r<=8;r++) for (let c=-1;c<=8;c++){ if (r>=0&&r<8&&c>=0&&c<8) continue; RC[k]=[r,c]; GRID[(r+1)*10+(c+1)]=k; k++; } }
+const idxAt = (r,c) => GRID[(r+1)*10+(c+1)];
+const at = (b,r,c) => (r<-1||r>8||c<-1||c>8) ? undefined : b[idxAt(r,c)];
+// guards plus every king not under a star seal: stones that can never be flipped
+function protOf(gs,ks,hs){ const out=gs.slice(); if (ks) for (const q of [1,2]){ const k=ks[q]; if (k>=0 && !(hs && hs.p===q)) out.push({idx:k,owner:q}); } return out; }
+function flipsFor(b, i, p, gs=prot){
+  if (b[i]!==0) return [];
+  const o = 3-p, [r,c] = RC[i], out = [];
   for (const [dr,dc] of D8){
-    let rr=r+dr, cc=c+dc; const tmp=[];
-    while (rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===o){ tmp.push(rr*8+cc); rr+=dr; cc+=dc; }
-    if (tmp.length && rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===p) for (const k of tmp) if (!gs.some(g=>g.idx===k && g.owner===o)) out.push(k);
+    let rr=r+dr, cc=c+dc, v; const tmp=[];
+    while ((v=at(b,rr,cc))===o){ tmp.push(idxAt(rr,cc)); rr+=dr; cc+=dc; }
+    if (tmp.length && v===p) for (const k of tmp) if (k<64 && !gs.some(g=>g.idx===k && g.owner===o)) out.push(k);
   }
   return out;
 }
-function legal(b, p, bs=burns, gs=guards){ const m=[]; for (let i=0;i<64;i++) if(!b[i] && !bs.some(x=>x.idx===i && x.owner!==p) && flipsFor(b,i,p,gs).length) m.push(i); return m; }
-function counts(b){ let a=0,w=0,e=0; for(const v of b){ if(v===1)a++; else if(v===2)w++; else e++; } return [a,w,e]; }
+function legal(b, p, bs=burns, gs=prot, hs=hush){
+  const m=[];
+  for (let i=0;i<64;i++) if (b[i]===0 && !bs.some(x=>x.idx===i && x.owner!==p) && flipsFor(b,i,p,gs).length) m.push(i);
+  if (cfg.el[p]==='rock' && !(hs && hs.p===p)) for (let i=64;i<N;i++) if (b[i]===0 && flipsFor(b,i,p,gs).length) m.push(i);
+  return m;
+}
+function counts(b){ let a=0,w=0,e=0; for (let i=0;i<b.length;i++){ const v=b[i]; if(v===1)a++; else if(v===2)w++; else if(v===0 && i<64) e++; } return [a,w,e]; }
 const isCorner = i => i===0||i===7||i===56||i===63;
 const cpuSide = () => cfg.mode==='cpu2' ? 2 : cfg.mode==='cpu1' ? 1 : 0;
 
@@ -529,10 +627,10 @@ function negamax(b,p,depth,a,beta,passed){
   if (depth===0) return evalB(b,p);
   const ms = legal(b,p);
   if (!ms.length){
-    if (passed){ let d=0; for(const v of b){ if(v===p)d++; else if(v)d--; } return d*1000; }
+    if (passed){ let d=0; for(const v of b){ if(v===p)d++; else if(v===3-p)d--; } return d*1000; }
     return -negamax(b,3-p,depth-1,-beta,-a,true);
   }
-  ms.sort((x,y)=>WT[y]-WT[x]);
+  ms.sort((x,y)=>W8(y)-W8(x));
   let best=-1e9;
   for (const m of ms){
     const nb=b.slice(); const f=flipsFor(nb,m,p); nb[m]=p; for(const k of f) nb[k]=p;
@@ -585,22 +683,61 @@ function nz(ft,f1,f2,dur,vol,delay=0,q=1){
   const g=a.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.015); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
   s.connect(f).connect(g).connect(master); s.start(t, Math.random()); s.stop(t+dur+0.05);
 }
+// slow-attack voice for choirs and pads
+function pad(f,dur,vol,delay=0,att=.25,type='sine'){
+  const a=ac(); if(!a) return; const t=a.currentTime+delay;
+  const o=a.createOscillator(), g=a.createGain(); o.type=type;
+  o.frequency.setValueAtTime(f,t); o.detune.setValueAtTime((Math.random()*2-1)*7,t);
+  g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol,t+att); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g).connect(master); o.start(t); o.stop(t+dur+0.05);
+}
+function bell(f,dur,vol,delay=0){ tone('sine',f,f,dur,vol,delay); tone('sine',f*2.76,f*2.76,dur*.5,vol*.35,delay); tone('sine',f*5.4,f*5.4,dur*.25,vol*.15,delay); }
 function sfx(el, kind, i=0){
   if (!cfg.sound) return;
   const up = 1 + i*0.07;
   if (kind==='place'){ tone('sine',260,90,.14,.35); nz('lowpass',900,120,.12,.25); return; }
+  if (kind==='chain'){
+    tone('sine',95,42,.4,.65); nz('lowpass',1400,120,.25,.4);
+    [1880,2741,3620,4980].forEach((f,k)=>tone('triangle',f,f*.985,.55-k*.1,.07-k*.012));
+    for (let k=0;k<7;k++) nz('highpass',7000,3200,.03,.2,.05+k*.03,1.5);
+    tone('square',3400,2500,.05,.1,.3); nz('bandpass',2600,2600,.07,.35,.3,9); tone('sine',150,55,.3,.6,.3); bell(2637,.6,.06,.31);
+    return;
+  }
   if (kind==='flip'){
-    if (el==='dark'){ tone('sine',140*up,38,.45,.35); nz('lowpass',500,80,.4,.22); tone('sawtooth',70*up,35,.3,.06); }
-    else if (el==='light'){ tone('sine',1046*up,1046*up,.55,.13); tone('triangle',1568*up,1568*up,.45,.08,.04); tone('sine',2093*up,2093*up,.3,.05,.08); }
+    if (el==='dark'){ tone('sine',120*up,28,.6,.42); tone('sawtooth',58*up,26,.5,.08); pad(146.8,.6,.035,0,.03,'sawtooth'); pad(155.6,.6,.03,0,.03,'sawtooth'); nz('lowpass',700,50,.55,.28); nz('bandpass',220,1800,.22,.1,0,4); }
+    else if (el==='light'){ bell(1318.5*up,1.1,.09); [523.3,659.3,784].forEach((f,k)=>pad(f*2*up,1.3,.022,.02*k,.06,'triangle')); pad(1046.5*up,1.4,.03,0,.08); nz('highpass',9000,6500,.5,.04); }
     else if (el==='fire'){ nz('bandpass',300*up,2600,.35,.4,0,.8); tone('sawtooth',110,40,.22,.1); }
+    else if (el==='star'){ [1,1.5,2,3].forEach((m,k)=>bell(1760*up*m/2,.7-k*.1,.06,k*.035)); nz('highpass',9000,7000,.35,.05); }
+    else if (el==='king'){ tone('sawtooth',392*up,392*up,.22,.07); tone('sawtooth',493.9*up,493.9*up,.22,.05,.02); tone('square',587.3*up,587.3*up,.18,.03,.04); tone('sine',98,55,.3,.35); }
+    else if (el==='rock'){ tone('sine',85*up,36,.28,.5); nz('lowpass',700,70,.22,.4); nz('bandpass',1300,600,.07,.25,.01,2); }
     else { nz('highpass',4000,900,.16,.35); nz('highpass',2500,600,.08,.3,.06); tone('square',70,30,.25,.08); }
     return;
   }
   if (kind==='crack'){ nz('highpass',3500,600,.2,.35); tone('square',55,25,.35,.12); return; }
   if (kind==='ult'){
-    if (el==='dark'){ tone('sine',90,18,2.6,.7); tone('sawtooth',45,20,2.4,.15); nz('lowpass',300,40,2.4,.45); nz('lowpass',2400,60,1.2,.6,1.5); tone('sine',60,20,1.4,.8,1.5); }
-    else if (el==='light'){ [523,659,784,1047,1319,1568,2093].forEach((f,k)=>{ tone('sine',f,f,2.2-k*.15,.14,k*.09); tone('triangle',f*2,f*2,1,.03,k*.09); }); nz('highpass',6000,3000,1.6,.12,.2); tone('sine',80,30,1.2,.7,1.3); nz('lowpass',3000,100,1.2,.5,1.3); }
+    if (el==='dark'){
+      tone('sine',80,16,3,.8); tone('sawtooth',41,18,2.6,.14);
+      [73.4,77.8,110,116.5,146.8].forEach((f,k)=>pad(f,3.2,.05,k*.04,.8,'sawtooth'));
+      nz('bandpass',6000,1100,1.4,.18,.3,12); nz('lowpass',300,40,2.6,.5);
+      nz('lowpass',2600,50,1.3,.65,1.5); tone('sine',58,18,1.6,.9,1.5); tone('square',36,22,1,.12,1.5);
+    }
+    else if (el==='light'){
+      [130.8,261.6,329.6,392,493.9,587.3,659.3,784].forEach((f,k)=>{ pad(f,3.6,.045,k*.03,.7,'sine'); pad(f*1.004,3.4,.025,k*.03,.8,'triangle'); });
+      [1046.5,1318.5,1568,2093,2637,3136].forEach((f,k)=>bell(f,1.4,.05,.45+k*.11));
+      nz('highpass',9000,5000,2.4,.06,.2); bell(1046.5,2.4,.09,1.3); bell(1568,2.4,.07,1.3); tone('sine',65,32,1.4,.6,1.3);
+    }
     else if (el==='fire'){ nz('bandpass',200,2400,.8,.35,0,.6); tone('sawtooth',160,40,.8,.12); nz('lowpass',3000,60,2.2,.9,.8); tone('sine',70,18,1.8,.9,.8); }
+    else if (el==='star'){
+      [440,554.4,659.3,830.6,987.8].forEach((f,k)=>pad(f,3,.035,k*.05,.6,'sine'));
+      for (let k=0;k<12;k++) bell(1760*Math.pow(2,k/12*1.5),.8,.045,k*.09);
+      nz('highpass',9500,7000,2,.05,.2); bell(3520,2,.06,1.3); tone('sine',110,55,1.5,.4,1.3);
+    }
+    else if (el==='king'){
+      const ch=(fs,t,d,v)=>fs.forEach(f=>{ tone('sawtooth',f,f,d,v,t); tone('square',f*2,f*2,d*.6,v*.3,t); });
+      ch([392,493.9,587.3],0,.22,.06); ch([392,493.9,587.3],.24,.12,.06); ch([440,554.4,659.3],.38,.22,.06); ch([523.3,659.3,784,1046.5],.64,1.6,.07);
+      for (let k=0;k<8;k++) tone('sine',98,60,.12,.35,k*.07); tone('sine',65,32,1.4,.7,.64); nz('highpass',7000,4000,1.4,.12,.64);
+    }
+    else if (el==='rock'){ nz('lowpass',220,30,2.4,.85); tone('sine',48,20,2.2,.9); for (let k=0;k<6;k++) nz('bandpass',900-k*80,250,.25,.45,.2+k*.28,2); tone('square',40,24,1,.12,.6); }
     else { for(let k=0;k<8;k++) nz('highpass',5000,700,.18,.35,k*.13); tone('square',60,22,.6,.15,.5); nz('highpass',6000,300,.6,.7,1.15); tone('sine',65,18,1.6,.9,1.15); nz('lowpass',1500,60,1.6,.6,1.2); }
   }
 }
@@ -613,7 +750,7 @@ addEventListener('resize', resize); resize();
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const pick=arr=>arr[(Math.random()*arr.length)|0];
 const MAXP=2600;
-const P=[], RINGS=[], BOLTS=[], BEAMS=[], CIRCLES=[], HOLES=[], EMIT=[];
+const P=[], RINGS=[], BOLTS=[], BEAMS=[], CIRCLES=[], HOLES=[], EMIT=[], LINES=[];
 function part(o){ if(P.length>=MAXP || (cfg.lite && Math.random()>.1)) return; P.push(Object.assign({x:0,y:0,vx:0,vy:0,g:0,drag:.97,life:1,t:0,size:3,color:'#fff',mode:'glow',tw:0},o)); }
 function ring(x,y,o){ RINGS.push(Object.assign({x,y,r:4,vr:400,life:.6,t:0,w:4,color:'#fff'},o)); }
 function emit(dur,fn){ EMIT.push({t:0,dur,fn}); }
@@ -675,6 +812,13 @@ function frame(now){
   cx.globalCompositeOperation='source-over';
   for(const p of P){ if(p.mode!=='smoke') continue; const k=p.t/p.life; cx.globalAlpha=(1-k)*(p.alpha??.5); cx.fillStyle=p.color; cx.beginPath(); cx.arc(p.x,p.y,p.size*(1+k*1.6),0,TAU); cx.fill(); }
   for(const p of P){ if(p.mode==='ghost') drawGhost(p); }
+  for(const p of P){
+    if (p.mode!=='chunk' && p.mode!=='coin') continue;
+    const k=p.t/p.life; cx.globalAlpha=Math.min(1,(1-k)*2); cx.save(); cx.translate(p.x,p.y); cx.rotate((p.rot||0)+p.t*6);
+    if (p.mode==='coin'){ cx.scale(Math.cos(p.t*9+(p.rot||0)),1); cx.fillStyle=p.color; cx.beginPath(); cx.arc(0,0,p.size,0,TAU); cx.fill(); cx.strokeStyle='#7a5410'; cx.lineWidth=Math.max(.5,p.size*.2); cx.stroke(); }
+    else { cx.fillStyle=p.color; cx.beginPath(); cx.moveTo(-p.size,-p.size*.4); cx.lineTo(-p.size*.2,-p.size); cx.lineTo(p.size,-p.size*.3); cx.lineTo(p.size*.6,p.size); cx.lineTo(-p.size*.7,p.size*.7); cx.closePath(); cx.fill(); }
+    cx.restore();
+  }
   cx.globalCompositeOperation='source-over';
   // black holes
   for(let i=HOLES.length-1;i>=0;i--){
@@ -710,12 +854,15 @@ function frame(now){
   }
   // glow particles
   for(const p of P){
-    if (p.mode==='smoke'||p.mode==='ghost') continue;
+    if (p.mode==='smoke'||p.mode==='ghost'||p.mode==='chunk'||p.mode==='coin') continue;
     const k=p.t/p.life; let a=1-k; let s=p.size;
     if (p.tw) { s*=.55+.45*Math.sin(p.t*p.tw+p.x); a*=Math.min(1,p.t*3); }
     const col = p.mode==='fire' ? fireCol(k) : p.color;
     cx.fillStyle=col; cx.strokeStyle=col;
-    if (p.mode==='spark'){
+    if (p.mode==='starp'){
+      const rot=(p.rot||0)+p.t*2.5, R=Math.max(.5,s*(1-k*.3));
+      for (const [mul,al] of [[2.4,.22],[1,1]]){ cx.globalAlpha=a*al; cx.beginPath(); for (let j=0;j<10;j++){ const rr=j%2?R*mul*.42:R*mul, an=rot+j*Math.PI/5-Math.PI/2; cx.lineTo(p.x+Math.cos(an)*rr,p.y+Math.sin(an)*rr); } cx.closePath(); cx.fill(); }
+    } else if (p.mode==='spark'){
       cx.globalAlpha=a; cx.lineWidth=s; cx.beginPath(); cx.moveTo(p.x,p.y); cx.lineTo(p.x-p.vx*.035,p.y-p.vy*.035); cx.stroke();
     } else {
       const r=Math.max(.3, p.mode==='fire'? s*(1-k*.5) : s*(1-k*.4));
@@ -736,6 +883,17 @@ function frame(now){
       cx.globalAlpha=a*.85; cx.lineWidth=w*2.4; cx.stroke();
       cx.strokeStyle='#ffffff'; cx.globalAlpha=a; cx.lineWidth=w*.9; cx.stroke();
     });
+  }
+  // constellation and chain lines that draw themselves in
+  cx.globalCompositeOperation='lighter';
+  for(let i=LINES.length-1;i>=0;i--){
+    const L=LINES[i]; L.t+=dt; if (L.t>=L.life+L.delay){ LINES.splice(i,1); continue; }
+    const t=L.t-L.delay; if (t<0) continue;
+    const prog=Math.min(1,t/(L.draw||.25)), a=t>L.life-.35 ? Math.max(0,(L.life-t)/.35) : 1;
+    const ex=L.x1+(L.x2-L.x1)*prog, ey=L.y1+(L.y2-L.y1)*prog;
+    cx.strokeStyle=L.color; cx.beginPath(); cx.moveTo(L.x1,L.y1); cx.lineTo(ex,ey);
+    cx.globalAlpha=a*.3; cx.lineWidth=L.w*4; cx.stroke();
+    cx.globalAlpha=a; cx.lineWidth=L.w; cx.stroke();
   }
   cx.globalAlpha=1; cx.globalCompositeOperation='source-over';
 }
@@ -766,6 +924,8 @@ function burst(el,x,y,pw=1,i=0){
     setTimeout(()=>{ for(let j=0;j<22*n;j++){ const a=rnd(0,TAU), s=rnd(140,380)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.4,.8),size:rnd(1.2,3),color:pick([E.c1,E.c2]),mode:Math.random()<.4?'spark':'glow'}); }
       ring(x,y,{vr:260*pw,life:.5,w:3*pw,color:E.c1});
       for(let j=0;j<2*pw;j++){ const a=rnd(0,TAU), L=rnd(40,90)*pw; bolt(x,y,x+Math.cos(a)*L,y+Math.sin(a)*L,E.c1,.22,1,0); }
+      for(let j=0;j<10*n;j++) part({x:x+rnd(-12,12),y:y+rnd(-6,6),vx:rnd(-30,30),vy:rnd(-170,-60),drag:.95,life:rnd(.6,1),size:rnd(6,12)*pw,color:'#000',mode:'smoke',alpha:.65});
+      for(let j=0;j<2;j++){ const a=rnd(-2.6,-.5); bolt(x,y,x+Math.cos(a)*rnd(50,100)*pw,y+Math.sin(a)*rnd(50,100)*pw,'#2a0050',.3,1.6,1); }
     }, 140);
   } else if (el==='light'){
     BEAMS.push({x,y,w:rnd(26,38)*pw,life:.55*Math.sqrt(pw),t:0,color:E.c3});
@@ -777,6 +937,18 @@ function burst(el,x,y,pw=1,i=0){
     for(let j=0;j<14*n;j++){ const a=rnd(0,TAU), s=rnd(160,420)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-120,g:520,drag:.97,life:rnd(.5,1),size:rnd(1,2.2),color:pick(['#ffd08a','#ff8a1f','#fff3b0']),mode:'spark'}); }
     for(let j=0;j<6*n;j++){ part({x,y:y-10,vx:rnd(-30,30),vy:rnd(-90,-40),drag:.97,life:rnd(.8,1.3),size:rnd(8,14),color:'#1a0602',mode:'smoke',alpha:.45}); }
     ring(x,y,{vr:320*pw,life:.45,w:4*pw,color:E.c1});
+  } else if (el==='star'){
+    for(let j=0;j<26*n;j++){ const a=rnd(0,TAU), s=rnd(80,380)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1),size:rnd(2,4.2),color:pick([E.c1,E.c2,E.c3]),mode:'starp',rot:rnd(0,TAU)}); }
+    ring(x,y,{vr:300*pw,life:.45,w:3*pw,color:E.c3}); ring(x,y,{vr:170*pw,life:.6,w:2,color:E.c1});
+    for(let j=0;j<2;j++){ const a=rnd(0,TAU), L=rnd(30,60)*pw; LINES.push({x1:x,y1:y,x2:x+Math.cos(a)*L,y2:y+Math.sin(a)*L,t:0,delay:.05,life:.6,draw:.12,color:'#cfe0ff',w:1.2}); }
+  } else if (el==='king'){
+    for(let j=0;j<20*n;j++){ const a=rnd(0,TAU), s=rnd(100,360)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,g:500,drag:.97,life:rnd(.5,1),size:rnd(2,3.6),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); }
+    for(let j=0;j<16*n;j++){ const a=rnd(0,TAU), s=rnd(80,260)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.4,.8),size:rnd(1.2,2.4),color:pick([E.c1,E.c2]),tw:14}); }
+    ring(x,y,{vr:300*pw,life:.45,w:4*pw,color:E.c1}); ring(x,y,{vr:180*pw,life:.6,w:2,color:E.c3});
+  } else if (el==='rock'){
+    for(let j=0;j<24*n;j++){ const a=rnd(-Math.PI,0), s=rnd(120,420)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:1100,drag:.98,life:rnd(.5,.9),size:rnd(2,5)*Math.sqrt(pw),color:pick(['#8a7458','#5a4a38','#c9b28a','#6b5238']),mode:'chunk',rot:rnd(0,TAU)}); }
+    for(let j=0;j<8*n;j++) part({x:x+rnd(-10,10),y:y+rnd(-4,8),vx:rnd(-50,50),vy:rnd(-40,-10),drag:.96,life:rnd(.7,1.2),size:rnd(8,16)*pw,color:'#3a2c1e',mode:'smoke',alpha:.5});
+    ring(x,y,{vr:260*pw,life:.4,w:5*pw,color:E.c1});
   } else {
     const sx=x+rnd(-90,90), sy=y-rnd(160,320)*pw;
     bolt(sx,sy,x,y,pick([E.c1,E.c3]),.28,1.3*Math.sqrt(pw),2);
@@ -861,6 +1033,40 @@ async function ultimate(el,x,y,top='CORNER BREAK'){
     for(let i=0;i<50*FXQ;i++){ const a=rnd(0,TAU), s=rnd(60,300); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,drag:.95,life:rnd(1.2,2),size:rnd(16,34),color:'#1a0500',mode:'smoke',alpha:.55}); }
     emit(1.8,()=>{ for(let j=0;j<5*FXQ;j++) part({x:rnd(0,W),y:-10,vx:rnd(-40,40),vy:rnd(60,200),g:120,drag:.99,life:rnd(1.5,2.5),size:rnd(2,5),mode:'fire',wob:4}); });
     undim(1800);
+  } else if (el==='star'){
+    dim('radial-gradient(circle at 50% 40%, rgba(20,30,100,.7), rgba(0,0,15,.97))',350);
+    emit(1.8,(dt)=>{
+      for (let j=0;j<3*FXQ;j++) part({x:rnd(0,W),y:rnd(0,H),life:rnd(.8,1.6),size:rnd(1.4,3),color:pick([E.c2,E.c3,E.c1]),mode:'starp',rot:rnd(0,TAU)});
+      if (Math.random()<dt*12){ const sx=rnd(W*.3,W*1.1), sy=rnd(-40,H*.4); for (let j=0;j<4;j++) part({x:sx,y:sy,vx:-rnd(700,1000),vy:rnd(400,600),drag:.995,life:rnd(.5,.8),size:rnd(1.4,2.6),color:pick([E.c2,E.c3]),mode:'spark'}); }
+    });
+    drawConstellation(pick(CONSTELLATIONS),{left:0,top:0,width:W,height:H},.2,2);
+    await wait(1600);
+    flash('#dfe8ff',.9,800); shake(36);
+    for(let i=0;i<5;i++) ring(x,y,{vr:650+i*320,life:1.1,w:9-i*1.5,color:i%2?E.c3:E.c1});
+    for(let i=0;i<300*FXQ;i++){ const a=rnd(0,TAU), s=rnd(150,1100); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.92,life:rnd(.7,1.5),size:rnd(2.5,6),color:pick([E.c1,E.c2,E.c3]),mode:'starp',rot:rnd(0,TAU)}); }
+    undim(1600);
+  } else if (el==='king'){
+    dim('radial-gradient(circle at 50% 30%, rgba(120,80,0,.4), rgba(25,5,40,.9))',300);
+    for (let j=0;j<14;j++) BEAMS.push({x:x+(j-6.5)*R*.07,y,w:R*.05,life:2,t:0,color:j%2?E.c1:E.c3});
+    emit(1.8,()=>{ for (let j=0;j<6*FXQ;j++) part({x:rnd(0,W),y:-10,vx:rnd(-30,30),vy:rnd(200,420),g:300,drag:.99,life:rnd(1,1.8),size:rnd(3,5.5),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); });
+    await wait(1300);
+    flash('#fff1c0',1,900); shake(30);
+    for(let i=0;i<5;i++) ring(x,y,{vr:650+i*320,life:1.1,w:10-i*1.5,color:i%2?E.c3:E.c1});
+    for(let i=0;i<220*FXQ;i++){ const a=rnd(0,TAU), s=rnd(150,900); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-200,g:600,drag:.97,life:rnd(.8,1.6),size:rnd(2.5,5),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); }
+    undim(1500);
+  } else if (el==='rock'){
+    dim('radial-gradient(circle at 50% 70%, rgba(80,55,30,.5), rgba(15,10,5,.92))',300);
+    emit(1.6,(dt,t)=>{
+      shake(8+t*14);
+      for (let j=0;j<4*FXQ;j++) part({x:rnd(0,W),y:-30,vx:rnd(-60,60),vy:rnd(150,350),g:1000,drag:.99,life:rnd(.8,1.3),size:rnd(4,12),color:pick(['#8a7458','#5a4a38','#c9b28a']),mode:'chunk',rot:rnd(0,TAU)});
+      if (Math.random()<dt*8){ const [ex,ey]=edgePoint(); bolt(x,y,ex,ey,'#c08a4a',.4,2,3); }
+    });
+    await wait(1500);
+    flash('#c08a4a',.6,600); shake(48);
+    for(let i=0;i<5;i++) ring(x,y,{vr:600+i*300,life:1,w:12-i*2,color:i%2?E.c2:E.c1});
+    for(let i=0;i<200*FXQ;i++){ const a=rnd(0,TAU), s=rnd(200,900); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-200,g:1100,drag:.98,life:rnd(.8,1.6),size:rnd(3,9),color:pick(['#8a7458','#5a4a38','#c9b28a','#6b5238']),mode:'chunk',rot:rnd(0,TAU)}); }
+    for(let i=0;i<50*FXQ;i++){ const a=rnd(0,TAU), s=rnd(60,300); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.95,life:rnd(1.2,2),size:rnd(20,40),color:'#3a2c1e',mode:'smoke',alpha:.55}); }
+    undim(1700);
   } else {
     dim('linear-gradient(180deg, rgba(0,6,30,.95), rgba(0,0,10,.85))',220);
     emit(1.15,(dt)=>{
@@ -915,6 +1121,16 @@ function spawnAmbient(el){
     if (Math.random()<.6){ x=rnd(0,W); y=H+5; }
     part({x,y,vx:ix*30+rnd(-20,20),vy:-rnd(50,160),g:-20,drag:.995,life:rnd(1.6,3),size:rnd(1.5,4.5),mode:'fire',wob:3});
     if (Math.random()<.15) part({x,y,vx:rnd(-10,10),vy:-rnd(20,50),drag:.995,life:rnd(2,3),size:rnd(20,40),color:'#160300',mode:'smoke',alpha:.4});
+  } else if (el==='star'){
+    part({x,y,vx:ix*30+rnd(-10,10),vy:iy*30+rnd(-10,10),drag:.998,life:rnd(2,3.5),size:rnd(1.6,3.2),color:pick([E.c1,E.c2,E.c3]),mode:'starp',rot:rnd(0,TAU)});
+    if (Math.random()<.03*amb.level){ const sx=rnd(W*.2,W), sy=rnd(-20,H*.2); part({x:sx,y:sy,vx:-rnd(600,900),vy:rnd(300,500),drag:.995,life:.6,size:2,color:'#ffffff',mode:'spark'}); }
+  } else if (el==='king'){
+    part({x,y,vx:ix*30+rnd(-10,10),vy:iy*20-rnd(10,40),drag:.998,life:rnd(2,3.5),size:rnd(1.2,2.6),color:pick([E.c1,E.c2]),tw:rnd(5,10)});
+    if (Math.random()<.05) part({x:rnd(0,W),y:-10,vx:rnd(-20,20),vy:rnd(120,240),g:200,drag:.99,life:2,size:rnd(2.5,4),color:pick([E.c1,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)});
+  } else if (el==='rock'){
+    if (Math.random()<.6){ x=rnd(0,W); y=-10; }
+    part({x,y,vx:rnd(-20,20),vy:rnd(40,140),g:400,drag:.99,life:rnd(1.5,2.5),size:rnd(1.2,3),color:pick(['#8a7458','#c9b28a','#5a4a38']),mode:'chunk',rot:rnd(0,TAU)});
+    if (Math.random()<.1) part({x,y:H+10,vx:rnd(-10,10),vy:-rnd(20,50),drag:.995,life:rnd(2,3),size:rnd(20,40),color:'#2a2016',mode:'smoke',alpha:.4});
   } else {
     part({x,y,vx:rnd(-120,120)+ix*80,vy:rnd(-120,120)+iy*80,drag:.9,life:rnd(.2,.5),size:rnd(1,2),color:pick([E.c1,E.c3]),mode:'spark'});
     if (Math.random()<.05*amb.level){
@@ -935,17 +1151,25 @@ const CARDS = {
   dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:3, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。' },
   fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:0,      desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。5ターンに1回使える。' },
   thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
+  star:    { name:'流星群',                 sub:'METEOR SHOWER',      uses:1,      desc:'空きマス3つに流れ星が落ちて自分の石になる（挟めば裏返す）。さらに相手の石1枚をランダムに自分の色に変える。' },
+  king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から指定する。' },
+  rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石を、1マス外側へ押し出す（行き先に石があれば動かない）。' },
 };
 const PASSIVES = {
   light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計20枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、置ける場所3つにつき1マス（最低1マス）を鎖で封じる。' },
   dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の画面が1ターン真っ暗に。置ける場所だけは見える。' },
   fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'毎ターン、置いた石は相手の2ターンのあいだ裏返らず、スキルも効かない。' },
   thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前のターンに裏返した枚数×3%。' },
+  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦・横・斜めに5つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
+  king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。ただし王の上下左右（盤内のマス）をすべて相手の石に囲まれると負け。' },
+  rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'盤の外周36マスのうち3マスに岩が現れ、岩には自分だけが石を置ける。' },
 };
 const freshPas = () => ({1:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0},2:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0}});
 const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
 const clone = o => JSON.parse(JSON.stringify(o));
 const cardOf = p => CARDS[cfg.el[p]];
+const isHushed = p => !!(hush && hush.p===p);
+const hushedS = (S,p) => !!(S.hush && S.hush.p===p);
 function fireReadyIn(p){
   const s=pas[p]||{}, t=s.turns||0;
   if (t<FIRE_OPEN) return FIRE_OPEN-t;
@@ -953,17 +1177,18 @@ function fireReadyIn(p){
 }
 const cardLeft = p => cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0) : Math.max(0, cardOf(p).uses - (used[p]||0));
 const cardOpenAt = el => el==='thunder' ? LATE+THUNDER_EARLY : LATE;
-const emptyCount = () => board.filter(v=>!v).length;
+const emptyCount = () => counts(board)[2];
 const roleOf = p => p===1 ? '先手' : '後手';
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
-// opponent stones a light/dark card may touch, and how many it would actually hit
+// opponent stones on the 8x8 a card may touch, and how many it would actually hit (never the last one)
 function skillTargets(b,p,gs,el){
   const opp=3-p, os=[]; let oc=0;
-  b.forEach((v,i)=>{ if (v===opp){ oc++; if (!gs.some(g=>g.idx===i && g.owner===opp)) os.push(i); } });
-  return {os, n:Math.min(CARDS[el].n||0, oc-1, os.length)};
+  for (let i=0;i<64;i++) if (b[i]===opp){ oc++; if (!gs.some(g=>g.idx===i && g.owner===opp)) os.push(i); }
+  return {os, n:Math.min(CARDS[el].n||1, oc-1, os.length)};
 }
 function cardBlock(p){
   const el=cfg.el[p];
+  if (isHushed(p)) return `星座に封じられている（あと${hush.left}ターン）`;
   if (el==='fire'){
     const t=(pas[p]&&pas[p].turns)||0, r=fireReadyIn(p);
     if (t<FIRE_OPEN) return `炎の手番があと${FIRE_OPEN-t}回で使用可能`;
@@ -973,42 +1198,91 @@ function cardBlock(p){
     const e=emptyCount(), at=cardOpenAt(el);
     if (e>at) return `空きマスがあと${e-at}減ると使用可能`;
   }
-  if ((el==='light'||el==='dark') && skillTargets(board,p,guards,el).n<3) return '狙える相手の石が3枚未満';
-  if (el==='fire' && !board.some((v,i)=>!v && !burns.some(b=>b.idx===i))) return '燃やせるマスがありません';
+  if ((el==='light'||el==='dark') && skillTargets(board,p,prot,el).n<3) return '狙える相手の石が3枚未満';
+  if (el==='fire' && !board.some((v,i)=>i<64 && v===0 && !burns.some(b=>b.idx===i))) return '燃やせるマスがありません';
+  if (el==='star' && !board.some((v,i)=>i<64 && v===0)) return '空きマスがありません';
   return '';
 }
 function cardAllowed(p){
-  if (phase!=='play'||busy||over||turn!==p||cardThisTurn) return false;
+  if (phase!=='play'||busy||over||turn!==p||cardThisTurn||decree) return false;
   return !cardBlock(p);
 }
 const canCard = p => cardAllowed(p) && isLocalTurn(p);
 function pasState(p){
   const el=cfg.el[p], s=pas[p]||{};
+  if (isHushed(p)) return `封印中（あと${hush.left}）`;
   if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(20,s.flips||0)} / 20`;
   if (el==='fire') return '毎ターン発動';
   if (el==='thunder') return `次ターン ${Math.round(jinraiChance(s)*100)}%`;
+  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${hush.left}）` : '5つ並びで発動';
+  if (el==='king') return kings[p]>=0 ? '王 健在' : kings[p]===-2 ? '王冠を失った' : '最初の石が王に';
+  if (el==='rock'){ let n=0; for (let i=64;i<N;i++) if (board[i]===0) n++; return `空いている岩 ${n}`; }
   return '4枚以上で発動';
+}
+const W8 = i => i<64 ? WT[i] : 60;
+function movesFor(p){
+  const lm=legal(board,p);
+  return forced && forced.p===p && lm.includes(forced.idx) ? [forced.idx] : lm;
 }
 
 /* ---------- board UI ---------- */
-const flames=[], auras=[];
-for (let i=0;i<64;i++){
-  const c=document.createElement('button'); c.className='cell'+(isCorner(i)?' corner':''); c.type='button';
-  c.setAttribute('aria-label', `${'ABCDEFGH'[i&7]}${(i>>3)+1}`);
+const flames=[], auras=[], decos=[];
+for (let i=0;i<N;i++){
+  const [r,c]=RC[i], ring=i>=64;
+  const cl=document.createElement('button'); cl.className='cell'+(isCorner(i)?' corner':'')+(ring?' ring':''); cl.type='button';
+  cl.style.setProperty('--gr', r+2); cl.style.setProperty('--gc', c+2);
+  cl.setAttribute('aria-label', ring ? `外周の岩 ${r+1},${c+1}` : `${'ABCDEFGH'[c]}${r+1}`);
   const au=document.createElement('span'); au.className='aura'; au.hidden=true;
   const d=document.createElement('div'); d.className='disc'; d.hidden=true;
   const f=document.createElement('span'); f.className='flame'; f.hidden=true;
-  c.append(au,d,f); boardEl.appendChild(c); cells.push(c); discs.push(d); flames.push(f); auras.push(au);
-  c.addEventListener('click',()=>cellClick(i));
+  const dc=document.createElement('span'); dc.className='deco'; dc.hidden=true;
+  cl.append(au,d,f,dc); boardEl.appendChild(cl); cells.push(cl); discs.push(d); flames.push(f); auras.push(au); decos.push(dc);
+  cl.addEventListener('click',()=>cellClick(i));
 }
 function center(i){ const r=cells[i].getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]; }
 function paintDisc(i){
   const v=board[i], d=discs[i], au=auras[i];
-  if (!v){ d.hidden=true; au.hidden=true; return; }
+  if (!(v>0)){ d.hidden=true; au.hidden=true; return; }
   d.hidden=false;
   if (phase!=='play'){ d.dataset.el='none'+v; d.dataset.k=''; au.hidden=true; return; }
   const el=cfg.el[v]; d.dataset.el=el; d.dataset.k=ELS[el].k;
   au.hidden=false; au.dataset.el=el;
+}
+// a jewelled gold crown, with a light sweep across it
+function crownSvg(id){
+  return `<svg viewBox="0 0 100 72" aria-hidden="true"><defs>
+    <linearGradient id="kg${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff8d8"/><stop offset=".3" stop-color="#ffd34d"/><stop offset=".72" stop-color="#c88f1a"/><stop offset="1" stop-color="#7a5410"/></linearGradient>
+    <linearGradient id="kb${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a0"/><stop offset=".5" stop-color="#b8860b"/><stop offset="1" stop-color="#5a3e08"/></linearGradient>
+    <radialGradient id="ru${id}" cx=".35" cy=".3"><stop offset="0" stop-color="#ffd0d0"/><stop offset=".45" stop-color="#e0112b"/><stop offset="1" stop-color="#5a000c"/></radialGradient>
+    <radialGradient id="sa${id}" cx=".35" cy=".3"><stop offset="0" stop-color="#d6e6ff"/><stop offset=".45" stop-color="#1f5fe0"/><stop offset="1" stop-color="#081a5a"/></radialGradient>
+    <radialGradient id="em${id}" cx=".35" cy=".3"><stop offset="0" stop-color="#d0ffe4"/><stop offset=".45" stop-color="#14b85a"/><stop offset="1" stop-color="#03401f"/></radialGradient>
+    <radialGradient id="pe${id}" cx=".35" cy=".3"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#ece6da"/><stop offset="1" stop-color="#9a8f7c"/></radialGradient>
+    <linearGradient id="sh${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="kc${id}"><path d="M8 60 L3 20 L17 38 L27 8 L38 30 L50 2 L62 30 L73 8 L83 38 L97 20 L92 60 Z"/><rect x="7" y="52" width="86" height="15" rx="3"/></clipPath>
+  </defs>
+  <path d="M8 60 L3 20 L17 38 L27 8 L38 30 L50 2 L62 30 L73 8 L83 38 L97 20 L92 60 Z" fill="url(#kg${id})" stroke="#5a3e08" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M10 56 L6 26 L17 41 L27 13 L38 34 L50 7 L62 34 L73 13 L83 41 L94 26 L90 56" fill="none" stroke="#fff6c8" stroke-opacity=".55" stroke-width="1"/>
+  <path d="M50 22 C46 30 46 36 50 40 C54 36 54 30 50 22 Z" fill="url(#ru${id})" stroke="#5a000c" stroke-width=".8"/>
+  <ellipse cx="27" cy="44" rx="3.2" ry="4" fill="url(#sa${id})"/><ellipse cx="73" cy="44" rx="3.2" ry="4" fill="url(#sa${id})"/>
+  <rect x="7" y="52" width="86" height="15" rx="3" fill="url(#kb${id})" stroke="#5a3e08" stroke-width="1.4"/>
+  ${[14,22,78,86].map(x=>`<circle cx="${x}" cy="59.5" r="1.4" fill="#fff2b8"/>`).join('')}
+  <ellipse cx="50" cy="59.5" rx="6.2" ry="5" fill="url(#ru${id})" stroke="#5a000c" stroke-width=".8"/>
+  <ellipse cx="33" cy="59.5" rx="4.4" ry="4" fill="url(#sa${id})" stroke="#081a5a" stroke-width=".6"/>
+  <ellipse cx="67" cy="59.5" rx="4.4" ry="4" fill="url(#sa${id})" stroke="#081a5a" stroke-width=".6"/>
+  <circle cx="17" cy="51" r="0" fill="none"/>
+  ${[[3,20,4],[27,8,4],[50,2,4.6],[73,8,4],[97,20,4]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="url(#pe${id})" stroke="#7a6a52" stroke-width=".6"/>`).join('')}
+  <circle cx="22" cy="59.5" r="0"/><circle cx="41.5" cy="59.5" r="2.3" fill="url(#em${id})"/><circle cx="58.5" cy="59.5" r="2.3" fill="url(#em${id})"/>
+  <g clip-path="url(#kc${id})"><rect x="-40" y="0" width="26" height="72" fill="url(#sh${id})" transform="skewX(-20)"><animate attributeName="x" values="-40;150;150" keyTimes="0;.55;1" dur="3.2s" repeatCount="indefinite"/></rect></g>
+</svg>`;
+}
+function paintDeco(i){
+  const dc=decos[i];
+  const crowned = phase==='play' && [1,2].some(k=>kings[k]===i && board[i]===k);
+  const isForced = phase==='play' && !!forced && forced.idx===i;
+  dc.hidden = !crowned && !isForced;
+  dc.classList.toggle('crowned', crowned); dc.classList.toggle('forced', isForced);
+  if (crowned){ if (!dc.querySelector('svg')) dc.innerHTML=crownSvg(i); }
+  else if (dc.firstChild) dc.innerHTML='';
 }
 function viewerSide(){ if (online()) return net.side||1; if (cfg.mode==='pvp') return turn; return 3-cpuSide(); }
 const blindView = () => phase==='play' && !over && !!blind && turn===blind && viewerSide()===blind;
@@ -1016,18 +1290,24 @@ function render(){
   const play = phase==='play';
   const bv = blindView();
   const human = play && !over && !busy && isLocalTurn(turn);
-  const lm = human && !aim ? legal(board,turn) : [];
+  const lm = human && !aim ? movesFor(turn) : [];
+  const dOpts = play && decree && !busy && localSide(decree.by) ? decree.opts : [];
   boardEl.classList.toggle('blind', bv);
+  boardEl.classList.toggle('ext', board.some((v,i)=>i>=64 && v!==-1));
   boardEl.style.setProperty('--hint', play ? ELS[cfg.el[turn]].c1 : '#cbb8ff');
-  for (let i=0;i<64;i++){
-    paintDisc(i);
+  for (let i=0;i<N;i++){
+    paintDisc(i); paintDeco(i);
     const b=burns.find(x=>x.idx===i);
-    const aimable = !!aim && human && !board[i] && !b;
-    cells[i].classList.toggle('hint', lm.includes(i));
-    cells[i].classList.toggle('aim', aimable);
-    cells[i].classList.toggle('last', i===lastMove);
-    cells[i].classList.toggle('guard', play && guards.some(g=>g.idx===i && board[i]===g.owner));
-    cells[i].tabIndex = (lm.includes(i)||aimable) ? 0 : -1;
+    const aimable = !!aim && human && i<64 && board[i]===0 && !b;
+    const cl=cells[i];
+    cl.classList.toggle('hint', lm.includes(i));
+    cl.classList.toggle('aim', aimable);
+    cl.classList.toggle('decree', dOpts.includes(i));
+    cl.classList.toggle('last', i===lastMove);
+    cl.classList.toggle('rock', i>=64 && board[i]!==-1);
+    cl.classList.toggle('guard', play && guards.some(g=>g.idx===i && board[i]===g.owner));
+    cl.classList.toggle('cursed', play && curses.some(c=>c.idx===i && board[i]===c.owner));
+    cl.tabIndex = (lm.includes(i)||aimable||dOpts.includes(i)) ? 0 : -1;
     flames[i].hidden = !b;
     if (b) paintSeal(i,b);
   }
@@ -1037,6 +1317,7 @@ function render(){
     $('count'+p).textContent = p===1?a:w;
     $('who'+p).textContent = online() ? (net.side ? (net.side===p ? 'あなた' : (net.opp ? '相手' : '待機中…')) : '') : cpuSide()===p ? 'CPU' : (cfg.mode==='pvp' ? `プレイヤー${p}` : 'あなた');
     cb.hidden = pb.hidden = !play;
+    side.classList.toggle('hushed', play && isHushed(p));
     if (!play){
       side.style.setProperty('--ec', '#cbb8ff');
       side.classList.remove('active');
@@ -1055,12 +1336,12 @@ function render(){
     cb.querySelector('.c-note').textContent=cardBlock(p);
     cb.disabled = !ok && aim!==p;
     cb.classList.toggle('ready', ok && aim!==p);
-    cb.classList.toggle('armed', aim===p || (!over && extra>0 && turn===p));
+    cb.classList.toggle('armed', aim===p || (!over && turn===p && (extra>0 || quake>0 || royal===p)));
     const PS=PASSIVES[cfg.el[p]];
     pb.querySelector('.p-name').textContent=PS.name;
     pb.querySelector('.p-desc').textContent=PS.desc;
     pb.querySelector('.p-state').textContent=pasState(p);
-    pb.classList.toggle('awake', cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph));
+    pb.classList.toggle('awake', (cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph)) || (cfg.el[p]==='star' && isHushed(3-p)) || (cfg.el[p]==='king' && kings[p]>=0));
   }
   renderDraft();
   const st=$('status');
@@ -1070,7 +1351,14 @@ function render(){
   const who = online()
     ? (!net.kind ? '合言葉で部屋に入ってください' : !net.opp ? '相手の参加を待っています' : turn===net.side ? 'あなたの番' : '相手の番')
     : cpuSide()===turn ? 'CPU思考中…' : (cfg.mode==='pvp' ? '' : 'あなたの番');
-  const hot = bv ? 'ゴーストパレード：置ける場所しか見えない' : aim ? '燃やすマスを選択（カードをもう一度押すと取り消し）' : extra>0 ? '雷帝：もう1手置ける' : '';
+  let hot = '';
+  if (decree) hot = localSide(decree.by) && !(cfg.mode==='pvp' && false) ? '王命：相手が次に置くマスを指定してください' : '王が次の一手を指定しています…';
+  else if (bv) hot='ゴーストパレード：置ける場所しか見えない';
+  else if (aim) hot='燃やすマスを選択（カードをもう一度押すと取り消し）';
+  else if (forced && forced.p===turn) hot='王命により、置けるマスは1つだけ';
+  else if (extra>0) hot='雷帝：もう1手置ける';
+  else if (quake>0) hot='岩石巨城：次に置いた石のまわりを押し出す';
+  else if (royal===turn) hot='ロイヤルアーツ：置いたあと相手の手を指定';
   st.innerHTML = `<span style="color:${E.c1};text-shadow:${E.glow}">${E.k}</span>のターン${who?`<small>${who}</small>`:''}${hot?`<small class="hot">${hot}</small>`:''}${e<=10?'<small>終盤戦</small>':''}`;
   st.className = 'status' + (e<=10 ? ' crit' : '');
 }
@@ -1089,6 +1377,12 @@ function elementMote(el,x,y,n,spread){
       part({x:px,y:py,vx:rnd(-30,30),vy:rnd(-60,-10),drag:.95,life:rnd(.5,1),size:rnd(1,2.4),color:pick([E.c1,E.c2,E.c3]),tw:14});
     } else if (el==='fire'){
       part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-120,-40),g:-80,drag:.96,life:rnd(.35,.65),size:rnd(2.5,5),mode:'fire'});
+    } else if (el==='star'){
+      part({x:px,y:py,vx:rnd(-25,25),vy:rnd(-25,25),drag:.95,life:rnd(.5,.9),size:rnd(2,3.5),color:pick([E.c2,E.c3]),mode:'starp',rot:rnd(0,TAU)});
+    } else if (el==='king'){
+      part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-50,-10),drag:.96,life:rnd(.5,.9),size:rnd(1,2.2),color:pick([E.c1,E.c2]),tw:12});
+    } else if (el==='rock'){
+      part({x:px,y:py,vx:rnd(-30,30),vy:rnd(-20,20),g:300,drag:.98,life:rnd(.4,.7),size:rnd(1.2,2.4),color:pick(['#8a7458','#c9b28a','#5a4a38']),mode:'chunk'});
     } else {
       part({x:px,y:py,vx:rnd(-220,220),vy:rnd(-220,220),drag:.86,life:rnd(.12,.3),size:rnd(.8,1.6),color:pick([E.c1,E.c3]),mode:'spark'});
     }
@@ -1112,16 +1406,24 @@ setInterval(()=>{
   if (document.hidden) return;
   for (const b of burns){
     if (b.kind==='chain' || cfg.lite) continue;
-    const [x,y]=center(b.idx);
-    for(let j=0;j<2*FXQ;j++) part({x:x+rnd(-12,12),y:y+rnd(-4,10),vx:rnd(-20,20),vy:rnd(-110,-40),g:-60,drag:.96,life:rnd(.4,.8),size:rnd(2,5),mode:'fire'});
+    const [x,y]=center(b.idx), w=cells[b.idx].getBoundingClientRect().width;
+    for(let j=0;j<4*FXQ;j++) part({x:x+rnd(-w*.4,w*.4),y:y+rnd(-2,w*.35),vx:rnd(-20,20),vy:rnd(-200,-80),g:-80,drag:.96,life:rnd(.45,.9),size:rnd(w*.12,w*.24),mode:'fire',wob:6});
+    if (Math.random()<.5) part({x:x+rnd(-w*.3,w*.3),y:y-w*.3,vx:rnd(-40,40),vy:rnd(-260,-140),g:-40,drag:.98,life:rnd(.6,1.1),size:rnd(1,2),color:pick(['#fff3b0','#ffd08a']),mode:'spark'});
   }
   if (phase!=='play' || cfg.lite) return;
   if (blindView()){ hauntBoard(); return; }
-  const filled=board.reduce((n,v)=>n+(v?1:0),0), chance=Math.min(.6,16/Math.max(1,filled))*FXQ;
-  for (let i=0;i<64;i++){
-    if (!board[i] || Math.random()>chance) continue;
+  const filled=board.reduce((n,v)=>n+(v>0?1:0),0), chance=Math.min(.6,16/Math.max(1,filled))*FXQ;
+  for (let i=0;i<N;i++){
+    if (!(board[i]>0)) continue;
+    const isCursed = curses.some(c=>c.idx===i && board[i]===c.owner);
+    if (!isCursed && Math.random()>chance) continue;
     const r=cells[i].getBoundingClientRect(); if (!r.width) continue;
-    stoneFx(cfg.el[board[i]], r.left+r.width/2, r.top+r.height/2, r.width*.4);
+    const x=r.left+r.width/2, y=r.top+r.height/2;
+    stoneFx(cfg.el[board[i]], x, y, r.width*.4);
+    if (isCursed){
+      for (let j=0;j<2;j++) part({x:x+rnd(-r.width*.4,r.width*.4),y:y+rnd(-r.width*.2,r.width*.3),vx:rnd(-12,12),vy:rnd(-70,-30),drag:.97,life:rnd(.7,1.2),size:rnd(r.width*.2,r.width*.38),color:'#000',mode:'smoke',alpha:.75});
+      if (Math.random()<.35) part({x:x+rnd(-r.width*.5,r.width*.5),y:y+rnd(-r.width*.5,r.width*.5),vx:0,vy:rnd(-40,-15),drag:.98,life:rnd(.6,1),size:rnd(1.4,2.6),color:'#c79bff'});
+    }
   }
 }, 110);
 function stoneFx(el,x,y,rad){
@@ -1135,9 +1437,17 @@ function stoneFx(el,x,y,rad){
   } else if (el==='light'){
     if (q<.35) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad*.2),vx:rnd(-8,8),vy:rnd(-40,-15),drag:.99,life:rnd(.8,1.4),size:rnd(1,2.2),color:pick([E.c1,E.c2,E.c3]),tw:10});
     if (q<.012) BEAMS.push({x,y,w:rad*.7,life:1.4,t:0,color:E.c3});
+  } else if (el==='star'){
+    if (q<.3) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:rnd(-6,6),vy:rnd(-12,-2),drag:.99,life:rnd(.8,1.4),size:rnd(1.6,3),color:pick([E.c2,E.c3,E.c1]),mode:'starp',rot:rnd(0,TAU)});
+    if (q<.02) part({x:x-rad*2,y:y-rad*2,vx:rnd(160,260),vy:rnd(160,260),drag:.97,life:.4,size:1.6,color:'#ffffff',mode:'spark'});
+  } else if (el==='king'){
+    if (q<.25) part({x:x+rnd(-rad,rad),y:y+rnd(-rad*.6,rad*.6),vx:0,vy:rnd(-20,-6),drag:.99,life:rnd(.6,1.1),size:rnd(1,2),color:pick([E.c1,E.c2]),tw:16});
+  } else if (el==='rock'){
+    if (q<.15) part({x:x+rnd(-rad*.6,rad*.6),y:y+rad*.6,vx:rnd(-8,8),vy:rnd(10,40),g:200,drag:.99,life:rnd(.4,.7),size:rnd(.8,1.6),color:pick(['#8a7458','#c9b28a']),mode:'chunk'});
   } else {
-    if (q<.4) part({x:x+rnd(-rad*.6,rad*.6),y:y+rnd(-rad*.3,rad*.3),vx:rnd(-10,10),vy:rnd(-30,-8),drag:.98,life:rnd(.8,1.3),size:rnd(rad*.25,rad*.45),color:'#000',mode:'smoke',alpha:.55});
-    if (q<.2) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:rnd(-10,10),vy:rnd(-25,-5),drag:.98,life:rnd(.6,1),size:rnd(1,2),color:pick([E.c1,E.c2])});
+    if (q<.45) part({x:x+rnd(-rad*.6,rad*.6),y:y+rnd(-rad*.3,rad*.3),vx:rnd(-10,10),vy:rnd(-40,-12),drag:.98,life:rnd(.8,1.3),size:rnd(rad*.25,rad*.45),color:'#000',mode:'smoke',alpha:.6});
+    if (q<.25) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:rnd(-10,10),vy:rnd(-25,-5),drag:.98,life:rnd(.6,1),size:rnd(1,2),color:pick([E.c1,E.c2])});
+    if (q<.03) bolt(x,y,x+rnd(-rad*1.4,rad*1.4),y-rnd(rad,rad*1.8),'#6a1fd0',.18,.7,0);
   }
 }
 // what the blinded player sees: a black board with things moving on it
@@ -1162,7 +1472,6 @@ function drawGhost(p){
   const n=7, w=p.t*8+p.seed;
   for (let j=0;j<=n;j++){ const xx=s*.75-j*(1.5*s/n); const len=s*(1.2+((j*37+p.seed)%5)*.22)+Math.sin(w+j*1.9)*s*.25; cx.lineTo(xx+Math.sin(w*.7+j)*s*.12, j%2?len:len*.55); }
   cx.closePath(); cx.fill();
-  // sunken sockets
   cx.globalAlpha=Math.min(1,a*1.8); cx.fillStyle='#000';
   cx.beginPath(); cx.ellipse(-s*.3,-s*.38,s*.2,s*.34,.35,0,TAU); cx.ellipse(s*.3,-s*.38,s*.2,s*.34,-.35,0,TAU); cx.fill();
   cx.beginPath(); cx.ellipse(0,s*.35,s*.13,s*.42+Math.sin(p.t*14+p.seed)*s*.1,0,0,TAU); cx.fill();
@@ -1173,19 +1482,27 @@ function drawGhost(p){
 }
 
 /* ---------- pure state transitions (shared by local play, CPU and online) ---------- */
-const initBoard = () => { const b=new Array(64).fill(0); b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
-const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], guards:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0, blind:0, pas:freshPas(), ev:[]});
-function curState(){ return {board:board.slice(), turn, over, lastMove, burns:clone(burns), guards:clone(guards), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0, blind, pas:clone(pas), ev:[]}; }
-const legalS = (S,p) => legal(S.board,p,S.burns,S.guards);
-// seals and guards count down each time their owner's opponent finishes a turn
+const initBoard = () => { const b=new Array(N).fill(-1); for (let i=0;i<64;i++) b[i]=0; b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
+const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], guards:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0, blind:0, pas:freshPas(),
+  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, ev:[]});
+function curState(){
+  return {board:board.slice(), turn, over, lastMove, burns:clone(burns), guards:clone(guards), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0, blind, pas:clone(pas),
+    kings:{...kings}, hush:hush?{...hush}:null, royal, decree:decree?clone(decree):null, forced:forced?{...forced}:null, quake, curses:clone(curses), winner:0, ev:[]};
+}
+const protS = S => protOf(S.guards, S.kings, S.hush);
+const legalS = (S,p) => legal(S.board,p,S.burns,protS(S),S.hush);
+function addRocks(S){ const ring=[]; for (let i=64;i<N;i++) ring.push(i); for (const i of shuffle(ring).slice(0,3)) S.board[i]=0; }
+// seals, guards and curses count down each time their owner's opponent finishes a turn
 function endTurnS(S,ended){
   S.burns.forEach(b=>{ if (b.owner!==ended) b.left--; }); S.burns=S.burns.filter(b=>b.left>0);
   S.guards.forEach(g=>{ if (g.owner!==ended) g.left--; }); S.guards=S.guards.filter(g=>g.left>0);
+  S.curses.forEach(c=>{ if (c.owner!==ended) c.left--; }); S.curses=S.curses.filter(c=>c.left>0);
   if (S.blind===ended) S.blind=0;
+  if (S.hush && S.hush.p===ended){ S.hush.left--; if (S.hush.left<=0) S.hush=null; }
 }
 function startTurnS(S,x){
   const o=3-x;
-  if (cfg.el[o]==='light' && S.pas[o].seraph){
+  if (cfg.el[o]==='light' && S.pas[o].seraph && !hushedS(S,o)){
     const lm=legalS(S,x);
     if (lm.length>=2){
       // one chain per three playable squares (at least one), always leaving one square open
@@ -1194,42 +1511,108 @@ function startTurnS(S,x){
     }
   }
   if (cfg.el[x]==='thunder'){
-    if ((S.used[x]||0)>0 && Math.random()<jinraiChance(S.pas[x])){ S.used[x]--; S.ev.push('jinrai:'+x); }
+    if (!hushedS(S,x) && (S.used[x]||0)>0 && Math.random()<jinraiChance(S.pas[x])){ S.used[x]--; S.ev.push('jinrai:'+x); }
     S.pas[x].jin=0;
   }
 }
-function advanceS(S,p){
-  S.pass=0;
-  S.burns=S.burns.filter(b=>!S.board[b.idx]);
+// 威光の王家: a king whose every on-board orthogonal neighbour belongs to the enemy has fallen
+function checkRegicide(S){
+  for (const k of [1,2]){
+    const i=S.kings[k]; if (!(i>=0) || S.board[i]!==k || i>=64) continue;
+    const [r,c]=RC[i]; let n=0, enemy=0;
+    for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; n++; if (S.board[rr*8+cc]===3-k) enemy++; }
+    if (n && enemy===n){ S.over=true; S.winner=3-k; S.ev.push('regicide:'+k); return true; }
+  }
+  return false;
+}
+function cleanupS(S){
+  S.burns=S.burns.filter(b=>S.board[b.idx]===0);
   S.guards=S.guards.filter(g=>S.board[g.idx]===g.owner);
+  S.curses=S.curses.filter(c=>S.board[c.idx]===c.owner);
+  for (const k of [1,2]) if (S.kings[k]>=0 && S.board[S.kings[k]]!==k) S.kings[k]=-2;
+}
+function advanceS(S,p){
+  S.pass=0; S.forced=null;
+  cleanupS(S);
+  if (checkRegicide(S)) return S;
   if (S.extra>0){ S.extra--; if (legalS(S,p).length){ S.turn=p; return S; } }
-  S.extra=0; S.cardThisTurn=false;
+  S.extra=0; S.cardThisTurn=false; S.quake=0;
   const nt=3-p;
   endTurnS(S,p);
-  if (legalS(S,nt).length){ S.turn=nt; startTurnS(S,nt); return S; }
+  if (legalS(S,nt).length){
+    S.turn=nt; startTurnS(S,nt);
+    if (S.royal===p){
+      S.royal=0;
+      const lm=legalS(S,nt);
+      if (lm.length>=2) S.decree={by:p, opts:lm};
+    }
+    return S;
+  }
   endTurnS(S,nt);
   if (legalS(S,p).length){ S.turn=p; S.pass=nt; startTurnS(S,p); return S; }
   S.over=true; return S;
 }
+// 星座封印: five of the star's stones in a line through anything that just changed
+function fiveLine(b,p,changed){
+  for (const i of changed){
+    if (i>=64 || b[i]!==p) continue;
+    const r=i>>3, c=i&7;
+    for (const [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]){
+      let n=1;
+      for (let s=1;;s++){ const rr=r+dr*s, cc=c+dc*s; if (rr<0||rr>7||cc<0||cc>7||b[rr*8+cc]!==p) break; n++; }
+      for (let s=1;;s++){ const rr=r-dr*s, cc=c-dc*s; if (rr<0||rr>7||cc<0||cc>7||b[rr*8+cc]!==p) break; n++; }
+      if (n>=5) return true;
+    }
+  }
+  return false;
+}
+function starPassive(S,p,changed){
+  if (cfg.el[p]!=='star' || hushedS(S,p) || S.hush) return;
+  if (fiveLine(S.board,p,changed)){ S.hush={p:3-p,left:2}; S.ev.push('hush:'+(3-p)); }
+}
 function placeS(S,idx,p){
-  const f=flipsFor(S.board,idx,p,S.guards); S.board[idx]=p; for(const k of f) S.board[k]=p; S.lastMove=idx;
-  const el=cfg.el[p], ps=S.pas[p];
+  const f=flipsFor(S.board,idx,p,protS(S)); S.board[idx]=p; for(const k of f) S.board[k]=p; S.lastMove=idx;
+  const el=cfg.el[p], ps=S.pas[p], quiet=hushedS(S,p);
   ps.flips+=f.length; ps.turns++;
-  if (el==='light' && !ps.seraph && ps.flips>=20){ ps.seraph=true; S.ev.push('seraph:'+p); }
-  if (el==='fire'){ S.guards.push({idx,owner:p,left:2}); S.ev.push('guard:'+idx); }
-  if (el==='dark' && f.length>=4){ S.blind=3-p; S.ev.push('ghost:'+(3-p)); }
-  if (el==='thunder') ps.jin=(ps.jin||0)+f.length;
+  if (!quiet){
+    if (el==='light' && !ps.seraph && ps.flips>=20){ ps.seraph=true; S.ev.push('seraph:'+p); }
+    if (el==='fire'){ S.guards.push({idx,owner:p,left:2}); S.ev.push('guard:'+idx); }
+    if (el==='dark' && f.length>=4){ S.blind=3-p; S.ev.push('ghost:'+(3-p)); }
+    if (el==='thunder') ps.jin=(ps.jin||0)+f.length;
+    if (el==='king' && S.kings[p]===-1){ S.kings[p]=idx; S.ev.push('crown:'+idx); }
+  }
+  if (el==='rock' && S.quake){
+    S.quake=0;
+    const [r,c]=RC[idx], pr=protS(S), moves=[];
+    for (const [dr,dc] of D8){
+      const r1=r+dr, c1=c+dc, r2=r+2*dr, c2=c+2*dc;
+      if (r1<0||r1>7||c1<0||c1>7||r2<0||r2>7||c2<0||c2>7) continue;
+      const a=r1*8+c1, b2=r2*8+c2;
+      if (S.board[a]>0 && S.board[b2]===0 && !S.burns.some(x=>x.idx===b2) && !pr.some(g=>g.idx===a)){
+        S.board[b2]=S.board[a]; S.board[a]=0;
+        S.curses.forEach(cu=>{ if (cu.idx===a) cu.idx=b2; });
+        moves.push(a+'-'+b2);
+      }
+    }
+    S.ev.push('quake:'+idx+':'+moves.join('.'));
+  }
+  starPassive(S,p,[idx,...f]);
   return advanceS(S,p);
 }
 async function commit(S){
-  board=S.board.slice(); turn=S.turn; lastMove=S.lastMove??-1;
-  burns=clone(S.burns||[]); guards=clone(S.guards||[]);
+  board=S.board.length===N ? S.board.slice() : S.board.slice().concat(new Array(N-S.board.length).fill(-1));
+  turn=S.turn; lastMove=S.lastMove??-1;
+  burns=clone(S.burns||[]); guards=clone(S.guards||[]); curses=clone(S.curses||[]);
   used={1:(S.used&&S.used[1])||0, 2:(S.used&&S.used[2])||0};
   extra=S.extra||0; cardThisTurn=!!S.cardThisTurn; blind=S.blind||0;
   pas=S.pas ? clone(S.pas) : freshPas();
+  kings=S.kings ? {1:S.kings[1]??-1, 2:S.kings[2]??-1} : {1:-1,2:-1};
+  hush=S.hush ? {...S.hush} : null; royal=S.royal||0; decree=S.decree ? clone(S.decree) : null; forced=S.forced ? {...S.forced} : null; quake=S.quake||0;
+  winOverride=S.winner||0;
+  prot=protOf(guards,kings,hush);
   if (S.pass) toast(`${ELS[cfg.el[S.pass]].k}は置ける場所がないのでパス`);
   const ev=(Array.isArray(S.ev)?S.ev:[]).filter(x=>typeof x==='string');
-  if (ev.length && !S.over && phase==='play'){
+  if (ev.length && phase==='play'){
     busy=true; updateAmbience(); render();
     const g=gen; await playEvents(ev); if (g!==gen) return;
     busy=false;
@@ -1240,7 +1623,7 @@ async function commit(S){
 }
 function resetLocal(S){
   gen++; busy=false; aim=0; over=false; $('result').hidden=true; net.queue=[];
-  P.length=0; RINGS.length=0; BOLTS.length=0; BEAMS.length=0; CIRCLES.length=0; HOLES.length=0; EMIT.length=0;
+  P.length=0; RINGS.length=0; BOLTS.length=0; BEAMS.length=0; CIRCLES.length=0; HOLES.length=0; EMIT.length=0; LINES.length=0;
   cells.forEach(c=>c.classList.remove('marked'));
   undim(200);
   commit({...S, ev:[]});
@@ -1288,7 +1671,7 @@ function renderDraft(){
 EL_ORDER.forEach(k=>{
   const E=ELS[k], b=document.createElement('button');
   b.type='button'; b.className='d-el'; b.dataset.el=k; b.style.setProperty('--ec',E.c1);
-  b.innerHTML=`<span class="k">${E.k}</span><span class="n">${E.name}</span><span class="s">${CARDS[k].name}<br>${PASSIVES[k].name}</span>`;
+  b.innerHTML=`<span class="k">${E.k}</span><span class="n">${E.name}</span>`;
   b.addEventListener('click',()=>{ const c=draftChooser(); if (c){ ac(); choose(c,k); } });
   $('dGrid').appendChild(b);
 });
@@ -1361,6 +1744,7 @@ function finishDraft(){
   cfg.el={1:picks[1],2:picks[2]};
   phase='play'; coinInfo=null;
   const S=freshState();
+  if (cfg.el[1]==='rock' || cfg.el[2]==='rock') addRocks(S);
   if (online() && net.kind){ net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'play', el:{...cfg.el}, coin:null, updated:Date.now()}); }
   resetLocal(S);
   revealFx();
@@ -1372,25 +1756,50 @@ function revealFx(){
     burst(el,x,y,1.2); sfx(el,'flip',p);
   }
   flash('#ffffff',.25,300);
+  const rocks=[]; for (let i=64;i<N;i++) if (board[i]!==-1) rocks.push(i);
+  if (rocks.length) setTimeout(()=>{
+    rocks.forEach((i,k)=>setTimeout(()=>{ const [x,y]=center(i); burst('rock',x,y,1.1); cells[i].animate([{transform:'translateY(30px) scale(.4)',opacity:0},{transform:'translateY(-6px) scale(1.1)',opacity:1,offset:.7},{transform:'none'}],{duration:420,easing:'cubic-bezier(.3,1.5,.5,1)'}); }, k*220));
+    shake(14); toast(`${PASSIVES.rock.name}：外周に岩が3つ現れた`);
+  }, 700);
 }
 
 /* ---------- moves ---------- */
 function cellClick(i){
+  if (decree){
+    if (!busy && localSide(decree.by) && decree.opts.includes(i)) decreeChoose(i);
+    return;
+  }
   if (aim){
-    if (busy||over||!isLocalTurn(turn)||board[i]||burns.some(b=>b.idx===i)) return;
+    if (busy||over||!isLocalTurn(turn)||i>=64||board[i]!==0||burns.some(b=>b.idx===i)) return;
     const p=aim; aim=0; castCard(p,i); return;
   }
   humanMove(i);
 }
 function humanMove(i){
   if (busy||over||!isLocalTurn(turn)) return;
-  if (!legal(board,turn).includes(i)) return;
+  if (!movesFor(turn).includes(i)) return;
   ac(); doMove(i);
+}
+function decreeChoose(idx){
+  const d=decree; if (!d || !d.opts.includes(idx) || busy) return;
+  ac();
+  const S=curState(); S.decree=null; S.forced={p:3-d.by, idx}; S.ev=['decree:'+idx];
+  sendState(S,['decree',d.by,idx]);
+  commit(S);
+}
+function thunderStrike(x,y){
+  const E=ELS.thunder;
+  for (let j=0;j<4;j++) bolt(x+rnd(-90,90),-40,x,y,j%2?E.c3:E.c1,.45,j?2:3.4,4);
+  flash('#ffffff',.6,260); shake(20);
+  for (let j=0;j<90*FXQ;j++){ const a=rnd(0,TAU), s=rnd(200,800); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.87,life:rnd(.2,.6),size:rnd(1,2.6),color:pick([E.c1,E.c2,E.c3]),mode:'spark'}); }
+  ring(x,y,{vr:520,life:.4,w:6,color:E.c2}); ring(x,y,{vr:300,life:.5,w:3,color:E.c3});
+  sfx('thunder','crack'); tone('sine',70,25,.6,.7,.02);
 }
 async function doMove(idx, remoteS){
   const myGen=gen;
   const p=turn, el=cfg.el[p];
   const flips=flipsFor(board,idx,p); if(!flips.length) return;
+  const strike = el==='thunder' && cardThisTurn;
   const S = remoteS || placeS(curState(),idx,p);
   if (!remoteS) sendState(S,['place',p,idx]);
   busy=true; lastMove=idx; aim=0;
@@ -1399,17 +1808,18 @@ async function doMove(idx, remoteS){
   const [x,y]=center(idx);
   discs[idx].animate([{transform:'translateZ(120px) scale(2.2)',opacity:0},{transform:'translateZ(0) scale(.92)',opacity:1,offset:.75},{transform:'scale(1)'}],{duration:corner?520:260,easing:'cubic-bezier(.3,1.4,.5,1)'});
   sfx(el,'place');
+  if (strike) thunderStrike(x,y);
   if (corner){
     shake(14);
     await ultimate(el,x,y);
     if (myGen!==gen) return;
-  } else {
+  } else if (!strike){
     burst(el,x,y,.7);
   }
   const pw = corner ? 1.7 : 1 + Math.min(.6, flips.length*.06);
   const step = corner ? 120 : 85;
-  const r0=idx>>3, c0=idx&7;
-  const order = flips.map(f=>({f,d:Math.max(Math.abs((f>>3)-r0),Math.abs((f&7)-c0))})).sort((a,b)=>a.d-b.d);
+  const [r0,c0]=RC[idx];
+  const order = flips.map(f=>({f,d:Math.max(Math.abs(RC[f][0]-r0),Math.abs(RC[f][1]-c0))})).sort((a,b)=>a.d-b.d);
   let maxDelay=0;
   order.forEach((o,k)=>{ const delay=(o.d-1)*step + (corner?0:k*8); maxDelay=Math.max(maxDelay,delay); setTimeout(()=>{ if(myGen===gen) flipDisc(o.f,p,pw,k); }, delay); });
   shake(Math.min(16, 2+flips.length*1.6)*(corner?1.6:1));
@@ -1433,10 +1843,23 @@ function flipDisc(i,p,pw,k){
   };
   setTimeout(()=>{ if(board[i]!==p){ board[i]=p; paintDisc(i); } }, half+60);
 }
+// 流星群: a star falls on the stone, bursts into stars, draws a little constellation, then the stone turns
+function starFlip(i,p,k){
+  const E=ELS.star, [x,y]=center(i), sx=x+rnd(160,320), sy=y-rnd(260,420);
+  emit(.32,(dt,t)=>{ const q=Math.min(1,t/.32), mx=sx+(x-sx)*q, my=sy+(y-sy)*q; for (let j=0;j<6*FXQ;j++) part({x:mx+rnd(-4,4),y:my+rnd(-4,4),vx:rnd(-30,30),vy:rnd(-30,30),drag:.9,life:rnd(.3,.6),size:rnd(1.5,3.2),color:pick([E.c2,E.c3,E.c1]),mode:Math.random()<.5?'starp':'glow',rot:rnd(0,TAU)}); });
+  setTimeout(()=>{
+    flash('#dfe8ff',.35,200); shake(12);
+    for (let j=0;j<46*FXQ;j++){ const a=rnd(0,TAU), s=rnd(120,620); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1.1),size:rnd(2.5,6),color:pick([E.c2,E.c3,E.c1]),mode:'starp',rot:rnd(0,TAU)}); }
+    ring(x,y,{vr:520,life:.5,w:5,color:E.c3}); ring(x,y,{vr:260,life:.7,w:2,color:E.c2});
+    for (let j=0;j<3;j++){ const a=rnd(0,TAU), L=rnd(50,110), ex=x+Math.cos(a)*L, ey=y+Math.sin(a)*L; LINES.push({x1:x,y1:y,x2:ex,y2:ey,t:0,delay:.05*j,life:1,draw:.18,color:'#cfe0ff',w:1.6}); part({x:ex,y:ey,life:1.1,size:4,color:'#ffffff',mode:'starp'}); }
+    sfx('star','flip',k);
+    flipDisc(i,p,2.2,k);
+  }, 330);
+}
 function vanish(i){
   const d=discs[i];
   const a=d.animate([{transform:'scale(1)',filter:'brightness(1)',opacity:1},{transform:'scale(1.6)',filter:'brightness(4)',opacity:1,offset:.35},{transform:'scale(.1)',filter:'brightness(8)',opacity:0}],{duration:560,easing:'ease-in'});
-  const done=()=>{ if(board[i]){ board[i]=0; paintDisc(i); } };
+  const done=()=>{ if(board[i]>0){ board[i]=0; paintDisc(i); } };
   a.onfinish=done; setTimeout(done,620);
 }
 
@@ -1447,16 +1870,32 @@ async function castCard(p, target, remoteS, remoteTargets){
   if (remoteS){ S=remoteS; targets=remoteTargets||[]; }
   else {
     S=curState();
+    const pr=protS(S);
     if (el==='light'||el==='dark'){
-      const {os,n}=skillTargets(S.board,p,S.guards,el);
+      const {os,n}=skillTargets(S.board,p,pr,el);
       targets=shuffle(os).slice(0,n);
       targets.forEach(i=>S.board[i] = el==='light' ? 0 : p);
-      S.guards=S.guards.filter(g=>S.board[g.idx]===g.owner);
+      if (el==='dark') targets.forEach(i=>S.curses.push({idx:i,owner:p,left:1}));
     }
     else if (el==='fire'){ targets=[target]; S.burns.push({idx:target,owner:p,left:3}); S.pas[p].fireAt=S.pas[p].turns; }
+    else if (el==='star'){
+      targets=[]; const changed=[];
+      const empt=[]; for (let i=0;i<64;i++) if (S.board[i]===0 && !S.burns.some(b=>b.idx===i)) empt.push(i);
+      for (const e of shuffle(empt).slice(0,3)){
+        const f=flipsFor(S.board,e,p,protS(S)); S.board[e]=p; f.forEach(k=>S.board[k]=p);
+        targets.push(e,...f,-1); changed.push(e,...f);
+      }
+      const {os}=skillTargets(S.board,p,protS(S),'star');
+      let oc=0; for (let i=0;i<64;i++) if (S.board[i]===3-p) oc++;
+      if (os.length && oc>1){ const cv=pick(os); S.board[cv]=p; targets.push(cv); changed.push(cv); }
+      starPassive(S,p,changed);
+    }
+    else if (el==='king'){ targets=[]; S.royal=p; }
+    else if (el==='rock'){ targets=[]; S.quake=1; }
     else { targets=[]; S.extra=1; }
     S.used[p]=(S.used[p]||0)+1; S.cardThisTurn=true; S.pass=0;
-    if (!legalS(S,p).length){
+    cleanupS(S);
+    if (!checkRegicide(S) && !legalS(S,p).length){
       S.extra=0; advanceS(S,p);
       if (!S.over && S.turn!==p && !S.pass) S.pass=p;
     }
@@ -1513,7 +1952,7 @@ async function playCard(el,p,targets,myGen){
     for (let k=0;k<targets.length;k++){
       const i=targets[k]; const [x,y]=center(i);
       cells[i].classList.remove('marked');
-      bolt(bx,by,x,y,E.c1,.55,2,3);
+      bolt(bx,by,x,y,E.c1,.55,2,3); bolt(bx,by,x,y,'#2a0050',.5,3,0);
       for(let j=0;j<26*FXQ;j++){ const t=Math.random(); part({x:bx+(x-bx)*t,y:by+(y-by)*t,vx:rnd(-40,40),vy:rnd(-40,40),drag:.95,life:rnd(.5,.9),size:rnd(8,16),color:'#000',mode:'smoke',alpha:.7}); }
       flipDisc(i,p,1.9,k); flash(E.c1,.25,220); shake(16);
       await wait(380); if (!alive()) return;
@@ -1538,8 +1977,59 @@ async function playCard(el,p,targets,myGen){
     for(let j=0;j<4;j++) ring(x,y,{vr:420+j*240,life:.9,w:10-j*2,color:j%2?E.c2:E.c1});
     for(let j=0;j<240*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,700); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-160,g:-160,drag:.92,life:rnd(.6,1.3),size:rnd(4,12),mode:'fire'}); }
     for(let j=0;j<60*FXQ;j++) part({x:x+rnd(-10,10),y,vx:rnd(-30,30),vy:rnd(-600,-250),g:-100,drag:.95,life:rnd(.6,1.1),size:rnd(5,10),mode:'fire'});
-    flames[i].hidden=false; flames[i].classList.remove('chain'); flames[i].textContent='3';
+    flames[i].hidden=false; flames[i].classList.remove('chain'); flames[i].innerHTML=''; flames[i].textContent='3';
     await wait(800);
+    undim(900);
+  } else if (el==='star'){
+    dim('radial-gradient(circle at 50% 30%, rgba(30,40,120,.6), rgba(0,0,20,.94))',300);
+    emit(2.6,()=>{
+      if (Math.random()<.5){ const sx=rnd(W*.2,W*1.1), sy=rnd(-40,H*.3); for (let j=0;j<3;j++) part({x:sx,y:sy,vx:-rnd(500,800),vy:rnd(300,500),drag:.995,life:rnd(.4,.7),size:rnd(1.2,2.2),color:pick([E.c2,E.c3]),mode:'spark'}); }
+      for (let j=0;j<2*FXQ;j++) part({x:rnd(0,W),y:rnd(0,H),vx:0,vy:0,drag:1,life:rnd(.6,1.2),size:rnd(1.2,2.6),color:pick([E.c2,E.c3,E.c1]),mode:'starp',rot:rnd(0,TAU)});
+    });
+    await wait(500);
+    // groups: meteor square, its flips, -1 ... then the converted stone
+    const groups=[]; let cur=[];
+    for (const v of targets){ if (v===-1){ groups.push(cur); cur=[]; } else cur.push(v); }
+    const conv=cur[0];
+    for (let g=0; g<groups.length; g++){
+      const [e,...fl]=groups[g]; if (e===undefined) continue;
+      const [x,y]=center(e), sx=x+rnd(200,360), sy=y-rnd(300,480);
+      emit(.38,(dt,t)=>{ const q=Math.min(1,t/.38), mx=sx+(x-sx)*q, my=sy+(y-sy)*q; for (let j=0;j<8*FXQ;j++) part({x:mx+rnd(-5,5),y:my+rnd(-5,5),vx:rnd(-40,40),vy:rnd(-40,40),drag:.9,life:rnd(.3,.7),size:rnd(2,4),color:pick([E.c2,E.c3,E.c1]),mode:Math.random()<.5?'starp':'glow',rot:rnd(0,TAU)}); });
+      await wait(390); if (!alive()) return;
+      board[e]=p; paintDisc(e);
+      discs[e].animate([{transform:'scale(2.4)',filter:'brightness(4)',opacity:0},{transform:'scale(.9)',filter:'brightness(2)',opacity:1,offset:.6},{transform:'scale(1)',filter:'brightness(1)'}],{duration:420,easing:'cubic-bezier(.3,1.4,.5,1)'});
+      flash('#dfe8ff',.4,220); shake(16); sfx('star','flip',g*2);
+      for (let j=0;j<50*FXQ;j++){ const a=rnd(0,TAU), s=rnd(150,650); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1),size:rnd(2.5,6),color:pick([E.c2,E.c3,E.c1]),mode:'starp',rot:rnd(0,TAU)}); }
+      ring(x,y,{vr:560,life:.5,w:6,color:E.c3});
+      fl.forEach((f,k)=>setTimeout(()=>{ if (alive()) starFlip(f,p,k); }, 120+k*110));
+      await wait(260+fl.length*110); if (!alive()) return;
+    }
+    if (conv!==undefined){
+      cells[conv].style.setProperty('--mk',E.c3); cells[conv].classList.add('marked');
+      tone('sine',2093,2093,.5,.08); await wait(700); if (!alive()) return;
+      cells[conv].classList.remove('marked');
+      starFlip(conv,p,6);
+      await wait(900);
+    } else await wait(500);
+    undim(900);
+  } else if (el==='king'){
+    dim('radial-gradient(circle at 50% 30%, rgba(90,60,0,.35), rgba(20,8,30,.85))',300);
+    const sr=$('side'+p).getBoundingClientRect(), sx=sr.left+sr.width/2, sy=sr.top+Math.min(60,sr.height/2);
+    for (let j=0;j<10;j++) BEAMS.push({x:bx+(j-4.5)*r.width*.11,y:r.bottom,w:r.width*.06,life:1.6,t:0,color:j%2?E.c1:E.c3});
+    emit(1.6,()=>{ for (let j=0;j<5*FXQ;j++) part({x:rnd(0,W),y:-10,vx:rnd(-30,30),vy:rnd(200,420),g:300,drag:.99,life:rnd(1,1.6),size:rnd(2.5,4.5),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); });
+    ring(sx,sy,{vr:420,life:.8,w:6,color:E.c1}); ring(sx,sy,{vr:260,life:1,w:3,color:E.c3});
+    flash('#fff1c0',.45,500); shake(10);
+    await wait(1700);
+    undim(900);
+  } else if (el==='rock'){
+    dim('radial-gradient(circle at 50% 70%, rgba(70,50,30,.45), rgba(15,10,5,.88))',300);
+    emit(1.3,(dt,t)=>{
+      shake(6+t*10);
+      for (let j=0;j<3*FXQ;j++) part({x:rnd(r.left,r.right),y:r.top-30,vx:rnd(-40,40),vy:rnd(100,260),g:900,drag:.99,life:rnd(.6,1),size:rnd(3,8),color:pick(['#8a7458','#5a4a38','#c9b28a']),mode:'chunk',rot:rnd(0,TAU)});
+      if (Math.random()<.4) part({x:rnd(r.left,r.right),y:r.bottom,vx:rnd(-20,20),vy:rnd(-60,-20),drag:.98,life:rnd(1,1.6),size:rnd(20,40),color:'#3a2c1e',mode:'smoke',alpha:.5});
+    });
+    for (let j=0;j<4;j++) setTimeout(()=>{ if (alive()) bolt(rnd(r.left,r.right),r.bottom,rnd(r.left,r.right),rnd(r.top,r.bottom),'#c08a4a',.4,1.4,2); }, j*250);
+    await wait(1500);
     undim(900);
   } else {
     const sr=$('side'+p).getBoundingClientRect(), sx=sr.left+sr.width/2, sy=sr.top+Math.min(60,sr.height/2);
@@ -1561,13 +2051,18 @@ async function playCard(el,p,targets,myGen){
 /* ---------- passive skill events ---------- */
 async function playEvents(ev){
   for (const e of ev){
-    const [k,v]=e.split(':'); const n=+v;
+    const [k,v,extra]=e.split(':'); const n=+v;
     if (!Number.isInteger(n)) continue;
     if (k==='seraph' && (n===1||n===2)) await fxSeraph(n);
-    else if (k==='guard' && n>=0 && n<64) await fxGuard(n);
+    else if (k==='guard' && n>=0 && n<N) await fxGuard(n);
     else if (k==='ghost' && (n===1||n===2)) await fxGhost(n);
     else if (k==='chain' && n>=0 && n<64) await fxChain(n);
     else if (k==='jinrai' && (n===1||n===2)) await fxJinrai(n);
+    else if (k==='hush' && (n===1||n===2)) await fxHush(n);
+    else if (k==='crown' && n>=0 && n<N) await fxCrown(n);
+    else if (k==='decree' && n>=0 && n<N) await fxDecree(n);
+    else if (k==='regicide' && (n===1||n===2)) await fxRegicide(n);
+    else if (k==='quake' && n>=0 && n<N) await fxQuake(n, extra||'');
   }
 }
 async function fxSeraph(p){
@@ -1608,23 +2103,24 @@ function chainSvg(id){
 function paintSeal(i,b){
   const f=flames[i], isChain=b.kind==='chain';
   f.classList.toggle('chain', isChain);
-  if (isChain){ if (!f.firstElementChild) f.innerHTML=chainSvg(i); }
-  else f.textContent=b.left;
+  if (isChain){ if (!f.querySelector('svg')) f.innerHTML=chainSvg(i); }
+  else { if (f.querySelector('svg')) f.innerHTML=''; f.textContent=b.left; }
 }
 async function fxChain(idx){
   const [x,y]=center(idx), r=boardEl.getBoundingClientRect(), col='#ffe9a0';
-  const anchors=[[r.left,y],[r.right,y],[x,r.top],[x,r.bottom]];
-  anchors.forEach(([ax,ay],k)=>{
-    const L=Math.hypot(x-ax,y-ay), n=Math.max(4,Math.round(L/14));
-    for (let j=0;j<=n;j++){ const t=j/n; setTimeout(()=>part({x:ax+(x-ax)*t,y:ay+(y-ay)*t,life:1.1,size:3,color:j%2?col:'#b8a76a'}), k*60+j*12); }
+  // four golden chains whip in from the board edges at once
+  [[r.left,y],[r.right,y],[x,r.top],[x,r.bottom]].forEach(([ax,ay])=>{
+    LINES.push({x1:ax,y1:ay,x2:x,y2:y,t:0,delay:0,life:.45,draw:.09,color:col,w:2.4});
+    const L=Math.hypot(x-ax,y-ay), n=Math.max(4,Math.round(L/16));
+    for (let j=0;j<=n;j++){ const t=j/n; setTimeout(()=>part({x:ax+(x-ax)*t,y:ay+(y-ay)*t,life:.4,size:2.6,color:j%2?col:'#c8ccd8'}), j*4); }
   });
-  [0,.12,.24].forEach(d=>{ tone('square',2400,1600,.07,.08,d); nz('highpass',5000,2500,.08,.12,d); });
-  flash('#fff6d0',.25,250); shake(6);
+  sfx(null,'chain');
+  setTimeout(()=>{ flash('#fff6d0',.3,160); shake(9); }, 90);
   flames[idx].hidden=false; flames[idx].textContent=''; paintSeal(idx,{kind:'chain'});
-  flames[idx].animate([{transform:'scale(2.2) rotate(-25deg)',opacity:0},{transform:'scale(.92) rotate(4deg)',opacity:1,offset:.6},{transform:'scale(1) rotate(0)'}],{duration:420,easing:'cubic-bezier(.3,1.4,.5,1)'});
-  setTimeout(()=>{ for (let j=0;j<18*FXQ;j++){ const a=rnd(0,TAU), sp=rnd(120,420); part({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,drag:.88,life:rnd(.2,.45),size:rnd(1,2),color:pick(['#ffffff','#ffe9a0','#c8ccd8']),mode:'spark'}); } }, 250);
+  flames[idx].animate([{transform:'scale(2.4) rotate(-30deg)',opacity:0},{transform:'scale(.9) rotate(5deg)',opacity:1,offset:.55},{transform:'scale(1) rotate(0)'}],{duration:240,easing:'cubic-bezier(.3,1.5,.5,1)'});
+  setTimeout(()=>{ for (let j=0;j<22*FXQ;j++){ const a=rnd(0,TAU), sp=rnd(160,520); part({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,drag:.86,life:rnd(.15,.35),size:rnd(1,2.2),color:pick(['#ffffff','#ffe9a0','#c8ccd8']),mode:'spark'}); } }, 110);
   toast('熾天使の鎖：置ける場所が封じられた');
-  await wait(650);
+  await wait(380);
 }
 async function fxGuard(idx){
   const [x,y]=center(idx), E=ELS.fire;
@@ -1637,7 +2133,6 @@ async function fxGuard(idx){
 async function fxGhost(victim){
   const D={k:'闇', c1:'#ff1a1a', c2:'#ffb0b0', c3:'#3a0000', glow:'0 0 18px #ff0000, 0 0 50px #600000, 0 0 3px #000', fill:'linear-gradient(180deg,#ffffff,#ff3030 45%,#4a0000)'};
   showBanner(D,'PASSIVE',PASSIVES.dark.name,'THE DEAD ARE MARCHING');
-  // drone, a choir of detuned voices, a scream and a heartbeat
   sfx('dark','ult');
   [196,207.6,233,246.9].forEach((f,k)=>{ tone('sine',f,f*.94,3.2,.07,k*.05); tone('triangle',f*2.01,f*1.88,2.8,.025,.1+k*.05); });
   nz('bandpass',3200,380,1.4,.4,.7,6);
@@ -1660,7 +2155,6 @@ async function fxGhost(victim){
     {filter:'contrast(2) saturate(0) brightness(.6)',offset:.7},{filter:'none'}
   ],{duration:2600});
   await wait(1250);
-  // the face
   part({x:W/2,y:H*.45,vx:0,vy:0,drag:1,life:.8,size:Math.min(W,H)*.34,color:'#dcd6e6',mode:'ghost',alpha:.95});
   flash('rgba(160,0,0,1)',.55,500); shake(30); nz('highpass',4000,900,.6,.5,0,2);
   await wait(1350);
@@ -1677,43 +2171,127 @@ async function fxJinrai(p){
   toast(`${PASSIVES.thunder.name}！ 雷帝が1回分よみがえった`);
   await wait(900);
 }
+const CONSTELLATIONS = [
+  { name:'オリオン座',   pts:[[.3,.1],[.7,.14],[.42,.46],[.5,.48],[.58,.5],[.26,.9],[.74,.86]], e:[[0,1],[0,2],[1,4],[2,3],[3,4],[2,5],[4,6]] },
+  { name:'北斗七星',     pts:[[.08,.32],[.24,.26],[.38,.34],[.5,.44],[.56,.72],[.84,.74],[.88,.46]], e:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3]] },
+  { name:'カシオペヤ座', pts:[[.08,.32],[.3,.7],[.5,.38],[.7,.74],[.92,.34]], e:[[0,1],[1,2],[2,3],[3,4]] },
+  { name:'はくちょう座', pts:[[.5,.06],[.5,.38],[.5,.62],[.5,.94],[.12,.3],[.88,.44]], e:[[0,1],[1,2],[2,3],[4,1],[1,5]] },
+  { name:'さそり座',     pts:[[.1,.2],[.2,.1],[.22,.3],[.34,.36],[.46,.46],[.5,.62],[.56,.78],[.7,.88],[.84,.82],[.9,.68]], e:[[1,2],[0,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9]] },
+  { name:'しし座',       pts:[[.18,.3],[.28,.16],[.42,.2],[.46,.36],[.36,.5],[.5,.56],[.82,.5],[.86,.72],[.56,.74]], e:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,5]] },
+  { name:'ペガスス座',   pts:[[.22,.26],[.68,.22],[.74,.66],[.26,.7],[.06,.92],[.94,.06],[.92,.84]], e:[[0,1],[1,2],[2,3],[3,0],[3,4],[1,5],[2,6]] },
+];
+function drawConstellation(C,rect,delay,w){
+  const pad=rect.width*.08, X=v=>rect.left+pad+v*(rect.width-2*pad), Y=v=>rect.top+pad+v*(rect.height-2*pad);
+  C.pts.forEach(([u,v],k)=>setTimeout(()=>{ const x=X(u), y=Y(v); part({x,y,life:2.5,size:4*w,color:'#ffffff',mode:'starp'}); part({x,y,life:2.5,size:7*w,color:ELS.star.c1}); ring(x,y,{vr:120*w,life:.45,w:2,color:ELS.star.c3}); }, (delay+k*.08)*1000));
+  C.e.forEach(([a,b],k)=>LINES.push({x1:X(C.pts[a][0]),y1:Y(C.pts[a][1]),x2:X(C.pts[b][0]),y2:Y(C.pts[b][1]),t:0,delay:delay+.25+k*.1,life:2.3,draw:.2,color:'#cfe0ff',w:1.6*w}));
+}
+async function fxHush(victim){
+  const E=ELS.star, C=pick(CONSTELLATIONS);
+  showBanner(E,'CONSTELLATION SEAL',`${C.name}の封印`,'PASSIVE & CARD SEALED · 2 TURNS');
+  sfx('star','ult');
+  dim('radial-gradient(circle at 50% 40%, rgba(20,30,90,.55), rgba(0,0,15,.9))',300);
+  drawConstellation(C, boardEl.getBoundingClientRect(), .1, 1.4);
+  drawConstellation(C, $('side'+victim).getBoundingClientRect(), .4, .8);
+  C.pts.forEach((_,k)=>tone('sine',1568*Math.pow(2,(k%5)/12),1568*Math.pow(2,(k%5)/12),.5,.05,.1+k*.08));
+  await wait(2400);
+  undim(800);
+  toast(`${roleOf(victim)}のパッシブとカードを2ターン封印`);
+}
+async function fxCrown(idx){
+  const E=ELS.king, [x,y]=center(idx);
+  sfx('king','flip',4); tone('sine',1318,1318,.8,.06,.25); tone('sine',1975,1975,.6,.04,.3);
+  for (let j=0;j<3;j++) ring(x,y,{vr:220+j*140,life:.7,w:5-j,color:j%2?E.c3:E.c1});
+  for (let j=0;j<40*FXQ;j++){ const a=rnd(0,TAU), s=rnd(80,360); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1),size:rnd(1.2,2.6),color:pick([E.c1,E.c2]),tw:14}); }
+  paintDeco(idx);
+  const svg=decos[idx].querySelector('svg');
+  if (svg) svg.animate([{transform:'translateY(-60px) scale(1.6)',opacity:0},{transform:'translateY(4px) scale(.95)',opacity:1,offset:.7},{transform:'none'}],{duration:620,easing:'cubic-bezier(.3,1.4,.5,1)'});
+  flash('#fff1c0',.3,300);
+  toast(`${PASSIVES.king.name}：この石が王になった`);
+  await wait(700);
+}
+async function fxDecree(idx){
+  const E=ELS.king, [x,y]=center(idx);
+  showBanner(E,'ROYAL DECREE','王命','THY NEXT MOVE IS DECIDED');
+  sfx('king','ult');
+  BEAMS.push({x,y,w:60,life:1.2,t:0,color:E.c1});
+  for (let j=0;j<3;j++) ring(x,y,{vr:300+j*180,life:.8,w:6-j*1.5,color:j%2?E.c3:E.c1});
+  for (let j=0;j<60*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,500); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1),size:rnd(2,4),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); }
+  shake(12); flash('#fff1c0',.35,300);
+  await wait(1300);
+}
+async function fxRegicide(k){
+  const E=ELS.king, i=kings[k]>=0 ? kings[k] : -1;
+  const [x,y] = i>=0 ? center(i) : [W/2,H/2];
+  showBanner({...E, fill:'linear-gradient(180deg,#ffffff,#ff5a5a 50%,#5a0000)', c1:'#ff3030'},'REGICIDE','王 陥落','THE KING HAS FALLEN');
+  tone('sawtooth',392,196,1.2,.12); tone('sawtooth',311,155,1.2,.1,.05); nz('lowpass',2000,80,1.4,.6,.1); tone('sine',60,25,1.4,.8,.1);
+  for (let j=0;j<80*FXQ;j++){ const a=rnd(0,TAU), s=rnd(150,600); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-200,g:900,drag:.98,life:rnd(.8,1.5),size:rnd(2,5),color:pick([E.c1,'#c88f1a','#e0112b','#1f5fe0']),mode:'coin',rot:rnd(0,TAU)}); }
+  if (i>=0){ const svg=decos[i].querySelector('svg'); if (svg) svg.animate([{transform:'none',opacity:1},{transform:'translateY(-30px) rotate(-25deg)',opacity:1,offset:.3},{transform:'translateY(120px) rotate(60deg)',opacity:0}],{duration:1200,fill:'forwards',easing:'ease-in'}); }
+  flash('#ff2020',.5,500); shake(36);
+  await wait(1800);
+}
+async function fxQuake(idx, movesTxt){
+  const E=ELS.rock, [x,y]=center(idx);
+  shake(26); flash('#c08a4a',.22,220);
+  nz('lowpass',300,40,1,.8); tone('sine',55,22,.9,.9); nz('bandpass',900,300,.3,.4,.05,2);
+  ring(x,y,{vr:340,life:.5,w:8,color:E.c1}); ring(x,y,{vr:200,life:.7,w:3,color:E.c2});
+  for (let j=0;j<40*FXQ;j++){ const a=rnd(0,TAU), s=rnd(120,420); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-100,g:900,drag:.98,life:rnd(.5,1),size:rnd(2,5),color:pick(['#8a7458','#5a4a38','#c9b28a']),mode:'chunk',rot:rnd(0,TAU)}); }
+  for (const mv of movesTxt.split('.').filter(Boolean)){
+    const [a,b]=mv.split('-').map(Number); if (!(a>=0&&a<64&&b>=0&&b<64)) continue;
+    const [ax,ay]=center(a), [bx2,by2]=center(b);
+    discs[b].animate([{transform:`translate(${ax-bx2}px,${ay-by2}px)`},{transform:'translate(0,0)'}],{duration:380,easing:'cubic-bezier(.2,.8,.3,1.25)'});
+    for (let j=0;j<8*FXQ;j++) part({x:ax,y:ay,vx:rnd(-60,60),vy:rnd(-60,20),drag:.95,life:rnd(.5,.9),size:rnd(8,14),color:'#3a2c1e',mode:'smoke',alpha:.5});
+  }
+  toast(`${CARDS.rock.name}：まわりの石を押し出した`);
+  await wait(500);
+}
 
 /* ---------- CPU ---------- */
 function cpuCardChoice(p){
   if (!cardAllowed(p)) return null;
   if (cfg.lv==1 && Math.random()<.5) return null;
   const el=cfg.el[p], opp=3-p, e=emptyCount();
-  if (el==='light'||el==='dark'){
+  if (el==='light'||el==='dark'||el==='star'){
     if (e<=14 || Math.random()<.35) return {};
   } else if (el==='fire'){
     const om=legal(board,opp), corner=om.find(isCorner);
     if (corner!==undefined) return {target:corner};
-    if (om.length && Math.random()<.2){ const best=om.slice().sort((x,y)=>WT[y]-WT[x])[0]; if (WT[best]>=15) return {target:best}; }
+    if (om.length && Math.random()<.2){ const best=om.slice().sort((x,y)=>W8(y)-W8(x))[0]; if (W8(best)>=15 && best<64) return {target:best}; }
+  } else if (el==='king'){
+    if (Math.random()<.45) return {};
+  } else if (el==='rock'){
+    if (Math.random()<.3) return {};
   } else {
     if (legal(board,p).some(isCorner) || Math.random()<.4) return {};
   }
   return null;
 }
 function maybeCPU(){
-  if (phase!=='play'||over||busy||aim||turn!==cpuSide()) return;
+  if (phase!=='play'||over||busy||aim) return;
+  const cs=cpuSide(); if (!cs) return;
   const myGen=gen;
+  if (decree){
+    if (decree.by===cs) setTimeout(()=>{ if (myGen===gen && decree && decree.by===cs && !busy) decreeChoose(decree.opts.slice().sort((a,b)=>W8(a)-W8(b))[0]); }, 800);
+    return;
+  }
+  if (turn!==cs) return;
   setTimeout(()=>{
-    if (myGen!==gen||phase!=='play'||over||busy||turn!==cpuSide()) return;
+    if (myGen!==gen||phase!=='play'||over||busy||decree||turn!==cs) return;
     const p=turn, c=cpuCardChoice(p);
     if (c){ castCard(p,c.target); return; }
-    const m=cpuPick(board,p);
+    const mv=movesFor(p);
+    const m = mv.length===1 ? mv[0] : cpuPick(board,p);
     if (m>=0) doMove(m);
   }, 600);
 }
 async function gameOver(){
   over=true; aim=0; updateAmbience(); render();
   const [a,w]=counts(board);
-  const win = a===w ? 0 : (a>w?1:2);
+  const win = winOverride || (a===w ? 0 : (a>w?1:2));
   const r=boardEl.getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2;
   $('resScore').textContent=`${ELS[cfg.el[1]].k} ${a} — ${w} ${ELS[cfg.el[2]].k}`;
   if (win){
     const E=ELS[cfg.el[win]];
-    $('resBig').innerHTML=`<span style="color:${E.c1};text-shadow:${E.glow}">${E.k}</span>の勝利`;
+    $('resBig').innerHTML=`<span style="color:${E.c1};text-shadow:${E.glow}">${E.k}</span>の勝利${winOverride?'<br><small style="font-size:.4em">王を討ち取った</small>':''}`;
     const myGen=gen;
     await ultimate(cfg.el[win],x,y,'VICTORY');
     if (myGen!==gen || !over) return;
@@ -1729,7 +2307,7 @@ async function gameOver(){
    the code becomes the host's peer id, and both sides mirror the same document shape.
    The host (先手) settles the element draft and the coin toss. */
 const online = () => cfg.mode==='online';
-function isLocalTurn(p){ if (phase!=='play') return false; return online() ? (!!net.kind && net.opp && p===net.side) : p!==cpuSide(); }
+function isLocalTurn(p){ if (phase!=='play' || decree) return false; return online() ? (!!net.kind && net.opp && p===net.side) : p!==cpuSide(); }
 const inClaude = () => !!(window.claude && typeof window.claude.use==='function');
 const PEER_PREFIX='zokusei-othello-v1-';
 const STALE_MS = 30*60*1000;
@@ -1776,14 +2354,16 @@ async function netWrite(patch){
 function stateFields(S){
   return {board:S.board.slice(), turn:S.turn, over:!!S.over, lastMove:S.lastMove??-1, burns:clone(S.burns||[]), guards:clone(S.guards||[]),
     used:{1:S.used[1]||0,2:S.used[2]||0}, extra:S.extra||0, cardThisTurn:!!S.cardThisTurn, pass:S.pass||0, blind:S.blind||0,
-    pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice()};
+    pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice(),
+    kings:{1:(S.kings&&S.kings[1])??-1, 2:(S.kings&&S.kings[2])??-1}, hush:S.hush?{...S.hush}:null, royal:S.royal||0,
+    decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0};
 }
 function sendState(S,act){
   if (!online() || !net.kind) return;
   net.seq++;
   netWrite({...stateFields(S), act, seq:net.seq, updated:Date.now()});
 }
-function validDoc(d){ return d && Array.isArray(d.board) && d.board.length===64 && d.board.every(v=>v===0||v===1||v===2) && (d.turn===1||d.turn===2); }
+function validDoc(d){ return d && Array.isArray(d.board) && (d.board.length===64||d.board.length===N) && d.board.every(v=>v===-1||v===0||v===1||v===2) && (d.turn===1||d.turn===2); }
 function syncPhase(d){
   if (d.picks && typeof d.picks==='object') picks={1:EL_ORDER.includes(d.picks[1])?d.picks[1]:'', 2:EL_ORDER.includes(d.picks[2])?d.picks[2]:''};
   const ph = ['draft','coin','play'].includes(d.phase) ? d.phase : 'play';
@@ -1816,6 +2396,7 @@ function drainNet(){
 function applyRemote(d){
   const a=Array.isArray(d.act) ? d.act : null;
   d.burns=Array.isArray(d.burns)?d.burns:[]; d.guards=Array.isArray(d.guards)?d.guards:[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas();
+  d.curses=Array.isArray(d.curses)?d.curses:[]; d.kings=d.kings||{1:-1,2:-1};
   if (!a){ resetLocal(d); return; }
   const kind=a[0], p=a[1];
   if (phase==='play' && p!==net.side && turn===p && !over){
@@ -1826,8 +2407,10 @@ function applyRemote(d){
         if (S.board.every((v,i)=>v===d.board[i])){ doMove(idx,d); return; }
       }
     } else if (kind==='card' && a[2]===cfg.el[p]){
-      castCard(p,null,d,a.slice(3).filter(i=>Number.isInteger(i)&&i>=0&&i<64)); return;
+      castCard(p,null,d,a.slice(3).filter(i=>Number.isInteger(i)&&i>=-1&&i<N)); return;
     }
+  }
+  if (kind==='decree' && phase==='play' && decree && p===decree.by && p!==net.side){ commit(d); return;
   }
   commit(d);
 }
@@ -2004,7 +2587,9 @@ function buildHelp(){
   body.innerHTML = `<ul class="h-rules">
     <li>対局の最初に、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
+    <li>星・王・岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。</li>
     <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
+    <li>星の<strong>星座封印</strong>を受けると、2ターンのあいだパッシブもカードも使えません。</li>
     <li>パッシブスキルは条件を満たすと自動で発動します。</li>
   </ul>` + EL_ORDER.map(k=>{
     const E=ELS[k], C=CARDS[k], PS=PASSIVES[k];
@@ -2080,7 +2665,7 @@ function start(data){
   paintOnline();
   if (!online() && data && data.phase==='play' && validDoc(data) && data.el && EL_ORDER.includes(data.el[1]) && EL_ORDER.includes(data.el[2])){
     cfg.el={1:data.el[1],2:data.el[2]}; phase='play';
-    resetLocal({...freshState(), ...data, burns:data.burns||[], guards:data.guards||[], used:data.used||{1:0,2:0}, pas:data.pas||freshPas(), pass:0, ev:[]});
+    resetLocal({...freshState(), ...data, burns:data.burns||[], guards:data.guards||[], used:data.used||{1:0,2:0}, pas:data.pas||freshPas(), curses:data.curses||[], kings:data.kings||{1:-1,2:-1}, pass:0, ev:[]});
   } else newGame();
 }
 window.claude?.hot?.snapshot?.(()=>({...curState(), phase, el:{...cfg.el}}));
