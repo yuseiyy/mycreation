@@ -10,7 +10,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@900&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&family=Reggae+One&family=RocknRoll+One&family=Kaisei+Decol:wght@700&family=Zen+Antique&family=Creepster&family=Black+Ops+One&display=swap">
 <style>
 /* Layout: one arena screen — two element "duelist" panels flank a carved stone board; FX canvas floats over everything. Single dark world by design. */
 :root{
@@ -368,6 +368,34 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
   background-image:radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 70% 20%,#cfe0ff 0 1px,transparent 1.5px),radial-gradient(circle at 50% 80%,#fff 0 1px,transparent 1.5px),linear-gradient(180deg,#1b2050,#0c0e26)}
 .side.hushed .card,.side.hushed .pas{filter:grayscale(.85) brightness(.75)}
 
+/* shifted shades for look-alike matchups (後手 side) */
+.disc[data-el="dark"][data-alt]{background:radial-gradient(circle at 34% 28%,#4a6ad8 0%,#101a50 45%,#000208 80%);box-shadow:0 0 12px #5a7cff99,0 3px 6px #000,inset 0 -4px 8px #000,inset 0 2px 5px #8aa4ff55}
+.disc[data-el="light"][data-alt]{background:radial-gradient(circle at 34% 28%,#ffffff 0%,#eef3fb 42%,#a8b6cc 88%);box-shadow:0 0 16px #dfe8ffcc,0 3px 6px #0008,inset 0 -4px 8px #8090a8aa;color:#6a7a96}
+.disc[data-el="fire"][data-alt]{background:radial-gradient(circle at 34% 28%,#ffc8d0 0%,#e01a3a 42%,#6a0018 86%);box-shadow:0 0 16px #ff3355,0 3px 6px #000a,inset 0 -4px 8px #3a000a}
+.disc[data-el="thunder"][data-alt]{background:radial-gradient(circle at 34% 28%,#fbffd8 0%,#c8f520 42%,#5f7f00 88%);box-shadow:0 0 14px #c8f520aa,0 3px 6px #000a,inset 0 -4px 8px #3a5000;color:#2a3a00}
+.disc[data-el="star"][data-alt]{background:radial-gradient(circle at 30% 30%,#fff 0 1px,transparent 2px),radial-gradient(circle at 66% 38%,#fff 0 1px,transparent 2px),radial-gradient(circle at 44% 70%,#c8ffff 0 1px,transparent 2px),radial-gradient(circle at 34% 28%,#2fb0b0 0%,#0a4a5a 50%,#021418 90%);box-shadow:0 0 14px #3ec9c9aa,0 3px 6px #000a,inset 0 -4px 8px #000}
+.disc[data-el="king"][data-alt]{background:radial-gradient(circle at 34% 28%,#ff9aa8 0%,#b0102a 45%,#4a0010 88%);box-shadow:0 0 0 2px #e6b43a,0 0 0 3px #7a5410,0 0 14px #ff5a7a88,0 3px 6px #000a,inset 0 -4px 8px #2a0008}
+.disc[data-el="rock"][data-alt]{background:radial-gradient(circle at 30% 36%,#0003 0 2px,transparent 3px),radial-gradient(circle at 62% 58%,#0004 0 2.5px,transparent 3.5px),radial-gradient(circle at 34% 28%,#e6e6e6 0%,#8f8f8f 45%,#3a3a3a 90%);box-shadow:0 3px 6px #000c,inset 0 -5px 8px #1a1a1a}
+
+/* a card that is ready to use shimmers even off-turn */
+.card{position:relative;overflow:hidden}
+.card.avail{border-color:var(--ec);box-shadow:0 0 14px -2px var(--ec)}
+.card.avail::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,color-mix(in srgb,var(--ec) 45%,#fff) 50%,transparent 65%);transform:translateX(-120%);animation:cardShine 2.6s ease-in-out infinite;pointer-events:none}
+@keyframes cardShine{60%,100%{transform:translateX(120%)}}
+
+/* royal flag */
+.deco svg.flag{left:30%;top:auto;bottom:38%;width:auto;height:150%;filter:drop-shadow(0 2px 2px #000) drop-shadow(0 0 6px #ffd34d)}
+.deco.forced::after{content:none}
+.bigflag{position:fixed;z-index:5;pointer-events:none;aspect-ratio:60/100}
+.bigflag svg{height:100%;width:auto;display:block;filter:drop-shadow(0 6px 6px #000) drop-shadow(0 0 16px #ffd34d)}
+
+/* castle scenes */
+#castle{position:fixed;inset:0;z-index:5;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;opacity:0}
+#castle.fall{background:radial-gradient(ellipse at 50% 85%,#6a0e0e,#1a0306 65%,#060103)}
+#castle.rise{background:radial-gradient(ellipse at 50% 88%,#ffe08a,#c88f1a 28%,#3a1d5a 72%,#12081e)}
+#castle svg{width:min(92vw,720px);height:auto;margin-bottom:3vh;overflow:visible}
+#castle .cpart,#castle .cfin,#castle .pp,#castle .pj{transform-box:fill-box;transform-origin:50% 100%}
+
 /* 省ドパモード: keep the game, drop the spectacle */
 html.lite .aura,html.lite #aura{display:none!important}
 html.lite .flame:not(.chain)::before,html.lite .flame:not(.chain)::after{animation:none!important}
@@ -433,6 +461,7 @@ html.lite .disc{filter:none!important}
 <canvas id="fx"></canvas>
 <div id="flash"></div>
 <div id="banner"><div class="b-top">CORNER BREAK</div><div class="b-main"></div><div class="b-sub"></div></div>
+<div id="castle" hidden></div>
 <div id="toast"></div>
 <div id="helpBox" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <div class="h-panel">
@@ -560,6 +589,20 @@ const ELS = {
              glow:'0 0 16px #d0a066, 0 0 50px #6b5238', fill:'linear-gradient(180deg,#f5e6c8,#c9a46a 45%,#7a5c3a 80%,#3e3226)' },
 };
 const EL_ORDER = ['dark','light','fire','thunder','star','king','rock'];
+// banner lettering per element: font, sub-title font, and any extra shaping
+const LETTERING = {
+  dark:    { font:'"Yuji Boku","Dela Gothic One",serif',             sfont:'"Creepster","Cinzel",serif', bf:'drop-shadow(0 5px 0 #1a0030) drop-shadow(0 0 16px #a259ff) drop-shadow(0 0 34px #000)', bt:'skewY(-2deg)' },
+  light:   { font:'"Shippori Mincho B1","Zen Kaku Gothic New",serif', sfont:'"Cinzel Decorative","Cinzel",serif' },
+  fire:    { font:'"Reggae One","Dela Gothic One",sans-serif',        sfont:'"Black Ops One","Cinzel",sans-serif', bt:'scaleY(1.06)' },
+  thunder: { font:'"RocknRoll One","Dela Gothic One",sans-serif',     sfont:'"Black Ops One","Cinzel",sans-serif', bt:'skewX(-10deg)' },
+  star:    { font:'"Kaisei Decol","Zen Kaku Gothic New",serif',       sfont:'"Cinzel Decorative","Cinzel",serif' },
+  king:    { font:'"Zen Antique","Shippori Mincho B1",serif',         sfont:'"Cinzel Decorative","Cinzel",serif' },
+  rock:    { font:'"Dela Gothic One",sans-serif',                     sfont:'"Black Ops One","Cinzel",sans-serif', bf:'drop-shadow(0 6px 0 #2a2016) drop-shadow(0 0 12px #d0a066)', bt:'scaleY(1.1)' },
+};
+for (const k of EL_ORDER) Object.assign(ELS[k], LETTERING[k]);
+// when two elements look alike, the 後手 side's stones and accents take a shifted shade
+const CLASH=[['thunder','fire'],['thunder','light'],['fire','rock'],['dark','king'],['dark','star'],['king','star']];
+const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star:'#3ec9c9',king:'#ff5a7a',rock:'#b8b8b8'};
 
 /* ---------- state ---------- */
 let cfg = { el:{1:'dark',2:'light'}, mode:'cpu2', lv:2, sound:true };
@@ -569,7 +612,8 @@ function saveCfg(){ try { localStorage.setItem('elemental-othello-cfg', JSON.str
 let board, turn, busy = false, over = false, lastMove = -1, gen = 0;
 let burns = [], guards = [], used = {1:0,2:0}, extra = 0, cardThisTurn = false, aim = 0, blind = 0;
 let pas = {1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}}, phase = 'draft', picks = {1:'',2:''}, coinInfo = null;
-let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, quake = 0, curses = [], winOverride = 0, prot = [];
+let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, quake = 0, curses = [], winOverride = 0, winReason = '', prot = [];
+let prevBlock = {1:null,2:null};
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
@@ -849,7 +893,7 @@ function frame(now){
   for(let i=RINGS.length-1;i>=0;i--){
     const r=RINGS[i]; r.t+=dt; if(r.t>=r.life){RINGS.splice(i,1);continue;}
     const k=r.t/r.life; r.r+=r.vr*dt*(1-k*.6);
-    cx.globalAlpha=(1-k); cx.strokeStyle=r.color; cx.lineWidth=Math.max(.5,r.w*(1-k)); cx.beginPath(); cx.arc(r.x,r.y,Math.max(.5,r.r),0,TAU); cx.stroke();
+    cx.globalAlpha=(1-k); cx.strokeStyle=r.color; cx.lineWidth=Math.max(.5,r.w*(1-k)); cx.beginPath(); if (r.shape==='star'){ const R=Math.max(.5,r.r), rot=r.t*1.5; for (let j=0;j<10;j++){ const rr=j%2?R*.45:R, an=rot+j*Math.PI/5-Math.PI/2; cx.lineTo(r.x+Math.cos(an)*rr,r.y+Math.sin(an)*rr); } cx.closePath(); } else cx.arc(r.x,r.y,Math.max(.5,r.r),0,TAU); cx.stroke();
     cx.globalAlpha=(1-k)*.3; cx.lineWidth=r.w*3*(1-k); cx.stroke();
   }
   // glow particles
@@ -859,7 +903,10 @@ function frame(now){
     if (p.tw) { s*=.55+.45*Math.sin(p.t*p.tw+p.x); a*=Math.min(1,p.t*3); }
     const col = p.mode==='fire' ? fireCol(k) : p.color;
     cx.fillStyle=col; cx.strokeStyle=col;
-    if (p.mode==='starp'){
+    if (p.mode==='glyph'){
+      cx.globalAlpha=a; cx.font=`${Math.max(6,s*(1-k*.3))}px "Zen Kaku Gothic New",sans-serif`; cx.textAlign='center'; cx.textBaseline='middle';
+      cx.save(); cx.translate(p.x,p.y); cx.rotate((p.rot||0)+p.t*1.5); cx.fillText(p.ch||'☆',0,0); cx.globalAlpha=a*.3; cx.font=`${Math.max(8,s*1.8)}px sans-serif`; cx.fillText(p.ch||'☆',0,0); cx.restore();
+    } else if (p.mode==='starp'){
       const rot=(p.rot||0)+p.t*2.5, R=Math.max(.5,s*(1-k*.3));
       for (const [mul,al] of [[2.4,.22],[1,1]]){ cx.globalAlpha=a*al; cx.beginPath(); for (let j=0;j<10;j++){ const rr=j%2?R*mul*.42:R*mul, an=rot+j*Math.PI/5-Math.PI/2; cx.lineTo(p.x+Math.cos(an)*rr,p.y+Math.sin(an)*rr); } cx.closePath(); cx.fill(); }
     } else if (p.mode==='spark'){
@@ -939,7 +986,8 @@ function burst(el,x,y,pw=1,i=0){
     ring(x,y,{vr:320*pw,life:.45,w:4*pw,color:E.c1});
   } else if (el==='star'){
     for(let j=0;j<26*n;j++){ const a=rnd(0,TAU), s=rnd(80,380)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1),size:rnd(2,4.2),color:pick([E.c1,E.c2,E.c3]),mode:'starp',rot:rnd(0,TAU)}); }
-    ring(x,y,{vr:300*pw,life:.45,w:3*pw,color:E.c3}); ring(x,y,{vr:170*pw,life:.6,w:2,color:E.c1});
+    ring(x,y,{vr:300*pw,life:.45,w:3*pw,color:E.c3,shape:'star'}); ring(x,y,{vr:170*pw,life:.6,w:2,color:E.c1});
+    for(let j=0;j<6*n;j++){ const a=rnd(0,TAU), s=rnd(80,260)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.6,1.1),size:rnd(10,18),color:pick([E.c2,E.c3]),mode:'glyph',ch:pick(['☆','★']),rot:rnd(-.5,.5)}); }
     for(let j=0;j<2;j++){ const a=rnd(0,TAU), L=rnd(30,60)*pw; LINES.push({x1:x,y1:y,x2:x+Math.cos(a)*L,y2:y+Math.sin(a)*L,t:0,delay:.05,life:.6,draw:.12,color:'#cfe0ff',w:1.2}); }
   } else if (el==='king'){
     for(let j=0;j<20*n;j++){ const a=rnd(0,TAU), s=rnd(100,360)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,g:500,drag:.97,life:rnd(.5,1),size:rnd(2,3.6),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); }
@@ -967,6 +1015,8 @@ function showBanner(E, top, main, sub){
   m.style.background=E.fill; m.style.webkitBackgroundClip='text'; m.style.backgroundClip='text'; m.style.color='transparent';
   m.style.filter=`drop-shadow(0 0 14px ${E.c1}) drop-shadow(0 0 40px ${E.c3})`;
   const s=bannerEl.querySelector('.b-sub'); s.textContent=sub; s.style.color=E.c2; s.style.textShadow=E.glow;
+  m.style.fontFamily=E.font||''; m.style.transform=E.bt||''; s.style.fontFamily=E.sfont||'';
+  if (E.bf) m.style.filter=E.bf;
   bannerEl.animate([
     {opacity:0,transform:'scale(2.6)',filter:'blur(14px)'},
     {opacity:1,transform:'scale(.96)',filter:'blur(0)',offset:.12},
@@ -1145,14 +1195,16 @@ function spawnAmbient(el){
 const LATE = 30;          // most cards unlock once this many empty squares remain
 const FIRE_OPEN = 3;      // the fire card unlocks after the fire side's third turn
 const FIRE_CD = 5;        // ...and then recharges after five of its own turns
-const THUNDER_EARLY = 7;  // 雷帝 unlocks seven squares before light/dark
+const THUNDER_EARLY = 10; // 雷帝 unlocks ten squares before light/dark
+const KING_EARLY = 3;     // ロイヤルアーツ unlocks three squares before light/dark
+const STAR_LINE = 6;     // 星座封印 needs this many in a row
 const CARDS = {
   light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。' },
   dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:3, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。' },
   fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:0,      desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。5ターンに1回使える。' },
   thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
   star:    { name:'流星群',                 sub:'METEOR SHOWER',      uses:1,      desc:'空きマス3つに流れ星が落ちて自分の石になる（挟めば裏返す）。さらに相手の石1枚をランダムに自分の色に変える。' },
-  king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から指定する。' },
+  king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から旗で指定する。角を指定できるのは1回だけ。' },
   rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石を、1マス外側へ押し出す（行き先に石があれば動かない）。' },
 };
 const PASSIVES = {
@@ -1160,8 +1212,8 @@ const PASSIVES = {
   dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の画面が1ターン真っ暗に。置ける場所だけは見える。' },
   fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'毎ターン、置いた石は相手の2ターンのあいだ裏返らず、スキルも効かない。' },
   thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前のターンに裏返した枚数×3%。' },
-  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦・横・斜めに5つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
-  king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。ただし王の上下左右（盤内のマス）をすべて相手の石に囲まれると負け。' },
+  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦・横・斜めに6つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
+  king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王のまわり8マスのうち6マスが相手の石になると負け。8マスすべてが味方になると勝ち。' },
   rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'盤の外周36マスのうち3マスに岩が現れ、岩には自分だけが石を置ける。' },
 };
 const freshPas = () => ({1:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0},2:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0}});
@@ -1176,7 +1228,7 @@ function fireReadyIn(p){
   return Math.max(0, FIRE_CD-(t-(s.fireAt??-99)));
 }
 const cardLeft = p => cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0) : Math.max(0, cardOf(p).uses - (used[p]||0));
-const cardOpenAt = el => el==='thunder' ? LATE+THUNDER_EARLY : LATE;
+const cardOpenAt = el => el==='thunder' ? LATE+THUNDER_EARLY : el==='king' ? LATE+KING_EARLY : LATE;
 const emptyCount = () => counts(board)[2];
 const roleOf = p => p===1 ? '先手' : '後手';
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -1214,7 +1266,7 @@ function pasState(p){
   if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(20,s.flips||0)} / 20`;
   if (el==='fire') return '毎ターン発動';
   if (el==='thunder') return `次ターン ${Math.round(jinraiChance(s)*100)}%`;
-  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${hush.left}）` : '5つ並びで発動';
+  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${hush.left}）` : `${STAR_LINE}つ並びで発動`;
   if (el==='king') return kings[p]>=0 ? '王 健在' : kings[p]===-2 ? '王冠を失った' : '最初の石が王に';
   if (el==='rock'){ let n=0; for (let i=64;i<N;i++) if (board[i]===0) n++; return `空いている岩 ${n}`; }
   return '4枚以上で発動';
@@ -1246,6 +1298,7 @@ function paintDisc(i){
   d.hidden=false;
   if (phase!=='play'){ d.dataset.el='none'+v; d.dataset.k=''; au.hidden=true; return; }
   const el=cfg.el[v]; d.dataset.el=el; d.dataset.k=ELS[el].k;
+  d.toggleAttribute('data-alt', altSide()===v);
   au.hidden=false; au.dataset.el=el;
 }
 // a jewelled gold crown, with a light sweep across it
@@ -1281,9 +1334,12 @@ function paintDeco(i){
   const isForced = phase==='play' && !!forced && forced.idx===i;
   dc.hidden = !crowned && !isForced;
   dc.classList.toggle('crowned', crowned); dc.classList.toggle('forced', isForced);
-  if (crowned){ if (!dc.querySelector('svg')) dc.innerHTML=crownSvg(i); }
+  if (crowned){ if (!dc.querySelector('.crown')) dc.innerHTML=crownSvg(i).replace('<svg ','<svg class="crown" '); }
+  else if (isForced){ if (!dc.querySelector('.flag')) dc.innerHTML=flagSvg(i); }
   else if (dc.firstChild) dc.innerHTML='';
 }
+const altSide = () => phase==='play' && CLASH.some(([a,b])=>(cfg.el[1]===a&&cfg.el[2]===b)||(cfg.el[1]===b&&cfg.el[2]===a)) ? 2 : 0;
+const tint = p => altSide()===p ? ALTC[cfg.el[p]] : ELS[cfg.el[p]].c1;
 function viewerSide(){ if (online()) return net.side||1; if (cfg.mode==='pvp') return turn; return 3-cpuSide(); }
 const blindView = () => phase==='play' && !over && !!blind && turn===blind && viewerSide()===blind;
 function render(){
@@ -1294,7 +1350,7 @@ function render(){
   const dOpts = play && decree && !busy && localSide(decree.by) ? decree.opts : [];
   boardEl.classList.toggle('blind', bv);
   boardEl.classList.toggle('ext', board.some((v,i)=>i>=64 && v!==-1));
-  boardEl.style.setProperty('--hint', play ? ELS[cfg.el[turn]].c1 : '#cbb8ff');
+  boardEl.style.setProperty('--hint', play ? tint(turn) : '#cbb8ff');
   for (let i=0;i<N;i++){
     paintDisc(i); paintDeco(i);
     const b=burns.find(x=>x.idx===i);
@@ -1326,11 +1382,17 @@ function render(){
       continue;
     }
     const E=ELS[cfg.el[p]];
-    side.style.setProperty('--ec', E.c1);
+    side.style.setProperty('--ec', tint(p));
     side.classList.toggle('active', !over && turn===p);
     $('sig'+p).textContent=E.k; $('name'+p).textContent=E.name;
     const C=cardOf(p), ok=canCard(p);
     cb.querySelector('.c-name').textContent=C.name;
+    cb.querySelector('.c-name').style.fontFamily=E.font||'';
+    pb.querySelector('.p-name').style.fontFamily=E.font||'';
+    const blk=cardBlock(p);
+    cb.classList.toggle('avail', !blk && !over);
+    if (!over && prevBlock[p]!==null && prevBlock[p] && !blk) cardReadyFx(p);
+    prevBlock[p]=blk;
     cb.querySelector('.c-desc').textContent=C.desc;
     cb.querySelector('.c-uses').textContent = cfg.el[p]==='fire' ? '5ターンに1回' : `残り ${cardLeft(p)} / ${C.uses}`;
     cb.querySelector('.c-note').textContent=cardBlock(p);
@@ -1359,7 +1421,7 @@ function render(){
   else if (extra>0) hot='雷帝：もう1手置ける';
   else if (quake>0) hot='岩石巨城：次に置いた石のまわりを押し出す';
   else if (royal===turn) hot='ロイヤルアーツ：置いたあと相手の手を指定';
-  st.innerHTML = `<span style="color:${E.c1};text-shadow:${E.glow}">${E.k}</span>のターン${who?`<small>${who}</small>`:''}${hot?`<small class="hot">${hot}</small>`:''}${e<=10?'<small>終盤戦</small>':''}`;
+  st.innerHTML = `<span style="color:${tint(turn)};text-shadow:${E.glow}">${E.k}</span>のターン${who?`<small>${who}</small>`:''}${hot?`<small class="hot">${hot}</small>`:''}${e<=10?'<small>終盤戦</small>':''}`;
   st.className = 'status' + (e<=10 ? ' crit' : '');
 }
 const toastEl=$('toast'); let toastT;
@@ -1515,13 +1577,15 @@ function startTurnS(S,x){
     S.pas[x].jin=0;
   }
 }
-// 威光の王家: a king whose every on-board orthogonal neighbour belongs to the enemy has fallen
+// 威光の王家: six enemies among the eight squares round the king take the castle;
+// eight friends round it win the kingdom outright
 function checkRegicide(S){
   for (const k of [1,2]){
-    const i=S.kings[k]; if (!(i>=0) || S.board[i]!==k || i>=64) continue;
-    const [r,c]=RC[i]; let n=0, enemy=0;
-    for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; n++; if (S.board[rr*8+cc]===3-k) enemy++; }
-    if (n && enemy===n){ S.over=true; S.winner=3-k; S.ev.push('regicide:'+k); return true; }
+    const i=S.kings[k]; if (!(i>=0) || i>=64 || S.board[i]!==k) continue;
+    const [r,c]=RC[i]; let n=0, enemy=0, own=0;
+    for (const [dr,dc] of D8){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; n++; const v=S.board[rr*8+cc]; if (v===3-k) enemy++; else if (v===k) own++; }
+    if (n===8 && own===8){ S.over=true; S.winner=k; S.winReason='coronation'; S.ev.push('coronation:'+k); return true; }
+    if (enemy>=6){ S.over=true; S.winner=3-k; S.winReason='regicide'; S.ev.push('regicide:'+k); return true; }
   }
   return false;
 }
@@ -1543,8 +1607,8 @@ function advanceS(S,p){
     S.turn=nt; startTurnS(S,nt);
     if (S.royal===p){
       S.royal=0;
-      const lm=legalS(S,nt);
-      if (lm.length>=2) S.decree={by:p, opts:lm};
+      const lm=legalS(S,nt), opts=S.pas[p].cornerDecree ? lm.filter(i=>!isCorner(i)) : lm;
+      if (lm.length>=2 && opts.length) S.decree={by:p, opts};
     }
     return S;
   }
@@ -1561,7 +1625,7 @@ function fiveLine(b,p,changed){
       let n=1;
       for (let s=1;;s++){ const rr=r+dr*s, cc=c+dc*s; if (rr<0||rr>7||cc<0||cc>7||b[rr*8+cc]!==p) break; n++; }
       for (let s=1;;s++){ const rr=r-dr*s, cc=c-dc*s; if (rr<0||rr>7||cc<0||cc>7||b[rr*8+cc]!==p) break; n++; }
-      if (n>=5) return true;
+      if (n>=STAR_LINE) return true;
     }
   }
   return false;
@@ -1608,7 +1672,7 @@ async function commit(S){
   pas=S.pas ? clone(S.pas) : freshPas();
   kings=S.kings ? {1:S.kings[1]??-1, 2:S.kings[2]??-1} : {1:-1,2:-1};
   hush=S.hush ? {...S.hush} : null; royal=S.royal||0; decree=S.decree ? clone(S.decree) : null; forced=S.forced ? {...S.forced} : null; quake=S.quake||0;
-  winOverride=S.winner||0;
+  winOverride=S.winner||0; winReason=S.winReason||'';
   prot=protOf(guards,kings,hush);
   if (S.pass) toast(`${ELS[cfg.el[S.pass]].k}は置ける場所がないのでパス`);
   const ev=(Array.isArray(S.ev)?S.ev:[]).filter(x=>typeof x==='string');
@@ -1625,6 +1689,7 @@ function resetLocal(S){
   gen++; busy=false; aim=0; over=false; $('result').hidden=true; net.queue=[];
   P.length=0; RINGS.length=0; BOLTS.length=0; BEAMS.length=0; CIRCLES.length=0; HOLES.length=0; EMIT.length=0; LINES.length=0;
   cells.forEach(c=>c.classList.remove('marked'));
+  prevBlock={1:null,2:null};
   undim(200);
   commit({...S, ev:[]});
 }
@@ -1757,10 +1822,7 @@ function revealFx(){
   }
   flash('#ffffff',.25,300);
   const rocks=[]; for (let i=64;i<N;i++) if (board[i]!==-1) rocks.push(i);
-  if (rocks.length) setTimeout(()=>{
-    rocks.forEach((i,k)=>setTimeout(()=>{ const [x,y]=center(i); burst('rock',x,y,1.1); cells[i].animate([{transform:'translateY(30px) scale(.4)',opacity:0},{transform:'translateY(-6px) scale(1.1)',opacity:1,offset:.7},{transform:'none'}],{duration:420,easing:'cubic-bezier(.3,1.5,.5,1)'}); }, k*220));
-    shake(14); toast(`${PASSIVES.rock.name}：外周に岩が3つ現れた`);
-  }, 700);
+  if (rocks.length){ rocks.forEach(i=>cells[i].style.opacity='0'); setTimeout(()=>fxMotherEarth(rocks), 900); }
 }
 
 /* ---------- moves ---------- */
@@ -1784,6 +1846,7 @@ function decreeChoose(idx){
   const d=decree; if (!d || !d.opts.includes(idx) || busy) return;
   ac();
   const S=curState(); S.decree=null; S.forced={p:3-d.by, idx}; S.ev=['decree:'+idx];
+  if (isCorner(idx)) S.pas[d.by].cornerDecree=true;
   sendState(S,['decree',d.by,idx]);
   commit(S);
 }
@@ -1850,7 +1913,8 @@ function starFlip(i,p,k){
   setTimeout(()=>{
     flash('#dfe8ff',.35,200); shake(12);
     for (let j=0;j<46*FXQ;j++){ const a=rnd(0,TAU), s=rnd(120,620); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1.1),size:rnd(2.5,6),color:pick([E.c2,E.c3,E.c1]),mode:'starp',rot:rnd(0,TAU)}); }
-    ring(x,y,{vr:520,life:.5,w:5,color:E.c3}); ring(x,y,{vr:260,life:.7,w:2,color:E.c2});
+    ring(x,y,{vr:520,life:.5,w:5,color:E.c3,shape:'star'}); ring(x,y,{vr:260,life:.7,w:2,color:E.c2,shape:'star'});
+    for (let j=0;j<10*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,360); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.7,1.2),size:rnd(12,22),color:pick([E.c2,E.c3,E.c1]),mode:'glyph',ch:pick(['☆','★','☆']),rot:rnd(-.6,.6)}); }
     for (let j=0;j<3;j++){ const a=rnd(0,TAU), L=rnd(50,110), ex=x+Math.cos(a)*L, ey=y+Math.sin(a)*L; LINES.push({x1:x,y1:y,x2:ex,y2:ey,t:0,delay:.05*j,life:1,draw:.18,color:'#cfe0ff',w:1.6}); part({x:ex,y:ey,life:1.1,size:4,color:'#ffffff',mode:'starp'}); }
     sfx('star','flip',k);
     flipDisc(i,p,2.2,k);
@@ -2017,6 +2081,7 @@ async function playCard(el,p,targets,myGen){
     const sr=$('side'+p).getBoundingClientRect(), sx=sr.left+sr.width/2, sy=sr.top+Math.min(60,sr.height/2);
     for (let j=0;j<10;j++) BEAMS.push({x:bx+(j-4.5)*r.width*.11,y:r.bottom,w:r.width*.06,life:1.6,t:0,color:j%2?E.c1:E.c3});
     emit(1.6,()=>{ for (let j=0;j<5*FXQ;j++) part({x:rnd(0,W),y:-10,vx:rnd(-30,30),vy:rnd(200,420),g:300,drag:.99,life:rnd(1,1.6),size:rnd(2.5,4.5),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); });
+    bigFlagStab(bx,by+r.height*.15,r.height*.55);
     ring(sx,sy,{vr:420,life:.8,w:6,color:E.c1}); ring(sx,sy,{vr:260,life:1,w:3,color:E.c3});
     flash('#fff1c0',.45,500); shake(10);
     await wait(1700);
@@ -2062,6 +2127,7 @@ async function playEvents(ev){
     else if (k==='crown' && n>=0 && n<N) await fxCrown(n);
     else if (k==='decree' && n>=0 && n<N) await fxDecree(n);
     else if (k==='regicide' && (n===1||n===2)) await fxRegicide(n);
+    else if (k==='coronation' && (n===1||n===2)) await fxCoronation(n);
     else if (k==='quake' && n>=0 && n<N) await fxQuake(n, extra||'');
   }
 }
@@ -2131,7 +2197,7 @@ async function fxGuard(idx){
   await wait(250);
 }
 async function fxGhost(victim){
-  const D={k:'闇', c1:'#ff1a1a', c2:'#ffb0b0', c3:'#3a0000', glow:'0 0 18px #ff0000, 0 0 50px #600000, 0 0 3px #000', fill:'linear-gradient(180deg,#ffffff,#ff3030 45%,#4a0000)'};
+  const D={k:'闇', c1:'#ff1a1a', c2:'#ffb0b0', c3:'#3a0000', glow:'0 0 18px #ff0000, 0 0 50px #600000, 0 0 3px #000', fill:'linear-gradient(180deg,#ffffff,#ff3030 45%,#4a0000)', font:ELS.dark.font, sfont:ELS.dark.sfont, bt:'skewY(-2deg)', bf:'drop-shadow(0 5px 0 #300) drop-shadow(0 0 18px #ff0000) drop-shadow(0 0 36px #000)'};
   showBanner(D,'PASSIVE',PASSIVES.dark.name,'THE DEAD ARE MARCHING');
   sfx('dark','ult');
   [196,207.6,233,246.9].forEach((f,k)=>{ tone('sine',f,f*.94,3.2,.07,k*.05); tone('triangle',f*2.01,f*1.88,2.8,.025,.1+k*.05); });
@@ -2179,10 +2245,20 @@ const CONSTELLATIONS = [
   { name:'さそり座',     pts:[[.1,.2],[.2,.1],[.22,.3],[.34,.36],[.46,.46],[.5,.62],[.56,.78],[.7,.88],[.84,.82],[.9,.68]], e:[[1,2],[0,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9]] },
   { name:'しし座',       pts:[[.18,.3],[.28,.16],[.42,.2],[.46,.36],[.36,.5],[.5,.56],[.82,.5],[.86,.72],[.56,.74]], e:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,5]] },
   { name:'ペガスス座',   pts:[[.22,.26],[.68,.22],[.74,.66],[.26,.7],[.06,.92],[.94,.06],[.92,.84]], e:[[0,1],[1,2],[2,3],[3,0],[3,4],[1,5],[2,6]] },
+  { name:'こと座',       pts:[[.5,.08],[.42,.38],[.6,.42],[.36,.84],[.58,.88]], e:[[0,1],[0,2],[1,2],[1,3],[2,4],[3,4]] },
+  { name:'わし座',       pts:[[.5,.42],[.4,.34],[.6,.5],[.16,.18],[.84,.72],[.48,.92],[.36,.62]], e:[[1,0],[0,2],[1,3],[2,4],[0,6],[6,5]] },
+  { name:'ふたご座',     pts:[[.3,.08],[.62,.1],[.32,.4],[.64,.42],[.28,.7],[.68,.72],[.18,.94],[.78,.94]], e:[[0,2],[2,4],[4,6],[1,3],[3,5],[5,7],[2,3]] },
+  { name:'おうし座',     pts:[[.5,.62],[.42,.5],[.34,.4],[.58,.5],[.66,.4],[.08,.12],[.92,.16],[.52,.88]], e:[[0,1],[1,2],[0,3],[3,4],[2,5],[4,6],[0,7]] },
+  { name:'南斗六星',     pts:[[.08,.42],[.26,.3],[.44,.36],[.6,.28],[.78,.42],[.92,.62]], e:[[0,1],[1,2],[2,3],[3,4],[4,5]] },
+  { name:'こぐま座',     pts:[[.12,.18],[.28,.3],[.44,.42],[.6,.52],[.62,.8],[.88,.82],[.86,.54]], e:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3]] },
+  { name:'ケフェウス座', pts:[[.5,.06],[.24,.4],[.76,.4],[.28,.9],[.72,.9]], e:[[0,1],[0,2],[1,2],[1,3],[2,4],[3,4]] },
+  { name:'アンドロメダ座', pts:[[.08,.82],[.3,.64],[.5,.48],[.72,.32],[.92,.16],[.48,.22],[.54,.76]], e:[[0,1],[1,2],[2,3],[3,4],[2,5],[2,6]] },
+  { name:'おおいぬ座',   pts:[[.46,.1],[.4,.3],[.58,.32],[.5,.56],[.28,.76],[.72,.8],[.6,.96]], e:[[0,1],[1,2],[1,3],[3,4],[3,5],[5,6]] },
+  { name:'みなみじゅうじ座', pts:[[.5,.08],[.5,.92],[.18,.46],[.82,.54],[.64,.66]], e:[[0,1],[2,3]] },
 ];
 function drawConstellation(C,rect,delay,w){
   const pad=rect.width*.08, X=v=>rect.left+pad+v*(rect.width-2*pad), Y=v=>rect.top+pad+v*(rect.height-2*pad);
-  C.pts.forEach(([u,v],k)=>setTimeout(()=>{ const x=X(u), y=Y(v); part({x,y,life:2.5,size:4*w,color:'#ffffff',mode:'starp'}); part({x,y,life:2.5,size:7*w,color:ELS.star.c1}); ring(x,y,{vr:120*w,life:.45,w:2,color:ELS.star.c3}); }, (delay+k*.08)*1000));
+  C.pts.forEach(([u,v],k)=>setTimeout(()=>{ const x=X(u), y=Y(v); part({x,y,life:2.5,size:4*w,color:'#ffffff',mode:'starp'}); part({x,y,life:2.5,size:7*w,color:ELS.star.c1}); ring(x,y,{vr:120*w,life:.45,w:2,color:ELS.star.c3,shape:'star'}); part({x,y,vx:0,vy:-20,life:1.2,size:10*w,color:ELS.star.c3,mode:'glyph',ch:'☆'}); }, (delay+k*.08)*1000));
   C.e.forEach(([a,b],k)=>LINES.push({x1:X(C.pts[a][0]),y1:Y(C.pts[a][1]),x2:X(C.pts[b][0]),y2:Y(C.pts[b][1]),t:0,delay:delay+.25+k*.1,life:2.3,draw:.2,color:'#cfe0ff',w:1.6*w}));
 }
 async function fxHush(victim){
@@ -2209,25 +2285,167 @@ async function fxCrown(idx){
   toast(`${PASSIVES.king.name}：この石が王になった`);
   await wait(700);
 }
+// the royal banner: a gilded pole with a purple flag bearing the crown
+function flagSvg(id){
+  const a='M13 14 Q30 9 44 15 T58 15 L58 44 Q44 39 30 45 T13 44 Z', b='M13 14 Q30 19 44 13 T58 17 L58 46 Q44 49 30 43 T13 44 Z';
+  return `<svg class="flag" viewBox="0 0 60 100" aria-hidden="true"><defs>
+    <linearGradient id="fp${id}" x1="0" x2="1"><stop offset="0" stop-color="#7a5410"/><stop offset=".5" stop-color="#ffe9a0"/><stop offset="1" stop-color="#7a5410"/></linearGradient>
+    <linearGradient id="fc${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b44dff"/><stop offset="1" stop-color="#5a0fa0"/></linearGradient></defs>
+    <rect x="10" y="10" width="3.4" height="86" fill="url(#fp${id})"/><path d="M10 96 l1.7 4 l1.7 -4z" fill="#c88f1a"/>
+    <circle cx="11.7" cy="8" r="4" fill="#ffd34d" stroke="#7a5410" stroke-width=".8"/>
+    <path d="${a}" fill="url(#fc${id})" stroke="#ffd34d" stroke-width="1.4"><animate attributeName="d" dur="1.2s" repeatCount="indefinite" values="${a};${b};${a}"/></path>
+    <path d="M26 35 l3 -9 l4 6 l4 -6 l4 6 l4 -6 l3 9 z" fill="#ffd34d" stroke="#7a5410" stroke-width=".6"/>
+  </svg>`;
+}
+// a big royal flag thrown down and stabbed into the board
+function bigFlagStab(x,y,h){
+  const el=document.createElement('div'); el.className='bigflag'; el.innerHTML=flagSvg('big');
+  el.style.height=h+'px'; el.style.left=(x-h*.2)+'px'; el.style.top=(y-h*.96)+'px';
+  document.body.appendChild(el);
+  el.animate([{transform:'translateY(-120vh) rotate(-14deg)'},{transform:'translateY(4%) rotate(2deg)',offset:.6},{transform:'translateY(-1%) rotate(-1deg)',offset:.8},{transform:'none'}],{duration:700,easing:'cubic-bezier(.55,0,.8,.5)'});
+  nz('bandpass',500,3200,.45,.28,0,1.5);
+  setTimeout(()=>{
+    tone('square',2200,1300,.09,.13); nz('bandpass',2800,2800,.09,.4,0,8); tone('sine',80,36,.45,.8); nz('lowpass',900,70,.4,.45);
+    shake(22); flash('#fff1c0',.35,220);
+    ring(x,y,{vr:420,life:.55,w:8,color:ELS.king.c1}); ring(x,y,{vr:240,life:.7,w:3,color:ELS.king.c3});
+    for (let j=0;j<50*FXQ;j++){ const a=rnd(-Math.PI,0), s=rnd(120,480); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:1000,drag:.98,life:rnd(.5,.9),size:rnd(2,5),color:pick(['#8a7458','#c9b28a','#5a4a38']),mode:'chunk',rot:rnd(0,TAU)}); }
+  }, 420);
+  setTimeout(()=>el.animate([{opacity:1},{opacity:0}],{duration:500,fill:'forwards'}).onfinish=()=>el.remove(), 1500);
+}
 async function fxDecree(idx){
   const E=ELS.king, [x,y]=center(idx);
   showBanner(E,'ROYAL DECREE','王命','THY NEXT MOVE IS DECIDED');
-  sfx('king','ult');
-  BEAMS.push({x,y,w:60,life:1.2,t:0,color:E.c1});
-  for (let j=0;j<3;j++) ring(x,y,{vr:300+j*180,life:.8,w:6-j*1.5,color:j%2?E.c3:E.c1});
-  for (let j=0;j<60*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,500); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1),size:rnd(2,4),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); }
-  shake(12); flash('#fff1c0',.35,300);
+  paintDeco(idx);
+  const svg=decos[idx].querySelector('.flag');
+  if (svg) svg.animate([{transform:'translateY(-420px) rotate(-12deg)',opacity:1},{transform:'translateY(6px) rotate(2deg)',offset:.55},{transform:'translateY(-2px) rotate(-1deg)',offset:.75},{transform:'none'}],{duration:760,easing:'cubic-bezier(.55,0,.8,.5)'});
+  nz('bandpass',600,3000,.4,.25,0,1.5);
+  setTimeout(()=>{
+    tone('square',2200,1400,.08,.12); nz('bandpass',2800,2800,.08,.35,0,8); tone('sine',90,40,.35,.7); nz('lowpass',900,80,.3,.4);
+    shake(16); flash('#fff1c0',.35,200);
+    ring(x,y,{vr:340,life:.5,w:6,color:E.c1}); ring(x,y,{vr:200,life:.6,w:3,color:E.c3});
+    for (let j=0;j<30*FXQ;j++){ const a=rnd(-Math.PI,0), s=rnd(100,360); part({x,y:y+6,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:900,drag:.98,life:rnd(.4,.8),size:rnd(1.5,3.5),color:pick(['#8a7458','#c9b28a']),mode:'chunk',rot:rnd(0,TAU)}); }
+    for (let j=0;j<40*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,420); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.5,1),size:rnd(2,4),color:pick([E.c1,E.c2,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)}); }
+    sfx('king','flip',3);
+  }, 420);
   await wait(1300);
 }
+// a castle silhouette: keep, wall with gate, two towers; flags and a crowd when it rises
+function castleSvg(mode){
+  const rise=mode==='rise', stone=rise?'#1e1530':'#55505e', edge=rise?'#ffd34d':'#2a2730', lit=rise?'#ffe08a':'#120e14';
+  const mer=(x0,x1,y)=>{ let o=''; for (let x=x0;x<x1-4;x+=12) o+=`<rect x="${x}" y="${y-8}" width="7" height="8" fill="${stone}" stroke="${edge}" stroke-width=".8"/>`; return o; };
+  const win=(x,y)=>`<rect x="${x}" y="${y}" width="6" height="11" rx="3" fill="${lit}"/>`;
+  const a='M1 -38 Q12 -42 24 -37 T46 -36 L46 -22 Q34 -25 24 -23 T1 -24 Z', b='M1 -38 Q12 -34 24 -39 T46 -34 L46 -20 Q34 -18 24 -25 T1 -24 Z';
+  const flag=(x,y)=>`<g transform="translate(${x} ${y})"><g class="cfin"><rect x="-1" y="-40" width="2.2" height="40" fill="#c8a040"/><circle cx="0" cy="-41" r="2.4" fill="#ffd34d"/><path d="${a}" fill="#9b30ff" stroke="#ffd34d" stroke-width="1"><animate attributeName="d" dur="1s" repeatCount="indefinite" values="${a};${b};${a}"/></path></g></g>`;
+  const tower=(id,x,w,top,roofH)=>`<g id="${id}" class="cpart"><rect x="${x}" y="${top}" width="${w}" height="${230-top}" fill="${stone}" stroke="${edge}" stroke-width="1.2"/>${mer(x,x+w,top)}<polygon points="${x-6},${top-8} ${x+w/2},${top-8-roofH} ${x+w+6},${top-8}" fill="${rise?'#5a1fa0':'#3a3640'}" stroke="${edge}" stroke-width="1.2"/>${win(x+w/2-3,top+22)}${win(x+w/2-3,top+56)}${rise?flag(x+w/2,top-8-roofH):''}</g>`;
+  const ppl = rise ? Array.from({length:44},(_,k)=>{
+    const x=8+k*8.9+rnd(-3,3), sc=rnd(.8,1.15), c=pick(['#2a1b10','#3a2614','#1d1420']);
+    const f = Math.random()<.32 ? `<line x1="4" y1="-11" x2="9" y2="-30" stroke="#c8a040" stroke-width="1.2"/><rect x="9" y="-31" width="9" height="6" fill="${pick(['#9b30ff','#ffd34d','#e0112b'])}"/>` : '';
+    return `<g transform="translate(${x.toFixed(1)} 244) scale(${sc.toFixed(2)})"><g class="pp" data-d="${x<200?-1:1}"><g class="pj"><circle cx="0" cy="-17" r="4.2" fill="${c}"/><path d="M-5 -12 Q0 -14 5 -12 L7 0 L-7 0 Z" fill="${c}"/>${f}</g></g></g>`;
+  }).join('') : '';
+  const cracks = rise ? '' : `<g class="ccrack" opacity="0"><path d="M200 74 L190 112 L206 142 L194 196" stroke="#ff5a1f" stroke-width="2.4" fill="none"/><path d="M81 104 L90 144 L77 186" stroke="#ff5a1f" stroke-width="2" fill="none"/><path d="M319 104 L310 152 L322 192" stroke="#ff5a1f" stroke-width="2" fill="none"/><path d="M120 160 L134 190 L126 222" stroke="#ff5a1f" stroke-width="1.6" fill="none"/></g>`;
+  return `<svg viewBox="0 0 400 260" aria-hidden="true">
+    ${tower('cK',160,80,72,58)}
+    <g id="cWall" class="cpart"><rect x="90" y="150" width="220" height="80" fill="${stone}" stroke="${edge}" stroke-width="1.2"/>${mer(90,310,150)}<path d="M184 230 V198 a16 16 0 0 1 32 0 V230 Z" fill="${rise?'#ffd86a':'#0a0608'}"/></g>
+    ${tower('cL',55,52,100,46)}
+    ${tower('cR',293,52,100,46)}
+    ${cracks}
+    <rect x="0" y="230" width="400" height="30" fill="${rise?'#2a1d0e':'#1a1214'}"/>
+    <g>${ppl}</g>
+  </svg>`;
+}
+function hideCastle(ov){ ov.animate([{opacity:1},{opacity:0}],{duration:600,fill:'forwards'}).onfinish=()=>{ ov.hidden=true; ov.innerHTML=''; }; }
+// 落城: the king is surrounded, the castle cracks and falls
 async function fxRegicide(k){
-  const E=ELS.king, i=kings[k]>=0 ? kings[k] : -1;
-  const [x,y] = i>=0 ? center(i) : [W/2,H/2];
-  showBanner({...E, fill:'linear-gradient(180deg,#ffffff,#ff5a5a 50%,#5a0000)', c1:'#ff3030'},'REGICIDE','王 陥落','THE KING HAS FALLEN');
-  tone('sawtooth',392,196,1.2,.12); tone('sawtooth',311,155,1.2,.1,.05); nz('lowpass',2000,80,1.4,.6,.1); tone('sine',60,25,1.4,.8,.1);
-  for (let j=0;j<80*FXQ;j++){ const a=rnd(0,TAU), s=rnd(150,600); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-200,g:900,drag:.98,life:rnd(.8,1.5),size:rnd(2,5),color:pick([E.c1,'#c88f1a','#e0112b','#1f5fe0']),mode:'coin',rot:rnd(0,TAU)}); }
-  if (i>=0){ const svg=decos[i].querySelector('svg'); if (svg) svg.animate([{transform:'none',opacity:1},{transform:'translateY(-30px) rotate(-25deg)',opacity:1,offset:.3},{transform:'translateY(120px) rotate(60deg)',opacity:0}],{duration:1200,fill:'forwards',easing:'ease-in'}); }
-  flash('#ff2020',.5,500); shake(36);
-  await wait(1800);
+  const E=ELS.king, i=kings[k];
+  showBanner({...E, fill:'linear-gradient(180deg,#ffffff,#ff5a5a 50%,#5a0000)', c1:'#ff3030', c3:'#3a0000'},'REGICIDE','落城','THE CASTLE HAS FALLEN');
+  if (i>=0){ const svg=decos[i].querySelector('.crown'); if (svg) svg.animate([{transform:'none'},{transform:'translateY(-30px) rotate(-25deg)',offset:.3},{transform:'translateY(120px) rotate(60deg)',opacity:0}],{duration:1200,fill:'forwards',easing:'ease-in'}); }
+  const ov=$('castle'); ov.className='fall'; ov.innerHTML=castleSvg('fall'); ov.hidden=false;
+  ov.animate([{opacity:0},{opacity:1}],{duration:300,fill:'forwards'});
+  const svg=ov.querySelector('svg');
+  svg.animate([{transform:'translate(0,0)'},{transform:'translate(-4px,2px)'},{transform:'translate(5px,-2px)'},{transform:'translate(-3px,3px)'},{transform:'translate(4px,0)'},{transform:'translate(0,0)'}],{duration:220,iterations:4});
+  nz('lowpass',260,40,3,.8); tone('sine',50,22,2.6,.8);
+  [0,.95,1.9].forEach(t=>bell(98,2.6,.16,t));
+  [1,1.25,1.55,1.8].forEach(t=>nz('bandpass',700,200,.5,.5,t,1.5));
+  await wait(700);
+  const cr=ov.querySelector('.ccrack'); if (cr) cr.animate([{opacity:0},{opacity:1}],{duration:260,fill:'forwards'});
+  await wait(300);
+  const fall=(id,to,delay)=>{ const g=ov.querySelector('#'+id); if (g) g.animate([{transform:'none'},{transform:to}],{duration:1300,delay,easing:'cubic-bezier(.5,0,.9,.6)',fill:'forwards'}); };
+  fall('cL','translate(-60px,290px) rotate(-38deg)',0);
+  fall('cR','translate(60px,290px) rotate(38deg)',120);
+  fall('cK','translate(10px,330px) rotate(10deg)',260);
+  fall('cWall','translateY(270px)',420);
+  const sr=svg.getBoundingClientRect();
+  emit(1.9,()=>{
+    for (let j=0;j<4*FXQ;j++) part({x:rnd(sr.left+sr.width*.12,sr.right-sr.width*.12),y:sr.top+sr.height*rnd(.4,.9),vx:rnd(-40,40),vy:rnd(-120,-40),drag:.97,life:rnd(1,2),size:rnd(20,44),color:'#1a1214',mode:'smoke',alpha:.6});
+    for (let j=0;j<3*FXQ;j++) part({x:rnd(sr.left,sr.right),y:sr.top+sr.height*.6,vx:rnd(-200,200),vy:rnd(-400,-100),g:900,drag:.98,life:rnd(.8,1.4),size:rnd(3,8),color:pick(['#55505e','#3a3640','#6a6470']),mode:'chunk',rot:rnd(0,TAU)});
+    if (Math.random()<.5) part({x:rnd(sr.left,sr.right),y:sr.bottom-12,vx:rnd(-20,20),vy:rnd(-170,-60),g:-60,drag:.97,life:rnd(.6,1),size:rnd(4,9),mode:'fire'});
+  });
+  shake(32); flash('#ff2020',.4,500);
+  await wait(2000);
+  hideCastle(ov);
+  await wait(450);
+}
+// 王国万歳: eight of the king's own stones round it; the castle rises, the people gather, the flags go up
+async function fxCoronation(k){
+  const E=ELS.king;
+  showBanner(E,'CORONATION','王国万歳','LONG LIVE THE KING');
+  const ov=$('castle'); ov.className='rise'; ov.innerHTML=castleSvg('rise'); ov.hidden=false;
+  ov.animate([{opacity:0},{opacity:1}],{duration:400,fill:'forwards'});
+  const svg=ov.querySelector('svg');
+  svg.animate([{transform:'translateY(60%)'},{transform:'none'}],{duration:900,easing:'cubic-bezier(.2,.8,.3,1)'});
+  sfx('king','ult');
+  for (let j=0;j<7;j++) nz('bandpass',700+j*110,1300+j*60,1.1,.11,1.1+j*.28,1.1);
+  ov.querySelectorAll('.cfin').forEach((f,j)=>f.animate([{transform:'scaleY(0)'},{transform:'scaleY(1.12)',offset:.8},{transform:'scaleY(1)'}],{duration:620,delay:1300+j*200,fill:'backwards',easing:'ease-out'}));
+  ov.querySelectorAll('.pp').forEach((pp,j)=>{
+    const d=+pp.dataset.d;
+    pp.animate([{transform:`translateX(${d*280}px)`,opacity:0},{transform:'none',opacity:1}],{duration:820,delay:650+j*24,fill:'backwards',easing:'cubic-bezier(.2,.8,.3,1)'});
+    const pj=pp.querySelector('.pj'); if (pj) pj.animate([{transform:'translateY(0)'},{transform:'translateY(-7px)'},{transform:'translateY(0)'}],{duration:rnd(360,480),delay:1700+rnd(0,500),iterations:6});
+  });
+  const sr=svg.getBoundingClientRect();
+  emit(2.8,(dt)=>{
+    if (Math.random()<dt*5){
+      const fx=rnd(sr.left,sr.right), fy=rnd(Math.max(20,sr.top-sr.height*.5),sr.top+sr.height*.25);
+      for (let j=0;j<40*FXQ;j++){ const a=rnd(0,TAU), s=rnd(80,280); part({x:fx,y:fy,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:120,drag:.95,life:rnd(.7,1.3),size:rnd(1.4,3),color:pick([E.c1,E.c2,'#ff5a7a','#9b30ff']),mode:Math.random()<.3?'starp':'glow',rot:rnd(0,TAU)}); }
+      tone('triangle',rnd(500,900),200,.3,.05);
+    }
+    for (let j=0;j<2*FXQ;j++) part({x:rnd(0,W),y:-10,vx:rnd(-30,30),vy:rnd(150,300),g:200,drag:.99,life:2,size:rnd(2.5,4),color:pick([E.c1,'#c88f1a']),mode:'coin',rot:rnd(0,TAU)});
+  });
+  flash('#fff1c0',.5,600);
+  await wait(3600);
+  hideCastle(ov);
+  await wait(450);
+}
+// 母なる大地: cracks run out from the board and three rocks heave up out of the ground
+async function fxMotherEarth(rocks){
+  const E=ELS.rock, r=boardEl.getBoundingClientRect(), bx=r.left+r.width/2, by=r.top+r.height/2;
+  showBanner(E,'PASSIVE',PASSIVES.rock.name,PASSIVES.rock.sub);
+  sfx('rock','ult');
+  dim('radial-gradient(circle at 50% 60%, rgba(80,55,30,.35), rgba(15,10,5,.8))',300);
+  shake(10);
+  for (let k=0;k<rocks.length;k++){
+    await wait(420);
+    const i=rocks[k], [x,y]=center(i);
+    bolt(bx,by,x,y,'#c08a4a',.55,1.8,3); bolt(bx,by,x,y,'#3a2c1e',.5,3,0);
+    for (let j=0;j<46*FXQ;j++){ const a=rnd(-Math.PI,0), s=rnd(160,520); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:1100,drag:.98,life:rnd(.6,1.1),size:rnd(2.5,6),color:pick(['#8a7458','#5a4a38','#c9b28a','#6b5238']),mode:'chunk',rot:rnd(0,TAU)}); }
+    for (let j=0;j<14*FXQ;j++) part({x:x+rnd(-14,14),y:y+rnd(-6,10),vx:rnd(-60,60),vy:rnd(-90,-20),drag:.96,life:rnd(1,1.6),size:rnd(14,26),color:'#3a2c1e',mode:'smoke',alpha:.55});
+    ring(x,y,{vr:300,life:.5,w:7,color:E.c1}); ring(x,y,{vr:170,life:.65,w:3,color:E.c2});
+    cells[i].style.opacity='';
+    cells[i].animate([{transform:'translateY(46px) scale(.2)',opacity:0,filter:'brightness(2)'},{transform:'translateY(-10px) scale(1.25)',opacity:1,offset:.6},{transform:'none',filter:'none'}],{duration:540,easing:'cubic-bezier(.3,1.5,.5,1)'});
+    shake(20); tone('sine',62,26,.6,.9); nz('bandpass',900,240,.35,.45,0,2);
+  }
+  await wait(700);
+  undim(800);
+  toast(`${PASSIVES.rock.name}：外周に岩が${rocks.length}つ現れた`);
+}
+// a card has just become playable: make the card itself announce it
+function cardReadyFx(p){
+  const cb=$('card'+p), rr=cb.getBoundingClientRect(); if (!rr.width) return;
+  const el=cfg.el[p], x=rr.left+rr.width/2, y=rr.top+rr.height/2;
+  cb.animate([{transform:'scale(1)',filter:'brightness(1)'},{transform:'scale(1.08)',filter:'brightness(2.2)',offset:.3},{transform:'scale(1)',filter:'brightness(1)'}],{duration:900,easing:'ease-out'});
+  for (let j=0;j<3;j++) setTimeout(()=>ring(x,y,{vr:260+j*90,life:.6,w:3,color:tint(p),shape:el==='star'?'star':undefined}), j*130);
+  elementMote(el,x,y,Math.round(34*FXQ),rr.width*.4);
+  [0,1,2,3].forEach(k=>tone('sine',1046.5*Math.pow(1.26,k),1046.5*Math.pow(1.26,k),.35,.06,k*.07));
+  toast(`${roleOf(p)}の必殺技「${CARDS[el].name}」が使えるようになった！`);
 }
 async function fxQuake(idx, movesTxt){
   const E=ELS.rock, [x,y]=center(idx);
@@ -2291,7 +2509,8 @@ async function gameOver(){
   $('resScore').textContent=`${ELS[cfg.el[1]].k} ${a} — ${w} ${ELS[cfg.el[2]].k}`;
   if (win){
     const E=ELS[cfg.el[win]];
-    $('resBig').innerHTML=`<span style="color:${E.c1};text-shadow:${E.glow}">${E.k}</span>の勝利${winOverride?'<br><small style="font-size:.4em">王を討ち取った</small>':''}`;
+    const why = winReason==='regicide' ? '王を討ち取った' : winReason==='coronation' ? '王国が民に満ちた' : '';
+    $('resBig').innerHTML=`<span style="color:${tint(win)};text-shadow:${E.glow}">${E.k}</span>の勝利${why?`<br><small style="font-size:.4em">${why}</small>`:''}`;
     const myGen=gen;
     await ultimate(cfg.el[win],x,y,'VICTORY');
     if (myGen!==gen || !over) return;
@@ -2356,7 +2575,7 @@ function stateFields(S){
     used:{1:S.used[1]||0,2:S.used[2]||0}, extra:S.extra||0, cardThisTurn:!!S.cardThisTurn, pass:S.pass||0, blind:S.blind||0,
     pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice(),
     kings:{1:(S.kings&&S.kings[1])??-1, 2:(S.kings&&S.kings[2])??-1}, hush:S.hush?{...S.hush}:null, royal:S.royal||0,
-    decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0};
+    decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0, winReason:S.winReason||''};
 }
 function sendState(S,act){
   if (!online() || !net.kind) return;
@@ -2587,7 +2806,8 @@ function buildHelp(){
   body.innerHTML = `<ul class="h-rules">
     <li>対局の最初に、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
-    <li>星・王・岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。</li>
+    <li>星と岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。<strong>王は残り${LATE+KING_EARLY}以下</strong>から使えます。</li>
+    <li>カードが使えるようになると、カードが光って知らせます。</li>
     <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
     <li>星の<strong>星座封印</strong>を受けると、2ターンのあいだパッシブもカードも使えません。</li>
     <li>パッシブスキルは条件を満たすと自動で発動します。</li>
