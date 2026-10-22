@@ -10,7 +10,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@900&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&family=Reggae+One&family=RocknRoll+One&family=Kaisei+Decol:wght@700&family=Zen+Antique&family=Creepster&family=Black+Ops+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Yuji+Syuku&family=Potta+One&family=DotGothic16&family=Cinzel+Decorative:wght@900&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&family=Reggae+One&family=RocknRoll+One&family=Kaisei+Decol:wght@700&family=Zen+Antique&family=Creepster&family=Black+Ops+One&display=swap">
 <style>
 /* Layout: one arena screen — two element "duelist" panels flank a carved stone board; FX canvas floats over everything. Single dark world by design. */
 :root{
@@ -507,6 +507,82 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .d-el .k{font-size:38px}
 .d-eyebrow{font-family:"Black Ops One",var(--f-latin);letter-spacing:.45em}
 
+/* 忍・竜・時 stones */
+.disc[data-el="ninja"]{
+  background:
+    linear-gradient(135deg,transparent 46%,#7bd88f55 47% 53%,transparent 54%),
+    radial-gradient(circle at 34% 28%,#4a5a8a 0%,#1d2846 50%,#0a0f1e 90%);
+  box-shadow:0 0 0 1.5px #4fa868,0 0 12px #7bd88f66,0 3px 6px #000,inset 0 -4px 8px #000,inset 0 2px 5px #8aa0d055;color:#9be8a6;
+}
+.disc[data-el="dragon"]{
+  background:
+    repeating-radial-gradient(circle at 50% 120%,transparent 0 5px,#ffffff10 5px 6px),
+    radial-gradient(circle at 34% 28%,#9fe0ff 0%,#2a7ad8 40%,#0a1f5a 88%);
+  box-shadow:0 0 16px #3fb6ff,0 -5px 18px #3fb6ff88,0 3px 6px #000a,inset 0 -4px 8px #06123a;color:#e8f8ff;
+  animation:ember 1s ease-in-out infinite alternate;
+}
+.disc[data-el="time"]{
+  background:
+    radial-gradient(circle,#2a1b06 0 6%,transparent 7%),
+    conic-gradient(from 0deg,#2a1b06 0 1deg,transparent 1deg 30deg,#2a1b06 30deg 31deg,transparent 31deg 60deg,#2a1b06 60deg 61deg,transparent 61deg 90deg,#2a1b06 90deg 91deg,transparent 91deg 120deg,#2a1b06 120deg 121deg,transparent 121deg 150deg,#2a1b06 150deg 151deg,transparent 151deg 180deg,#2a1b06 180deg 181deg,transparent 181deg 210deg,#2a1b06 210deg 211deg,transparent 211deg 240deg,#2a1b06 240deg 241deg,transparent 241deg 270deg,#2a1b06 270deg 271deg,transparent 271deg 300deg,#2a1b06 300deg 301deg,transparent 301deg 330deg,#2a1b06 330deg 331deg,transparent 331deg),
+    radial-gradient(circle at 40% 35%,#fffdf0 0%,#efe2b8 55%,#c8a96a 80%,#8a6420 92%);
+  box-shadow:0 0 0 2px #b8862e,0 0 12px #e6c26a88,0 3px 6px #000a;color:#5a3e08;
+}
+.aura[data-el="ninja"]{inset:-4%;border:1px dashed #7bd88f88;animation:auraSpin 6s linear infinite}
+.aura[data-el="dragon"]{inset:-16% 6% 22% 6%;border-radius:50% 50% 40% 40%;background:radial-gradient(ellipse 50% 60% at 50% 75%,#bff0ffcc,#3fb6ff77 45%,transparent 72%);filter:blur(2px);transform-origin:50% 100%;animation:flicker .3s steps(2) infinite alternate}
+.aura[data-el="dragon"]::before,.aura[data-el="dragon"]::after{content:"";position:absolute;bottom:20%;width:42%;height:120%;border-radius:50% 50% 30% 30%/70% 70% 30% 30%;background:radial-gradient(ellipse 50% 70% at 50% 90%,#ffffff,#3fb6ff 40%,#1a3fa0aa 65%,transparent 80%);filter:blur(1.5px);transform-origin:50% 100%}
+.aura[data-el="dragon"]::before{left:6%;animation:tongue .55s ease-in-out infinite alternate}
+.aura[data-el="dragon"]::after{right:6%;animation:tongue .7s ease-in-out infinite alternate-reverse}
+.aura[data-el="time"]{inset:-7%;background:repeating-conic-gradient(#e6c26a99 0 2deg,transparent 2deg 30deg);-webkit-mask:radial-gradient(circle,transparent 44%,#000 52%,transparent 64%);mask:radial-gradient(circle,transparent 44%,#000 52%,transparent 64%);animation:auraSpin 12s linear infinite reverse}
+.disc[data-el="ninja"][data-alt]{background:radial-gradient(circle at 34% 28%,#8a8f2a 0%,#3a4012 50%,#141606 90%);box-shadow:0 0 0 1.5px #c7d84a,0 0 12px #c7d84a66,0 3px 6px #000}
+.disc[data-el="dragon"][data-alt]{background:radial-gradient(circle at 34% 28%,#c8b8ff 0%,#5a4ad8 40%,#1a0f5a 88%);box-shadow:0 0 16px #7a6cff,0 3px 6px #000a}
+.disc[data-el="time"][data-alt]{background:radial-gradient(circle,#0a2240 0 6%,transparent 7%),radial-gradient(circle at 40% 35%,#ffffff 0%,#d8ecff 55%,#7aa8d8 90%);box-shadow:0 0 0 2px #5a8ac8,0 0 12px #9ad0ff88,0 3px 6px #000a}
+
+/* sealed squares: 蒼炎 lines and rewound clock squares */
+.flame.blaze{background:radial-gradient(ellipse 60% 85% at 50% 96%,#ffffff 0%,#bff0ff 22%,#3fb6ff 48%,#1a3fa0 70%,transparent 86%),#06123a;box-shadow:0 0 22px #3fb6ff,0 0 40px #1a3fa099,inset 0 0 14px #9fe0ff}
+.flame.blaze::before,.flame.blaze::after{background:radial-gradient(ellipse 50% 70% at 50% 90%,#ffffff,#3fb6ff 40%,#1a3fa0aa 65%,transparent 82%)!important}
+.flame.clock{background:radial-gradient(circle,#2a1b06 0 8%,transparent 9%),conic-gradient(from 0deg,#e6c26a 0 90deg,#3a2c10 90deg 360deg);box-shadow:0 0 14px #e6c26a,inset 0 0 0 3px #b8862e;animation:none;place-items:center;font-family:"DotGothic16",monospace;color:#fff8e0;text-shadow:0 0 4px #000}
+.flame.clock::before,.flame.clock::after{content:none}
+
+/* flying dragon, scenes */
+.dragonfly{position:fixed;left:0;top:0;z-index:5;pointer-events:none;filter:drop-shadow(0 0 18px #3fb6ff) drop-shadow(0 0 40px #1a3fa0)}
+.dragonfly svg{width:100%;height:auto;display:block}
+.scene{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0}
+.scene.bamboo svg{position:absolute;inset:0;width:100%;height:100%}
+.scene.bamboo .stalk,.scene.bamboo .stop{transform-box:fill-box;transform-origin:50% 100%}
+.scene.clockov{display:grid;place-items:center}
+.scene.clockov svg{width:min(70vw,70vh);height:auto;filter:drop-shadow(0 10px 30px #000) drop-shadow(0 0 30px #e6c26a88)}
+.scene.clockov .hh,.scene.clockov .mh,.scene.clockov .sh{transform-box:view-box;transform-origin:100px 100px}
+.scene.clockov .g1{transform-box:view-box;transform-origin:20px 175px}
+.scene.clockov .g2{transform-box:view-box;transform-origin:185px 20px}
+.disc.flyaway{position:fixed;z-index:5;pointer-events:none}
+.stamp.trap{border-color:#7bd88f;background:#06140bcc;box-shadow:0 0 30px #7bd88f66,inset 0 0 20px #7bd88f44}
+.stamp.trap span{font-family:"Yuji Syuku","Yuji Boku",serif;color:#c8ffd4;text-shadow:0 0 20px #4fa868,0 4px 0 #06140b}
+.stamp.trap small{color:#d8ffe0}
+
+/* aiming in two steps */
+.cell.aimfirst{box-shadow:inset 0 0 0 3px #fff,0 0 16px #ffffffaa!important}
+.hud-right{display:flex;gap:8px}
+
+/* fire stones under 烈火出陣 burn harder */
+.cell.guard .aura[data-el="fire"]{inset:-34% -2% 16% -2%;filter:blur(1px) brightness(1.3)}
+.cell.guard .disc[data-el="fire"]{box-shadow:0 0 22px #ff8a1f,0 -8px 26px #ff5a1fcc,0 3px 6px #000a,inset 0 -4px 8px #5a0500}
+
+/* element tiles in the draft carry a light version of their effect */
+.d-el{position:relative;overflow:hidden;isolation:isolate}
+.d-el > span{position:relative;z-index:1}
+.d-el::before{content:"";position:absolute;inset:-40%;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 55%,color-mix(in srgb,var(--ec) 40%,transparent),transparent 55%);animation:tilePulse 2.6s ease-in-out infinite}
+@keyframes tilePulse{50%{opacity:.45;transform:scale(1.15)}}
+.d-el[data-el="dark"]::before{background:conic-gradient(from 0deg,transparent,#a259ff55,transparent 40%,#4b12a077,transparent 80%);animation:auraSpin 4s linear infinite}
+.d-el[data-el="light"]::before{background:repeating-conic-gradient(#fff3c044 0 6deg,transparent 6deg 30deg);animation:auraSpin 14s linear infinite}
+.d-el[data-el="fire"]::before{background:radial-gradient(ellipse 40% 60% at 50% 100%,#ff8a1f99,transparent 70%);animation:flicker .3s steps(2) infinite alternate;transform-origin:50% 100%}
+.d-el[data-el="thunder"]::before{background:radial-gradient(circle,#ffe60055,transparent 55%);animation:charged 1.4s steps(1) infinite}
+.d-el[data-el="star"]::before{background:radial-gradient(circle at 25% 30%,#fff 0 1px,transparent 2px),radial-gradient(circle at 70% 25%,#ffd86a 0 1px,transparent 2px),radial-gradient(circle at 60% 70%,#fff 0 1px,transparent 2px),radial-gradient(circle at 35% 75%,#9db8ff 0 1px,transparent 2px);inset:0;animation:tilePulse 1.8s ease-in-out infinite}
+.d-el[data-el="king"]::before{background:linear-gradient(105deg,transparent 35%,#ffd34d55 50%,transparent 65%);inset:0;animation:cardShine 2.4s ease-in-out infinite}
+.d-el[data-el="rock"]::before{background:radial-gradient(circle at 50% 110%,#c9a46a55,transparent 60%)}
+.d-el[data-el="ninja"]::before{background:repeating-linear-gradient(90deg,transparent 0 16px,#4fa86833 16px 20px);animation:none}
+.d-el[data-el="dragon"]::before{background:radial-gradient(ellipse 40% 60% at 50% 100%,#3fb6ff99,transparent 70%);animation:flicker .32s steps(2) infinite alternate;transform-origin:50% 100%}
+
 /* 省ドパモード: keep the game, drop the spectacle */
 html.lite .aura,html.lite #aura{display:none!important}
 html.lite .flame:not(.chain)::before,html.lite .flame:not(.chain)::after{animation:none!important}
@@ -630,9 +706,9 @@ html.lite .disc{filter:none!important}
   <header class="hud">
     <button class="gbtn small" id="menuBtn" type="button">メニュー</button>
     <div class="hud-logo">属性オセロ</div>
-    <button class="gbtn small" id="help" type="button">図鑑</button>
+    <div class="hud-right"><button class="gbtn small" id="hudSet" type="button">設定</button><button class="gbtn small" id="help" type="button">図鑑</button></div>
   </header>
-  <div class="balance" id="balance" aria-hidden="true"><i id="balL"></i><i id="balR"></i></div>
+  
 
   <section class="arena">
     <aside class="side" data-p="1" id="side1">
@@ -723,8 +799,15 @@ const ELS = {
              glow:'0 0 18px #ffd34d, 0 0 60px #9b30ff', fill:'linear-gradient(180deg,#fff8d8,#ffd34d 45%,#b8860b 80%,#7a5410)' },
   rock:    { k:'岩', name:'岩属性', ult:'地殻崩壊', sub:'TECTONIC RUPTURE',     c1:'#d0a066', c2:'#f0dcb4', c3:'#6b5238', aura:'rgba(160,110,60,0.85)',
              glow:'0 0 16px #d0a066, 0 0 50px #6b5238', fill:'linear-gradient(180deg,#f5e6c8,#c9a46a 45%,#7a5c3a 80%,#3e3226)' },
+  ninja:   { k:'忍', name:'忍属性', ult:'竹林斬', sub:'BAMBOO SLASH',           c1:'#7bd88f', c2:'#e8f5e0', c3:'#2b3a67', aura:'rgba(60,150,90,0.8)',
+             glow:'0 0 16px #7bd88f, 0 0 50px #2b3a67', fill:'linear-gradient(180deg,#f0fff0,#7bd88f 45%,#2e6b45 80%,#16242e)' },
+  dragon:  { k:'竜', name:'竜属性', ult:'蒼龍天翔', sub:'AZURE DRAGON ASCENT',  c1:'#3fb6ff', c2:'#d8f4ff', c3:'#1a3fa0', aura:'rgba(40,140,255,0.85)',
+             glow:'0 0 18px #3fb6ff, 0 0 60px #1a3fa0', fill:'linear-gradient(180deg,#ffffff,#9fe0ff 40%,#3fb6ff 70%,#1a3fa0)' },
+  time:    { k:'時', name:'時属性', ult:'時空断絶', sub:'CHRONO RUPTURE',       c1:'#e6c26a', c2:'#fff8e0', c3:'#5fd3c8', aura:'rgba(230,194,106,0.8)',
+             glow:'0 0 16px #e6c26a, 0 0 50px #5fd3c8', fill:'linear-gradient(180deg,#fffdf0,#e6c26a 50%,#8a6420)' },
 };
-const EL_ORDER = ['dark','light','fire','thunder','star','king','rock'];
+const EL_ORDER = ['dark','light','fire','thunder','star','king','rock','ninja','dragon'];
+const ALL_ELS = [...EL_ORDER,'time'];   // 時 is only ever chosen by the CPU
 // banner lettering per element: font, sub-title font, and any extra shaping
 const LETTERING = {
   dark:    { font:'"Yuji Boku","Dela Gothic One",serif',             sfont:'"Creepster","Cinzel",serif', bf:'drop-shadow(0 5px 0 #1a0030) drop-shadow(0 0 16px #a259ff) drop-shadow(0 0 34px #000)', bt:'skewY(-2deg)' },
@@ -734,11 +817,14 @@ const LETTERING = {
   star:    { font:'"Kaisei Decol","Zen Kaku Gothic New",serif',       sfont:'"Cinzel Decorative","Cinzel",serif' },
   king:    { font:'"Zen Antique","Shippori Mincho B1",serif',         sfont:'"Cinzel Decorative","Cinzel",serif' },
   rock:    { font:'"Dela Gothic One",sans-serif',                     sfont:'"Black Ops One","Cinzel",sans-serif', bf:'drop-shadow(0 6px 0 #2a2016) drop-shadow(0 0 12px #d0a066)', bt:'scaleY(1.1)' },
+  ninja:   { font:'"Yuji Syuku","Yuji Boku",serif',                   sfont:'"Black Ops One","Cinzel",sans-serif', bf:'drop-shadow(0 4px 0 #0c1420) drop-shadow(0 0 12px #7bd88f)', bt:'skewX(-6deg)' },
+  dragon:  { font:'"Potta One","Dela Gothic One",sans-serif',         sfont:'"Cinzel Decorative","Cinzel",serif', bf:'drop-shadow(0 5px 0 #06123a) drop-shadow(0 0 18px #3fb6ff)', bt:'scaleY(1.06)' },
+  time:    { font:'"DotGothic16","Zen Kaku Gothic New",monospace',    sfont:'"Black Ops One","Cinzel",sans-serif' },
 };
-for (const k of EL_ORDER) Object.assign(ELS[k], LETTERING[k]);
+for (const k of ALL_ELS) Object.assign(ELS[k], LETTERING[k]);
 // when two elements look alike, the 後手 side's stones and accents take a shifted shade
-const CLASH=[['thunder','fire'],['thunder','light'],['fire','rock'],['dark','king'],['dark','star'],['king','star']];
-const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star:'#3ec9c9',king:'#ff5a7a',rock:'#b8b8b8'};
+const CLASH=[['thunder','fire'],['thunder','light'],['fire','rock'],['dark','king'],['dark','star'],['king','star'],['dragon','star'],['king','time'],['ninja','time'],['dragon','time']];
+const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star:'#3ec9c9',king:'#ff5a7a',rock:'#b8b8b8',ninja:'#c7d84a',dragon:'#7a6cff',time:'#9ad0ff'};
 
 /* ---------- state ---------- */
 let cfg = { el:{1:'dark',2:'light'}, mode:'cpu2', lv:2, sound:true };
@@ -750,6 +836,7 @@ let burns = [], guards = [], used = {1:0,2:0}, extra = 0, cardThisTurn = false, 
 let pas = {1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}}, phase = 'draft', picks = {1:'',2:''}, coinInfo = null;
 let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, quake = 0, curses = [], winOverride = 0, winReason = '', prot = [];
 let prevBlock = {1:null,2:null};
+let hidden = [], lastPlace = null, predict = null, aimSel = null;
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
@@ -891,6 +978,9 @@ function sfx(el, kind, i=0){
     else if (el==='star'){ [1,1.5,2,3].forEach((m,k)=>bell(1760*up*m/2,.7-k*.1,.06,k*.035)); nz('highpass',9000,7000,.35,.05); }
     else if (el==='king'){ tone('sawtooth',392*up,392*up,.22,.07); tone('sawtooth',493.9*up,493.9*up,.22,.05,.02); tone('square',587.3*up,587.3*up,.18,.03,.04); tone('sine',98,55,.3,.35); }
     else if (el==='rock'){ tone('sine',85*up,36,.28,.5); nz('lowpass',700,70,.22,.4); nz('bandpass',1300,600,.07,.25,.01,2); }
+    else if (el==='ninja'){ nz('bandpass',800,3000,.12,.25,0,2); tone('triangle',3400*up,2800,.14,.05,.02); tone('sine',170,80,.12,.25); }
+    else if (el==='dragon'){ tone('sawtooth',95*up,45,.32,.1); nz('bandpass',400,1700,.28,.3,0,1.2); tone('sine',70,35,.3,.3); }
+    else if (el==='time'){ tone('square',2400*up,2400,.02,.06); tone('square',1600*up,1600,.02,.06,.11); bell(1318.5*up,.5,.04,.05); }
     else { nz('highpass',4000,900,.16,.35); nz('highpass',2500,600,.08,.3,.06); tone('square',70,30,.25,.08); }
     return;
   }
@@ -919,6 +1009,9 @@ function sfx(el, kind, i=0){
       for (let k=0;k<8;k++) tone('sine',98,60,.12,.35,k*.07); tone('sine',65,32,1.4,.7,.64); nz('highpass',7000,4000,1.4,.12,.64);
     }
     else if (el==='rock'){ nz('lowpass',220,30,2.4,.85); tone('sine',48,20,2.2,.9); for (let k=0;k<6;k++) nz('bandpass',900-k*80,250,.25,.45,.2+k*.28,2); tone('square',40,24,1,.12,.6); }
+    else if (el==='ninja'){ [293.7,329.6,440,493.9,587.3,493.9,440].forEach((f,k)=>tone('sawtooth',f,f*.99,.22,.06,k*.11)); [0,.45,.9].forEach(t=>tone('sine',70,40,.4,.7,t)); tone('triangle',4200,2600,.3,.07,1.1); nz('highpass',8000,4000,.2,.25,1.1); }
+    else if (el==='dragon'){ roar(1.4); nz('lowpass',3000,60,2.2,.7,.9); tone('sine',50,20,1.8,.8,.9); }
+    else if (el==='time'){ for (let k=0;k<14;k++) tone('square',k%2?1600:2400,k%2?1600:2400,.02,.06,k*(.16-k*.007)); [523.3,659.3,784,1046.5].forEach((f,k)=>bell(f,1.6,.06,1.3+k*.08)); nz('bandpass',300,3200,1.2,.15,0,1.5); }
     else { for(let k=0;k<8;k++) nz('highpass',5000,700,.18,.35,k*.13); tone('square',60,22,.6,.15,.5); nz('highpass',6000,300,.6,.7,1.15); tone('sine',65,18,1.6,.9,1.15); nz('lowpass',1500,60,1.6,.6,1.2); }
   }
 }
@@ -994,9 +1087,11 @@ function frame(now){
   for(const p of P){ if(p.mode!=='smoke') continue; const k=p.t/p.life; cx.globalAlpha=(1-k)*(p.alpha??.5); cx.fillStyle=p.color; cx.beginPath(); cx.arc(p.x,p.y,p.size*(1+k*1.6),0,TAU); cx.fill(); }
   for(const p of P){ if(p.mode==='ghost') drawGhost(p); }
   for(const p of P){
-    if (p.mode!=='chunk' && p.mode!=='coin') continue;
-    const k=p.t/p.life; cx.globalAlpha=Math.min(1,(1-k)*2); cx.save(); cx.translate(p.x,p.y); cx.rotate((p.rot||0)+p.t*6);
+    if (p.mode!=='chunk' && p.mode!=='coin' && p.mode!=='shuriken' && p.mode!=='leaf') continue;
+    const k=p.t/p.life; cx.globalAlpha=Math.min(1,(1-k)*2); cx.save(); cx.translate(p.x,p.y); cx.rotate((p.rot||0)+p.t*(p.spin||6));
     if (p.mode==='coin'){ cx.scale(Math.cos(p.t*9+(p.rot||0)),1); cx.fillStyle=p.color; cx.beginPath(); cx.arc(0,0,p.size,0,TAU); cx.fill(); cx.strokeStyle='#7a5410'; cx.lineWidth=Math.max(.5,p.size*.2); cx.stroke(); }
+    else if (p.mode==='shuriken'){ cx.fillStyle=p.color; cx.beginPath(); for (let j=0;j<8;j++){ const rr=j%2?p.size*.28:p.size, an=j*Math.PI/4; cx.lineTo(Math.cos(an)*rr,Math.sin(an)*rr); } cx.closePath(); cx.fill(); cx.fillStyle='#16161c'; cx.beginPath(); cx.arc(0,0,p.size*.18,0,TAU); cx.fill(); }
+    else if (p.mode==='leaf'){ cx.fillStyle=p.color; cx.beginPath(); cx.ellipse(0,0,p.size,p.size*.3,0,0,TAU); cx.fill(); cx.strokeStyle='#2e6b45'; cx.lineWidth=.6; cx.beginPath(); cx.moveTo(-p.size,0); cx.lineTo(p.size,0); cx.stroke(); }
     else { cx.fillStyle=p.color; cx.beginPath(); cx.moveTo(-p.size,-p.size*.4); cx.lineTo(-p.size*.2,-p.size); cx.lineTo(p.size,-p.size*.3); cx.lineTo(p.size*.6,p.size); cx.lineTo(-p.size*.7,p.size*.7); cx.closePath(); cx.fill(); }
     cx.restore();
   }
@@ -1035,10 +1130,10 @@ function frame(now){
   }
   // glow particles
   for(const p of P){
-    if (p.mode==='smoke'||p.mode==='ghost'||p.mode==='chunk'||p.mode==='coin') continue;
+    if (p.mode==='smoke'||p.mode==='ghost'||p.mode==='chunk'||p.mode==='coin'||p.mode==='shuriken'||p.mode==='leaf') continue;
     const k=p.t/p.life; let a=1-k; let s=p.size;
     if (p.tw) { s*=.55+.45*Math.sin(p.t*p.tw+p.x); a*=Math.min(1,p.t*3); }
-    const col = p.mode==='fire' ? fireCol(k) : p.color;
+    const col = p.mode==='fire' ? fireCol(k) : p.mode==='bfire' ? bfireCol(k) : p.color;
     cx.fillStyle=col; cx.strokeStyle=col;
     if (p.mode==='glyph'){
       cx.globalAlpha=a; cx.font=`${Math.max(6,s*(1-k*.3))}px "Zen Kaku Gothic New",sans-serif`; cx.textAlign='center'; cx.textBaseline='middle';
@@ -1049,7 +1144,7 @@ function frame(now){
     } else if (p.mode==='spark'){
       cx.globalAlpha=a; cx.lineWidth=s; cx.beginPath(); cx.moveTo(p.x,p.y); cx.lineTo(p.x-p.vx*.035,p.y-p.vy*.035); cx.stroke();
     } else {
-      const r=Math.max(.3, p.mode==='fire'? s*(1-k*.5) : s*(1-k*.4));
+      const r=Math.max(.3, (p.mode==='fire'||p.mode==='bfire')? s*(1-k*.5) : s*(1-k*.4));
       cx.globalAlpha=a*.22; cx.beginPath(); cx.arc(p.x,p.y,r*2.6,0,TAU); cx.fill();
       cx.globalAlpha=a; cx.beginPath(); cx.arc(p.x,p.y,r,0,TAU); cx.fill();
     }
@@ -1134,6 +1229,18 @@ function burst(el,x,y,pw=1,i=0){
     for(let j=0;j<24*n;j++){ const a=rnd(-Math.PI,0), s=rnd(120,420)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:1100,drag:.98,life:rnd(.5,.9),size:rnd(2,5)*Math.sqrt(pw),color:pick(['#8a7458','#5a4a38','#c9b28a','#6b5238']),mode:'chunk',rot:rnd(0,TAU)}); }
     for(let j=0;j<8*n;j++) part({x:x+rnd(-10,10),y:y+rnd(-4,8),vx:rnd(-50,50),vy:rnd(-40,-10),drag:.96,life:rnd(.7,1.2),size:rnd(8,16)*pw,color:'#3a2c1e',mode:'smoke',alpha:.5});
     ring(x,y,{vr:260*pw,life:.4,w:5*pw,color:E.c1});
+  } else if (el==='ninja'){
+    for(let j=0;j<8*n;j++){ const a=rnd(0,TAU), s=rnd(200,520)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.93,life:rnd(.35,.7),size:rnd(4,7),color:pick(['#c8ccd8','#9aa0aa']),mode:'shuriken',rot:rnd(0,TAU),spin:22}); }
+    for(let j=0;j<14*n;j++){ const a=rnd(0,TAU), s=rnd(60,240)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,g:160,drag:.96,life:rnd(.7,1.3),size:rnd(4,8),color:pick(['#7bd88f','#9be8a6','#4fa868']),mode:'leaf',rot:rnd(0,TAU),spin:rnd(-6,6)}); }
+    for(let j=0;j<8*n;j++){ const a=rnd(0,TAU), s=rnd(20,90); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.95,life:rnd(.6,1),size:rnd(10,18)*pw,color:'#8a8f98',mode:'smoke',alpha:.4}); }
+    LINES.push({x1:x-30*pw,y1:y+20*pw,x2:x+30*pw,y2:y-20*pw,t:0,delay:0,life:.3,draw:.06,color:'#ffffff',w:2});
+  } else if (el==='dragon'){
+    for(let j=0;j<40*n;j++) part({x:x+rnd(-12,12),y:y+rnd(-8,8),vx:rnd(-120,120)*pw,vy:rnd(-340,-40)*pw,g:-260,drag:.95,life:rnd(.45,.95),size:rnd(4,9)*Math.sqrt(pw),mode:'bfire',wob:6});
+    ring(x,y,{vr:320*pw,life:.45,w:4*pw,color:E.c1}); ring(x,y,{vr:180*pw,life:.6,w:2,color:E.c2});
+  } else if (el==='time'){
+    for(let k2=0;k2<12;k2++){ const a=k2*Math.PI/6; LINES.push({x1:x+Math.cos(a)*14*pw,y1:y+Math.sin(a)*14*pw,x2:x+Math.cos(a)*26*pw,y2:y+Math.sin(a)*26*pw,t:0,delay:k2*.015,life:.5,draw:.05,color:E.c1,w:1.6}); }
+    for(let j=0;j<18*n;j++){ const a=rnd(0,TAU), s=rnd(60,260)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.4,.8),size:rnd(2,3.5),color:pick([E.c1,'#c8a040']),mode:'coin',rot:rnd(0,TAU)}); }
+    ring(x,y,{vr:260*pw,life:.5,w:3,color:E.c3});
   } else {
     const sx=x+rnd(-90,90), sy=y-rnd(160,320)*pw;
     bolt(sx,sy,x,y,pick([E.c1,E.c3]),.28,1.3*Math.sqrt(pw),2);
@@ -1254,6 +1361,31 @@ async function ultimate(el,x,y,top='CORNER BREAK'){
     for(let i=0;i<200*FXQ;i++){ const a=rnd(0,TAU), s=rnd(200,900); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-200,g:1100,drag:.98,life:rnd(.8,1.6),size:rnd(3,9),color:pick(['#8a7458','#5a4a38','#c9b28a','#6b5238']),mode:'chunk',rot:rnd(0,TAU)}); }
     for(let i=0;i<50*FXQ;i++){ const a=rnd(0,TAU), s=rnd(60,300); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.95,life:rnd(1.2,2),size:rnd(20,40),color:'#3a2c1e',mode:'smoke',alpha:.55}); }
     undim(1700);
+  } else if (el==='ninja'){
+    dim('radial-gradient(circle at 50% 70%, rgba(20,50,30,.5), rgba(5,10,8,.9))',300);
+    await bambooScene();
+    flash('#e8f5e0',.5,400); shake(30);
+    for(let i=0;i<40*FXQ;i++){ const a=rnd(0,TAU), s=rnd(300,900); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.93,life:rnd(.4,.8),size:rnd(5,9),color:pick(['#c8ccd8','#9aa0aa']),mode:'shuriken',rot:rnd(0,TAU),spin:24}); }
+    undim(900);
+  } else if (el==='dragon'){
+    dim('radial-gradient(circle at 50% 50%, rgba(10,30,80,.6), rgba(0,4,16,.95))',300);
+    roar(1.4);
+    flyDragon(-W*.4,H*.85,W*1.4,H*.15,1300,Math.min(W,H)*.75);
+    await wait(900);
+    flyDragon(W*1.4,H*.6,-W*.4,y,1100,Math.min(W,H)*.6);
+    await wait(900);
+    flash('#bff0ff',.8,700); shake(44);
+    for(let i=0;i<5;i++) ring(x,y,{vr:650+i*320,life:1.1,w:12-i*2,color:i%2?E.c2:E.c1});
+    for(let i=0;i<380*FXQ;i++){ const a=rnd(0,TAU), s=rnd(150,1000); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-120,g:-100,drag:.92,life:rnd(.6,1.4),size:rnd(4,14),mode:'bfire'}); }
+    undim(1500);
+  } else if (el==='time'){
+    dim('radial-gradient(circle at 50% 50%, rgba(60,45,10,.5), rgba(10,8,2,.92))',300);
+    stage.animate([{filter:'none'},{filter:'sepia(1) contrast(1.2)',offset:.3},{filter:'sepia(1) contrast(1.2)',offset:.8},{filter:'none'}],{duration:2600});
+    await clockScene(1,1800);
+    flash('#fff8e0',.7,600); shake(30);
+    for(let i=0;i<4;i++) ring(x,y,{vr:600+i*300,life:1,w:10-i*2,color:i%2?E.c3:E.c1});
+    for(let i=0;i<200*FXQ;i++){ const a=rnd(0,TAU), s=rnd(150,800); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.92,life:rnd(.6,1.3),size:rnd(2,4),color:pick([E.c1,'#c8a040',E.c3]),mode:'coin',rot:rnd(0,TAU)}); }
+    undim(1300);
   } else {
     dim('linear-gradient(180deg, rgba(0,6,30,.95), rgba(0,0,10,.85))',220);
     emit(1.15,(dt)=>{
@@ -1318,6 +1450,13 @@ function spawnAmbient(el){
     if (Math.random()<.6){ x=rnd(0,W); y=-10; }
     part({x,y,vx:rnd(-20,20),vy:rnd(40,140),g:400,drag:.99,life:rnd(1.5,2.5),size:rnd(1.2,3),color:pick(['#8a7458','#c9b28a','#5a4a38']),mode:'chunk',rot:rnd(0,TAU)});
     if (Math.random()<.1) part({x,y:H+10,vx:rnd(-10,10),vy:-rnd(20,50),drag:.995,life:rnd(2,3),size:rnd(20,40),color:'#2a2016',mode:'smoke',alpha:.4});
+  } else if (el==='ninja'){
+    part({x,y,vx:ix*40+rnd(-20,20),vy:rnd(10,50),g:40,drag:.99,life:rnd(2,3),size:rnd(4,7),color:pick(['#7bd88f','#9be8a6','#4fa868']),mode:'leaf',rot:rnd(0,TAU),spin:rnd(-3,3)});
+  } else if (el==='dragon'){
+    if (Math.random()<.6){ x=rnd(0,W); y=H+5; }
+    part({x,y,vx:ix*30+rnd(-20,20),vy:-rnd(50,160),g:-20,drag:.995,life:rnd(1.6,3),size:rnd(1.5,4.5),mode:'bfire',wob:3});
+  } else if (el==='time'){
+    part({x,y,vx:ix*20+rnd(-8,8),vy:iy*20+rnd(-8,8),drag:.998,life:rnd(2,3),size:rnd(1.4,2.6),color:pick([E.c1,E.c3]),tw:6});
   } else {
     part({x,y,vx:rnd(-120,120)+ix*80,vy:rnd(-120,120)+iy*80,drag:.9,life:rnd(.2,.5),size:rnd(1,2),color:pick([E.c1,E.c3]),mode:'spark'});
     if (Math.random()<.05*amb.level){
@@ -1335,6 +1474,9 @@ const FIRE_CD = 5;        // ...and then recharges after five of its own turns
 const THUNDER_EARLY = 10; // 雷帝 unlocks ten squares before light/dark
 const KING_EARLY = 3;     // ロイヤルアーツ unlocks three squares before light/dark
 const STAR_LINE = 7;     // 星座封印 needs this many in a row
+const NINJA_OPEN = 3;     // 神出鬼没 unlocks after the ninja's third turn
+const DRAGON_OPEN = 44;  // 暴虐 unlocks in the midgame
+const TIME_OPEN = 36;    // 秒針自在 unlocks at the end of the midgame
 const CARDS = {
   light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。' },
   dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:3, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。' },
@@ -1342,7 +1484,10 @@ const CARDS = {
   thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
   star:    { name:'流星群',                 sub:'METEOR SHOWER',      uses:1,      desc:'空きマス3つに流れ星が落ちて自分の石になる（挟めば裏返す）。さらに相手の石1枚をランダムに自分の色に変える。' },
   king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から旗で指定する。角を指定できるのは1回だけ。' },
-  rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石を、1マス外側へ押し出す（行き先に石があれば動かない）。' },
+  rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石のうち、半分を盤のどこかへ、残り半分を画面の外へ吹き飛ばす。' },
+  ninja:   { name:'神出鬼没',               sub:'NOW YOU SEE ME',     uses:2,      desc:'自分の石1つと相手の石1つを選び、位置を入れ替える。' },
+  dragon:  { name:'暴虐',                   sub:'TYRANNY',            uses:1,      desc:'荒ぶる蒼炎が、選んだ直線上の石をすべて焼き払って消し去る。その直線には2ターンのあいだ誰も置けない。' },
+  time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が1ターン選べなくなる。' },
 };
 const PASSIVES = {
   light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計20枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、置ける場所3つにつき1マス（最低1マス）を鎖で封じる。' },
@@ -1352,6 +1497,9 @@ const PASSIVES = {
   star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦・横・斜めに7つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
   king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王のまわり8マスのうち6マスが相手の石になると負け。8マスすべてが味方になると勝ち。' },
   rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'盤の外周36マスのうち3マスに岩が現れ、岩には自分だけが石を置ける。' },
+  ninja:   { name:'隠密と罠',         sub:'SHADOW TRAP',       desc:'置いた石は相手の次のターンのあいだ相手から見えない。見えない石のマスに置こうとすると罠にかかり、そのターンを失う。' },
+  dragon:  { name:'逆鱗',             sub:"DRAGON'S WRATH",    desc:'自分の石を一度に5枚以上裏返されると怒り状態になる。次に置いたとき、裏返した石の上下左右にいる相手の石も裏返す。' },
+  time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。' },
 };
 const freshPas = () => ({1:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0},2:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0}});
 const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
@@ -1365,7 +1513,7 @@ function fireReadyIn(p){
   return Math.max(0, FIRE_CD-(t-(s.fireAt??-99)));
 }
 const cardLeft = p => cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0) : Math.max(0, cardOf(p).uses - (used[p]||0));
-const cardOpenAt = el => el==='thunder' ? LATE+THUNDER_EARLY : el==='king' ? LATE+KING_EARLY : LATE;
+const cardOpenAt = el => el==='thunder' ? LATE+THUNDER_EARLY : el==='king' ? LATE+KING_EARLY : el==='dragon' ? DRAGON_OPEN : el==='time' ? TIME_OPEN : LATE;
 const emptyCount = () => counts(board)[2];
 const roleOf = p => p===1 ? '先手' : '後手';
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -1382,11 +1530,17 @@ function cardBlock(p){
     const t=(pas[p]&&pas[p].turns)||0, r=fireReadyIn(p);
     if (t<FIRE_OPEN) return `炎の手番があと${FIRE_OPEN-t}回で使用可能`;
     if (r>0) return `再使用まであと${r}ターン`;
+  } else if (el==='ninja'){
+    const t=(pas[p]&&pas[p].turns)||0;
+    if (cardLeft(p)<=0) return '使い切りました';
+    if (t<NINJA_OPEN) return `忍の手番があと${NINJA_OPEN-t}回で使用可能`;
   } else {
     if (cardLeft(p)<=0) return '使い切りました';
     const e=emptyCount(), at=cardOpenAt(el);
     if (e>at) return `空きマスがあと${e-at}減ると使用可能`;
   }
+  if (el==='time' && !(lastPlace && lastPlace.p===3-p)) return '巻き戻せる相手の一手がない';
+  if (el==='ninja' && !board.some((v,i)=>i<64 && v===3-p && !prot.some(g=>g.idx===i && g.owner===3-p))) return '入れ替えられる相手の石がない';
   if ((el==='light'||el==='dark') && skillTargets(board,p,prot,el).n<3) return '狙える相手の石が3枚未満';
   if (el==='fire' && !board.some((v,i)=>i<64 && v===0 && !burns.some(b=>b.idx===i))) return '燃やせるマスがありません';
   if (el==='star' && !board.some((v,i)=>i<64 && v===0)) return '空きマスがありません';
@@ -1406,9 +1560,46 @@ function pasState(p){
   if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${hush.left}）` : `${STAR_LINE}つ並びで発動`;
   if (el==='king') return kings[p]>=0 ? '王 健在' : kings[p]===-2 ? '王冠を失った' : '最初の石が王に';
   if (el==='rock'){ let n=0; for (let i=64;i<N;i++) if (board[i]===0) n++; return `空いている岩 ${n}`; }
+  if (el==='ninja') return hidden.some(h=>h.owner===p) ? '隠密中' : '置いた石を隠す';
+  if (el==='dragon') return s.rage ? '逆鱗 発動中' : '5枚返されると発動';
+  if (el==='time') return predict && predict.p===3-p ? '未来を見ている' : '相手の手を予測';
   return '4枚以上で発動';
 }
 const W8 = i => i<64 ? WT[i] : 60;
+function aimOk(i){
+  if (!aim || !aimSel || i>=64) return false;
+  const p=aim, k=aimSel.kind;
+  if (k==='fire') return board[i]===0 && !burns.some(b=>b.idx===i);
+  if (k==='ninja') return aimSel.stage===1 ? board[i]===p : (board[i]===3-p && !prot.some(g=>g.idx===i && g.owner===3-p));
+  if (k==='dragon'){
+    if (aimSel.stage===1) return true;
+    const f=aimSel.first; if (i===f) return false;
+    const [r1,c1]=RC[f], [r2,c2]=RC[i];
+    return r1===r2 || c1===c2 || Math.abs(r1-r2)===Math.abs(c1-c2);
+  }
+  return false;
+}
+// the whole board line through two squares
+function dragonLine(f,s2){
+  const [r1,c1]=RC[f], [r2,c2]=RC[s2], dr=Math.sign(r2-r1), dc=Math.sign(c2-c1);
+  let r=r1, c=c1; while (r-dr>=0&&r-dr<8&&c-dc>=0&&c-dc<8){ r-=dr; c-=dc; }
+  const out=[]; while (r>=0&&r<8&&c>=0&&c<8){ out.push(r*8+c); r+=dr; c+=dc; }
+  return out;
+}
+// 隠密と罠: squares that only look playable because a ninja stone is hidden from this player
+function illusionMoves(p){
+  if (!hidden.some(h=>h.owner===3-p)) return [];
+  const b=board.slice(); hidden.forEach(h=>{ if (h.owner===3-p && b[h.idx]===h.owner) b[h.idx]=0; });
+  const real=legal(board,p);
+  return legal(b,p).filter(i=>!real.includes(i));
+}
+const concealed = i => phase==='play' && !over && hidden.some(h=>h.idx===i && board[i]===h.owner && turn===3-h.owner) && viewerSide()===turn;
+function springTrap(idx){
+  const p=turn, S=curState();
+  S.ev.push('trap:'+idx+':'+p); S.extra=0; advanceS(S,p);
+  sendState(S,['trap',p,idx]);
+  commit(S);
+}
 function movesFor(p){
   const lm=legal(board,p);
   return forced && forced.p===p && lm.includes(forced.idx) ? [forced.idx] : lm;
@@ -1431,7 +1622,7 @@ for (let i=0;i<N;i++){
 function center(i){ const r=cells[i].getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]; }
 function paintDisc(i){
   const v=board[i], d=discs[i], au=auras[i];
-  if (!(v>0)){ d.hidden=true; au.hidden=true; return; }
+  if (!(v>0) || concealed(i)){ d.hidden=true; au.hidden=true; return; }
   d.hidden=false;
   if (phase!=='play'){ d.dataset.el='none'+v; d.dataset.k=''; au.hidden=true; return; }
   const el=cfg.el[v]; d.dataset.el=el; d.dataset.k=ELS[el].k;
@@ -1483,7 +1674,7 @@ function render(){
   const play = phase==='play';
   const bv = blindView();
   const human = play && !over && !busy && isLocalTurn(turn);
-  const lm = human && !aim ? movesFor(turn) : [];
+  const lm = human && !aim ? (viewerSide()===turn && !(forced && forced.p===turn) ? [...new Set([...movesFor(turn),...illusionMoves(turn)])] : movesFor(turn)) : [];
   const dOpts = play && decree && !busy && localSide(decree.by) ? decree.opts : [];
   boardEl.classList.toggle('blind', bv);
   boardEl.classList.toggle('ext', board.some((v,i)=>i>=64 && v!==-1));
@@ -1491,7 +1682,8 @@ function render(){
   for (let i=0;i<N;i++){
     paintDisc(i); paintDeco(i);
     const b=burns.find(x=>x.idx===i);
-    const aimable = !!aim && human && i<64 && board[i]===0 && !b;
+    const aimable = human && aimOk(i);
+    cells[i].classList.toggle('aimfirst', !!aimSel && aimSel.stage===2 && aimSel.first===i);
     const cl=cells[i];
     cl.classList.toggle('hint', lm.includes(i));
     cl.classList.toggle('aim', aimable);
@@ -1505,7 +1697,6 @@ function render(){
     if (b) paintSeal(i,b);
   }
   const [a,w,e]=counts(board);
-  updateBalance(a,w);
   for (const p of [1,2]){
     const side=$('side'+p), cb=$('card'+p), pb=$('pas'+p);
     $('count'+p).textContent = p===1?a:w;
@@ -1541,7 +1732,7 @@ function render(){
     pb.querySelector('.p-name').textContent=PS.name;
     pb.querySelector('.p-desc').textContent=PS.desc;
     pb.querySelector('.p-state').textContent=pasState(p);
-    pb.classList.toggle('awake', (cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph)) || (cfg.el[p]==='star' && isHushed(3-p)) || (cfg.el[p]==='king' && kings[p]>=0));
+    pb.classList.toggle('awake', (cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph)) || (cfg.el[p]==='star' && isHushed(3-p)) || (cfg.el[p]==='king' && kings[p]>=0) || (cfg.el[p]==='dragon' && !!(pas[p]&&pas[p].rage)) || (cfg.el[p]==='ninja' && hidden.some(h=>h.owner===p)));
   }
   renderDraft();
   const st=$('status');
@@ -1554,7 +1745,7 @@ function render(){
   let hot = '';
   if (decree) hot = localSide(decree.by) && !(cfg.mode==='pvp' && false) ? '王命：相手が次に置くマスを指定してください' : '王が次の一手を指定しています…';
   else if (bv) hot='ゴーストパレード：置ける場所しか見えない';
-  else if (aim) hot='燃やすマスを選択（カードをもう一度押すと取り消し）';
+  else if (aim && aimSel) hot = aimSel.kind==='fire' ? '燃やすマスを選択（カードをもう一度押すと取り消し）' : aimSel.kind==='ninja' ? (aimSel.stage===1 ? '入れ替える自分の石を選択' : '入れ替える相手の石を選択') : (aimSel.stage===1 ? '蒼炎の起点となるマスを選択' : '焼き払う方向のマスを選択');
   else if (forced && forced.p===turn) hot='王命により、置けるマスは1つだけ';
   else if (extra>0) hot='雷帝：もう1手置ける';
   else if (quake>0) hot='岩石巨城：次に置いた石のまわりを押し出す';
@@ -1583,6 +1774,12 @@ function elementMote(el,x,y,n,spread){
       part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-50,-10),drag:.96,life:rnd(.5,.9),size:rnd(1,2.2),color:pick([E.c1,E.c2]),tw:12});
     } else if (el==='rock'){
       part({x:px,y:py,vx:rnd(-30,30),vy:rnd(-20,20),g:300,drag:.98,life:rnd(.4,.7),size:rnd(1.2,2.4),color:pick(['#8a7458','#c9b28a','#5a4a38']),mode:'chunk'});
+    } else if (el==='ninja'){
+      part({x:px,y:py,vx:rnd(-30,30),vy:rnd(-20,30),g:60,drag:.97,life:rnd(.5,.9),size:rnd(3,6),color:pick(['#7bd88f','#9be8a6']),mode:'leaf',rot:rnd(0,TAU),spin:rnd(-5,5)});
+    } else if (el==='dragon'){
+      part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-110,-40),g:-70,drag:.96,life:rnd(.3,.6),size:rnd(3,6),mode:'bfire'});
+    } else if (el==='time'){
+      part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-20,20),drag:.95,life:rnd(.4,.8),size:rnd(1,2),color:pick([E.c1,E.c3]),tw:10});
     } else {
       part({x:px,y:py,vx:rnd(-220,220),vy:rnd(-220,220),drag:.86,life:rnd(.12,.3),size:rnd(.8,1.6),color:pick([E.c1,E.c3]),mode:'spark'});
     }
@@ -1604,9 +1801,15 @@ addEventListener('pointerdown',e=>{
 },{passive:true});
 setInterval(()=>{
   if (document.hidden) return;
+  if (phase==='play' && !cfg.lite && hush){
+    const r=$('side'+hush.p).getBoundingClientRect();
+    if (r.width) for (let j=0;j<3;j++){ const g=Math.random()<.35; part({x:rnd(r.left,r.right),y:rnd(r.top,r.bottom),vx:rnd(-25,25),vy:rnd(-45,-10),drag:.98,life:rnd(.9,1.6),size:g?rnd(11,17):rnd(2,4),color:pick(['#ffffff','#ffd86a','#9db8ff']),mode:g?'glyph':'starp',ch:'★',rot:rnd(0,TAU)}); }
+  }
   for (const b of burns){
     if (b.kind==='chain' || cfg.lite) continue;
     const [x,y]=center(b.idx), w=cells[b.idx].getBoundingClientRect().width;
+    if (b.kind==='blaze'){ for (let j=0;j<4*FXQ;j++) part({x:x+rnd(-w*.4,w*.4),y:y+rnd(-2,w*.35),vx:rnd(-20,20),vy:rnd(-200,-80),g:-80,drag:.96,life:rnd(.45,.9),size:rnd(w*.12,w*.24),mode:'bfire',wob:6}); continue; }
+    if (b.kind==='clock'){ if (Math.random()<.3) part({x:x+rnd(-w*.3,w*.3),y,vx:0,vy:-20,life:.8,size:2,color:'#e6c26a',tw:10}); continue; }
     for(let j=0;j<4*FXQ;j++) part({x:x+rnd(-w*.4,w*.4),y:y+rnd(-2,w*.35),vx:rnd(-20,20),vy:rnd(-200,-80),g:-80,drag:.96,life:rnd(.45,.9),size:rnd(w*.12,w*.24),mode:'fire',wob:6});
     if (Math.random()<.5) part({x:x+rnd(-w*.3,w*.3),y:y-w*.3,vx:rnd(-40,40),vy:rnd(-260,-140),g:-40,drag:.98,life:rnd(.6,1.1),size:rnd(1,2),color:pick(['#fff3b0','#ffd08a']),mode:'spark'});
   }
@@ -1616,10 +1819,13 @@ setInterval(()=>{
   for (let i=0;i<N;i++){
     if (!(board[i]>0)) continue;
     const isCursed = curses.some(c=>c.idx===i && board[i]===c.owner);
-    if (!isCursed && Math.random()>chance) continue;
+    const guarded = cfg.el[board[i]]==='fire' && guards.some(g=>g.idx===i && g.owner===board[i]);
+    if (!isCursed && !guarded && Math.random()>chance) continue;
     const r=cells[i].getBoundingClientRect(); if (!r.width) continue;
     const x=r.left+r.width/2, y=r.top+r.height/2;
+    if (concealed(i)) continue;
     stoneFx(cfg.el[board[i]], x, y, r.width*.4);
+    if (guarded) for (let j=0;j<2;j++) part({x:x+rnd(-r.width*.35,r.width*.35),y:y-r.width*.2,vx:rnd(-15,15),vy:rnd(-170,-80),g:-100,drag:.96,life:rnd(.4,.7),size:rnd(r.width*.14,r.width*.24),mode:'fire',wob:6});
     if (isCursed){
       for (let j=0;j<2;j++) part({x:x+rnd(-r.width*.4,r.width*.4),y:y+rnd(-r.width*.2,r.width*.3),vx:rnd(-12,12),vy:rnd(-70,-30),drag:.97,life:rnd(.7,1.2),size:rnd(r.width*.2,r.width*.38),color:'#000',mode:'smoke',alpha:.75});
       if (Math.random()<.35) part({x:x+rnd(-r.width*.5,r.width*.5),y:y+rnd(-r.width*.5,r.width*.5),vx:0,vy:rnd(-40,-15),drag:.98,life:rnd(.6,1),size:rnd(1.4,2.6),color:'#c79bff'});
@@ -1644,6 +1850,13 @@ function stoneFx(el,x,y,rad){
     if (q<.25) part({x:x+rnd(-rad,rad),y:y+rnd(-rad*.6,rad*.6),vx:0,vy:rnd(-20,-6),drag:.99,life:rnd(.6,1.1),size:rnd(1,2),color:pick([E.c1,E.c2]),tw:16});
   } else if (el==='rock'){
     if (q<.15) part({x:x+rnd(-rad*.6,rad*.6),y:y+rad*.6,vx:rnd(-8,8),vy:rnd(10,40),g:200,drag:.99,life:rnd(.4,.7),size:rnd(.8,1.6),color:pick(['#8a7458','#c9b28a']),mode:'chunk'});
+  } else if (el==='ninja'){
+    if (q<.06) part({x:x+rnd(-rad,rad),y:y-rad,vx:rnd(-20,20),vy:rnd(10,40),g:40,drag:.99,life:rnd(1,1.6),size:rnd(4,7),color:pick(['#7bd88f','#9be8a6']),mode:'leaf',rot:rnd(0,TAU),spin:rnd(-3,3)});
+    if (q<.15) part({x:x+rnd(-rad*.5,rad*.5),y:y+rnd(-rad*.3,rad*.3),vx:rnd(-8,8),vy:rnd(-20,-6),drag:.98,life:rnd(.8,1.2),size:rnd(rad*.2,rad*.35),color:'#5a6070',mode:'smoke',alpha:.35});
+  } else if (el==='dragon'){
+    part({x:x+rnd(-rad*.6,rad*.6),y:y-rad*.3,vx:rnd(-10,10),vy:rnd(-130,-50),g:-80,drag:.96,life:rnd(.35,.6),size:rnd(rad*.12,rad*.22),mode:'bfire',wob:5});
+  } else if (el==='time'){
+    if (q<.2) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:0,vy:rnd(-12,-4),drag:.99,life:rnd(.6,1),size:rnd(1,2),color:pick([E.c1,E.c3]),tw:8});
   } else {
     if (q<.45) part({x:x+rnd(-rad*.6,rad*.6),y:y+rnd(-rad*.3,rad*.3),vx:rnd(-10,10),vy:rnd(-40,-12),drag:.98,life:rnd(.8,1.3),size:rnd(rad*.25,rad*.45),color:'#000',mode:'smoke',alpha:.6});
     if (q<.25) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:rnd(-10,10),vy:rnd(-25,-5),drag:.98,life:rnd(.6,1),size:rnd(1,2),color:pick([E.c1,E.c2])});
@@ -1684,17 +1897,20 @@ function drawGhost(p){
 /* ---------- pure state transitions (shared by local play, CPU and online) ---------- */
 const initBoard = () => { const b=new Array(N).fill(-1); for (let i=0;i<64;i++) b[i]=0; b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
 const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], guards:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0, blind:0, pas:freshPas(),
-  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, ev:[]});
+  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, ev:[]});
 function curState(){
   return {board:board.slice(), turn, over, lastMove, burns:clone(burns), guards:clone(guards), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0, blind, pas:clone(pas),
-    kings:{...kings}, hush:hush?{...hush}:null, royal, decree:decree?clone(decree):null, forced:forced?{...forced}:null, quake, curses:clone(curses), winner:0, ev:[]};
+    kings:{...kings}, hush:hush?{...hush}:null, royal, decree:decree?clone(decree):null, forced:forced?{...forced}:null, quake, curses:clone(curses), winner:0,
+    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, ev:[]};
 }
 const protS = S => protOf(S.guards, S.kings, S.hush);
 const legalS = (S,p) => legal(S.board,p,S.burns,protS(S),S.hush);
 function addRocks(S){ const ring=[]; for (let i=64;i<N;i++) ring.push(i); for (const i of shuffle(ring).slice(0,3)) S.board[i]=0; }
 // seals, guards and curses count down each time their owner's opponent finishes a turn
 function endTurnS(S,ended){
-  S.burns.forEach(b=>{ if (b.owner!==ended) b.left--; }); S.burns=S.burns.filter(b=>b.left>0);
+  // 蒼炎 lines (owner 0) burn for two whole turns, whoever's they are
+  S.burns.forEach(b=>{ if (b.kind==='blaze'){ if (b.fresh) b.fresh=false; else b.left--; } else if (b.owner!==ended) b.left--; }); S.burns=S.burns.filter(b=>b.left>0);
+  S.hidden=(S.hidden||[]).filter(h=>h.owner===ended);
   S.guards.forEach(g=>{ if (g.owner!==ended) g.left--; }); S.guards=S.guards.filter(g=>g.left>0);
   S.curses.forEach(c=>{ if (c.owner!==ended) c.left--; }); S.curses=S.curses.filter(c=>c.left>0);
   if (S.blind===ended) S.blind=0;
@@ -1714,6 +1930,11 @@ function startTurnS(S,x){
     if (!hushedS(S,x) && (S.used[x]||0)>0 && Math.random()<jinraiChance(S.pas[x])){ S.used[x]--; S.ev.push('jinrai:'+x); }
     S.pas[x].jin=0;
   }
+  S.predict=null;
+  if (cfg.el[o]==='time' && !hushedS(S,o)){
+    const lm=legalS(S,x);
+    if (lm.length){ let m=cpuPick(S.board,x); if (!lm.includes(m)) m=lm.slice().sort((a,b)=>W8(b)-W8(a))[0]; S.predict={p:x, idx:m}; }
+  }
 }
 // 威光の王家: six enemies among the eight squares round the king take the castle;
 // eight friends round it win the kingdom outright
@@ -1731,6 +1952,7 @@ function cleanupS(S){
   S.burns=S.burns.filter(b=>S.board[b.idx]===0);
   S.guards=S.guards.filter(g=>S.board[g.idx]===g.owner);
   S.curses=S.curses.filter(c=>S.board[c.idx]===c.owner);
+  S.hidden=(S.hidden||[]).filter(h=>S.board[h.idx]===h.owner);
   for (const k of [1,2]) if (S.kings[k]>=0 && S.board[S.kings[k]]!==k) S.kings[k]=-2;
 }
 function advanceS(S,p){
@@ -1774,8 +1996,23 @@ function starPassive(S,p,changed){
   if (run){ S.hush={p:3-p,left:2}; S.ev.push('hush:'+(3-p)+':'+run.join('.')); }
 }
 function placeS(S,idx,p){
+  S.lastPlace={p, idx, before:S.board.slice()};
   const f=flipsFor(S.board,idx,p,protS(S)); S.board[idx]=p; for(const k of f) S.board[k]=p; S.lastMove=idx;
   const el=cfg.el[p], ps=S.pas[p], quiet=hushedS(S,p);
+  // 未来視 checks its prediction
+  if (S.predict && S.predict.p===p){
+    const tp=3-p;
+    if (S.predict.idx===idx && (S.used[tp]||0)>0){ S.used[tp]--; S.ev.push('foresee:'+idx); }
+    S.predict=null;
+  }
+  // 逆鱗: losing five or more stones at once enrages the dragon
+  if (cfg.el[3-p]==='dragon' && f.length>=5 && !hushedS(S,3-p) && !S.pas[3-p].rage){ S.pas[3-p].rage=true; S.ev.push('rage:'+(3-p)); }
+  if (el==='dragon' && ps.rage && !quiet){
+    const pr=protS(S), extra=[];
+    for (const k of f){ const [r,c]=RC[k]; for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; const n=rr*8+cc; if (S.board[n]===3-p && !pr.some(g=>g.idx===n && g.owner===3-p) && !extra.includes(n)) extra.push(n); } }
+    extra.forEach(n=>S.board[n]=p); f.push(...extra);
+    ps.rage=false; S.ev.push('wrath:'+idx+':'+extra.join('.'));
+  }
   ps.flips+=f.length; ps.turns++;
   if (!quiet){
     if (el==='light' && !ps.seraph && ps.flips>=20){ ps.seraph=true; S.ev.push('seraph:'+p); }
@@ -1783,20 +2020,26 @@ function placeS(S,idx,p){
     if (el==='dark' && f.length>=4){ S.blind=3-p; S.ev.push('ghost:'+(3-p)); }
     if (el==='thunder') ps.jin=(ps.jin||0)+f.length;
     if (el==='king' && S.kings[p]===-1){ S.kings[p]=idx; S.ev.push('crown:'+idx); }
+    if (el==='ninja') S.hidden=[{idx, owner:p}];
   }
   if (el==='rock' && S.quake){
+    // 岩石巨城: half the stones around fly somewhere else on the board (rarely a corner), half fly off the screen
     S.quake=0;
-    const [r,c]=RC[idx], pr=protS(S), moves=[];
-    for (const [dr,dc] of D8){
-      const r1=r+dr, c1=c+dc, r2=r+2*dr, c2=c+2*dc;
-      if (r1<0||r1>7||c1<0||c1>7||r2<0||r2>7||c2<0||c2>7) continue;
-      const a=r1*8+c1, b2=r2*8+c2;
-      if (S.board[a]>0 && S.board[b2]===0 && !S.burns.some(x=>x.idx===b2) && !pr.some(g=>g.idx===a)){
-        S.board[b2]=S.board[a]; S.board[a]=0;
-        S.curses.forEach(cu=>{ if (cu.idx===a) cu.idx=b2; });
-        moves.push(a+'-'+b2);
-      }
-    }
+    const [r,c]=RC[idx], pr=protS(S), around=[];
+    for (const [dr,dc] of D8){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; const a=rr*8+cc; if (S.board[a]>0 && !pr.some(g=>g.idx===a && g.owner===S.board[a])) around.push(a); }
+    shuffle(around);
+    const half=Math.floor(around.length/2), moves=[];
+    around.forEach((a,k)=>{
+      const v=S.board[a]; S.board[a]=0;
+      if (k<half){
+        const free=[]; for (let i=0;i<64;i++) if (S.board[i]===0 && !around.includes(i) && !S.burns.some(b=>b.idx===i)) free.push(i);
+        let total=free.reduce((t,i)=>t+(isCorner(i)?.15:1),0), roll=Math.random()*total, b=-1;
+        for (const i of free){ roll-=isCorner(i)?.15:1; if (roll<=0){ b=i; break; } }
+        if (b<0 && free.length) b=free[free.length-1];
+        if (b>=0){ S.board[b]=v; S.curses.forEach(cu=>{ if (cu.idx===a) cu.idx=b; }); moves.push(a+'-'+b); }
+        else moves.push(a+'-X'+v);
+      } else moves.push(a+'-X'+v);
+    });
     S.ev.push('quake:'+idx+':'+moves.join('.'));
   }
   starPassive(S,p,[idx,...f]);
@@ -1810,6 +2053,7 @@ async function commit(S){
   extra=S.extra||0; cardThisTurn=!!S.cardThisTurn; blind=S.blind||0;
   pas=S.pas ? clone(S.pas) : freshPas();
   kings=S.kings ? {1:S.kings[1]??-1, 2:S.kings[2]??-1} : {1:-1,2:-1};
+  hidden=clone(S.hidden||[]); lastPlace=S.lastPlace?clone(S.lastPlace):null; predict=S.predict?{...S.predict}:null;
   hush=S.hush ? {...S.hush} : null; royal=S.royal||0; decree=S.decree ? clone(S.decree) : null; forced=S.forced ? {...S.forced} : null; quake=S.quake||0;
   winOverride=S.winner||0; winReason=S.winReason||'';
   prot=protOf(guards,kings,hush);
@@ -1823,11 +2067,10 @@ async function commit(S){
   if (S.over){ if (!over) gameOver(); }
   else if (over){ over=false; $('result').hidden=true; }
   updateAmbience(); render();
-  if (phase==='play' && !over && turn!==lastTurnShown){ lastTurnShown=turn; turnBanner(turn); }
   maybeCPU(); drainNet();
 }
 function resetLocal(S){
-  gen++; busy=false; aim=0; over=false; $('result').hidden=true; net.queue=[];
+  gen++; busy=false; aim=0; aimSel=null; over=false; $('result').hidden=true; net.queue=[];
   P.length=0; RINGS.length=0; BOLTS.length=0; BEAMS.length=0; CIRCLES.length=0; HOLES.length=0; EMIT.length=0; LINES.length=0;
   cells.forEach(c=>c.classList.remove('marked'));
   prevBlock={1:null,2:null}; lastTurnShown=0;
@@ -1892,7 +2135,8 @@ function startDraft(){
 const newGame = startDraft;
 function cpuDraftPick(){
   const c=cpuSide();
-  if (!online() && c && phase==='draft' && !picks[c]) draftTimers.push(setTimeout(()=>{ if (phase==='draft' && !picks[c]) choose(c, pick(EL_ORDER)); }, 700));
+  // from 魔導士 up the CPU sometimes brings the time element, which players cannot pick
+  if (!online() && c && phase==='draft' && !picks[c]) draftTimers.push(setTimeout(()=>{ if (phase==='draft' && !picks[c]) choose(c, cfg.lv>=2 && Math.random()<.25 ? 'time' : pick(EL_ORDER)); }, 700));
 }
 function choose(p, el){
   if (phase==='draft'){ if (picks[p]) return; picks[p]=el; }
@@ -1973,14 +2217,21 @@ function cellClick(i){
     return;
   }
   if (aim){
-    if (busy||over||!isLocalTurn(turn)||i>=64||board[i]!==0||burns.some(b=>b.idx===i)) return;
-    const p=aim; aim=0; castCard(p,i); return;
+    if (busy||over||!isLocalTurn(turn)||!aimOk(i)) return;
+    const p=aim, k=aimSel.kind;
+    if (k==='fire'){ aim=0; aimSel=null; castCard(p,i); return; }
+    if (aimSel.stage===1){ aimSel={kind:k, stage:2, first:i}; render(); return; }
+    const first=aimSel.first; aim=0; aimSel=null;
+    castCard(p, k==='ninja' ? [first,i] : dragonLine(first,i)); return;
   }
   humanMove(i);
 }
 function humanMove(i){
   if (busy||over||!isLocalTurn(turn)) return;
-  if (!movesFor(turn).includes(i)) return;
+  if (!movesFor(turn).includes(i)){
+    if (viewerSide()===turn && illusionMoves(turn).includes(i)){ ac(); springTrap(i); }
+    return;
+  }
   ac(); doMove(i);
 }
 function decreeChoose(idx){
@@ -2098,6 +2349,19 @@ async function castCard(p, target, remoteS, remoteTargets){
     }
     else if (el==='king'){ targets=[]; S.royal=p; }
     else if (el==='rock'){ targets=[]; S.quake=1; }
+    else if (el==='ninja'){ const [a,b]=target; targets=[a,b]; S.board[a]=3-p; S.board[b]=p; }
+    else if (el==='dragon'){
+      const pr=protS(S); targets=target.slice();
+      for (const i of targets){
+        if (S.board[i]>0 && !pr.some(g=>g.idx===i && g.owner===S.board[i])) S.board[i]=0;
+        if (S.board[i]===0){ S.burns=S.burns.filter(b=>b.idx!==i); S.burns.push({idx:i,owner:0,left:2,kind:'blaze',fresh:true}); }
+      }
+    }
+    else if (el==='time'){
+      const lp=S.lastPlace; targets=[lp.idx];
+      S.board=lp.before.slice(); S.lastPlace=null;
+      S.burns=S.burns.filter(b=>b.idx!==lp.idx); S.burns.push({idx:lp.idx,owner:p,left:1,kind:'clock'});
+    }
     else { targets=[]; S.extra=1; }
     S.used[p]=(S.used[p]||0)+1; S.cardThisTurn=true; S.pass=0;
     cleanupS(S);
@@ -2238,6 +2502,73 @@ async function playCard(el,p,targets,myGen){
     for (let j=0;j<4;j++) setTimeout(()=>{ if (alive()) bolt(rnd(r.left,r.right),r.bottom,rnd(r.left,r.right),rnd(r.top,r.bottom),'#c08a4a',.4,1.4,2); }, j*250);
     await wait(1500);
     undim(900);
+  } else if (el==='ninja'){
+    const [a,b]=targets, [ax,ay]=center(a), [bx2,by2]=center(b);
+    dim('radial-gradient(circle at 50% 50%, rgba(15,40,25,.45), rgba(4,8,6,.88))',250);
+    [a,b].forEach(i=>{ cells[i].style.setProperty('--mk',E.c1); cells[i].classList.add('marked'); });
+    const sr=$('side'+p).getBoundingClientRect(), sx=sr.left+sr.width/2, sy=sr.top+sr.height/2;
+    [a,b].forEach((i,k)=>{ const [tx,ty]=center(i); for (let j=0;j<3;j++) setTimeout(()=>part({x:sx,y:sy,vx:(tx-sx)*2.2,vy:(ty-sy)*2.2,drag:1,life:.45,size:7,color:'#c8ccd8',mode:'shuriken',rot:rnd(0,TAU),spin:26}), k*120+j*60); });
+    tone('triangle',4200,2600,.2,.07); tone('triangle',4600,3000,.2,.06,.15);
+    await wait(650); if (!alive()) return;
+    [[ax,ay],[bx2,by2]].forEach(([x,y])=>{ for (let j=0;j<22*FXQ;j++){ const ang=rnd(0,TAU), s=rnd(30,150); part({x,y,vx:Math.cos(ang)*s,vy:Math.sin(ang)*s,drag:.94,life:rnd(.7,1.2),size:rnd(14,26),color:'#8a8f98',mode:'smoke',alpha:.55}); } });
+    nz('lowpass',1500,120,.35,.5); tone('sine',160,70,.25,.5);
+    const da=discs[a], db=discs[b];
+    da.animate([{transform:'none'},{transform:`translate(${(bx2-ax)/2}px,${(by2-ay)/2-40}px) scale(.6)`,opacity:.4,offset:.5},{transform:`translate(${bx2-ax}px,${by2-ay}px)`}],{duration:520,easing:'cubic-bezier(.5,0,.5,1)'});
+    db.animate([{transform:'none'},{transform:`translate(${(ax-bx2)/2}px,${(ay-by2)/2+40}px) scale(.6)`,opacity:.4,offset:.5},{transform:`translate(${ax-bx2}px,${ay-by2}px)`}],{duration:520,easing:'cubic-bezier(.5,0,.5,1)'});
+    for (let j=0;j<6;j++) setTimeout(()=>{ const t=j/6; part({x:ax+(bx2-ax)*t,y:ay+(by2-ay)*t,life:.4,size:8,color:E.c1}); part({x:bx2+(ax-bx2)*t,y:by2+(ay-by2)*t,life:.4,size:8,color:E.c3}); }, j*70);
+    await wait(520);
+    board[a]=3-p; board[b]=p; paintDisc(a); paintDisc(b);
+    [a,b].forEach(i=>cells[i].classList.remove('marked'));
+    [[ax,ay],[bx2,by2]].forEach(([x,y])=>burst('ninja',x,y,1));
+    await wait(500);
+    undim(800);
+  } else if (el==='dragon'){
+    const line=targets; if (!line.length) return;
+    dim('radial-gradient(circle at 50% 50%, rgba(10,30,80,.55), rgba(0,4,16,.93))',300);
+    line.forEach(i=>{ cells[i].style.setProperty('--mk',E.c1); cells[i].classList.add('marked'); });
+    roar(1.2);
+    await wait(700); if (!alive()) return;
+    const [ax,ay]=center(line[0]), [bx2,by2]=center(line[line.length-1]);
+    const ang=Math.atan2(by2-ay,bx2-ax), ext=Math.max(W,H)*.65;
+    const x0=ax-Math.cos(ang)*ext, y0=ay-Math.sin(ang)*ext, x1=bx2+Math.cos(ang)*ext, y1=by2+Math.sin(ang)*ext, L=Math.hypot(x1-x0,y1-y0), dur=1300;
+    flyDragon(x0,y0,x1,y1,dur,Math.min(W,H)*.55);
+    line.forEach((i,k)=>{
+      const [cx2,cy2]=center(i), d=Math.hypot(cx2-x0,cy2-y0);
+      setTimeout(()=>{
+        if (!alive()) return;
+        cells[i].classList.remove('marked');
+        if (board[i]>0 && !prot.some(g=>g.idx===i && g.owner===board[i])) vanish(i);
+        for (let j=0;j<26*FXQ;j++) part({x:cx2+rnd(-10,10),y:cy2+rnd(-6,6),vx:rnd(-80,80),vy:rnd(-300,-80),g:-150,drag:.95,life:rnd(.45,.9),size:rnd(5,12),mode:'bfire'});
+        ring(cx2,cy2,{vr:240,life:.4,w:4,color:E.c1});
+        flames[i].hidden=false; flames[i].classList.remove('chain','clock'); flames[i].classList.add('blaze'); flames[i].innerHTML=''; flames[i].textContent='2';
+        shake(10); sfx('dragon','flip',k);
+      }, d/L*dur);
+    });
+    await wait(dur+500);
+    flash('#bff0ff',.4,400);
+    undim(900);
+  } else if (el==='time'){
+    const idx=targets[0], before=lastPlace ? lastPlace.before : null;
+    dim('radial-gradient(circle at 50% 50%, rgba(60,45,10,.45), rgba(10,8,2,.9))',300);
+    stage.animate([{filter:'none'},{filter:'sepia(.9) hue-rotate(-10deg)',offset:.25},{filter:'sepia(.9) hue-rotate(-10deg)',offset:.8},{filter:'none'}],{duration:2400});
+    clockScene(-1,1500);
+    await wait(700); if (!alive()) return;
+    if (before){
+      const diff=[]; for (let i=0;i<N;i++) if (board[i]!==before[i]) diff.push(i);
+      diff.forEach((i,k)=>setTimeout(()=>{
+        if (!alive()) return;
+        const [x,y]=center(i);
+        if (before[i]>0){ board[i]=before[i]; paintDisc(i); discs[i].animate([{transform:'rotateY(-90deg)',filter:'sepia(1) brightness(2)'},{transform:'none',filter:'none'}],{duration:380}); }
+        else if (board[i]>0) vanish(i);
+        for (let j=0;j<10*FXQ;j++) part({x,y,vx:rnd(-80,80),vy:rnd(-80,80),attract:{x,y,s:6},drag:.9,life:rnd(.4,.7),size:rnd(1.5,3),color:pick([E.c1,E.c3])});
+      }, k*70));
+      await wait(diff.length*70+400);
+    }
+    const [x,y]=center(idx);
+    flames[idx].hidden=false; flames[idx].classList.remove('chain','blaze'); flames[idx].classList.add('clock'); flames[idx].innerHTML=''; flames[idx].textContent='1';
+    ring(x,y,{vr:220,life:.6,w:4,color:E.c1});
+    await wait(700);
+    undim(800);
   } else {
     const sr=$('side'+p).getBoundingClientRect(), sx=sr.left+sr.width/2, sy=sr.top+Math.min(60,sr.height/2);
     dim('linear-gradient(180deg, rgba(0,6,30,.92), rgba(0,0,10,.8))',220);
@@ -2270,6 +2601,10 @@ async function playEvents(ev){
     else if (k==='decree' && n>=0 && n<N) await fxDecree(n);
     else if (k==='regicide' && (n===1||n===2)) await fxRegicide(n);
     else if (k==='coronation' && (n===1||n===2)) await fxCoronation(n);
+    else if (k==='trap' && n>=0 && n<64) await fxTrap(n, +extra===2?2:1);
+    else if (k==='rage' && (n===1||n===2)) await fxRage(n);
+    else if (k==='wrath' && n>=0 && n<64) await fxWrath(n, extra||'');
+    else if (k==='foresee' && n>=0 && n<64) await fxForesee(n);
     else if (k==='quake' && n>=0 && n<N) await fxQuake(n, extra||'');
   }
 }
@@ -2311,6 +2646,8 @@ function chainSvg(id){
 function paintSeal(i,b){
   const f=flames[i], isChain=b.kind==='chain';
   f.classList.toggle('chain', isChain);
+  f.classList.toggle('blaze', b.kind==='blaze');
+  f.classList.toggle('clock', b.kind==='clock');
   if (isChain){ if (!f.querySelector('svg')) f.innerHTML=chainSvg(i); }
   else { if (f.querySelector('svg')) f.innerHTML=''; f.textContent=b.left; }
 }
@@ -2467,7 +2804,8 @@ function bigFlagStab(x,y,h){
     ring(x,y,{vr:420,life:.55,w:8,color:ELS.king.c1}); ring(x,y,{vr:240,life:.7,w:3,color:ELS.king.c3});
     for (let j=0;j<50*FXQ;j++){ const a=rnd(-Math.PI,0), s=rnd(120,480); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:1000,drag:.98,life:rnd(.5,.9),size:rnd(2,5),color:pick(['#8a7458','#c9b28a','#5a4a38']),mode:'chunk',rot:rnd(0,TAU)}); }
   }, 420);
-  setTimeout(()=>el.animate([{opacity:1},{opacity:0}],{duration:500,fill:'forwards'}).onfinish=()=>el.remove(), 1500);
+  setTimeout(()=>el.animate([{opacity:1},{opacity:0}],{duration:500,fill:'forwards'}), 1500);
+  setTimeout(()=>el.remove(), 2060);
 }
 async function fxDecree(idx){
   const E=ELS.king, [x,y]=center(idx);
@@ -2508,7 +2846,7 @@ function castleSvg(mode){
     <g>${ppl}</g>
   </svg>`;
 }
-function hideCastle(ov){ ov.animate([{opacity:1},{opacity:0}],{duration:600,fill:'forwards'}).onfinish=()=>{ ov.hidden=true; ov.innerHTML=''; }; }
+function hideCastle(ov){ ov.animate([{opacity:1},{opacity:0}],{duration:600,fill:'forwards'}); setTimeout(()=>{ ov.hidden=true; ov.innerHTML=''; },640); }
 // 落城: the king is surrounded, the castle cracks and falls
 async function fxRegicide(k){
   const E=ELS.king, i=kings[k];
@@ -2602,20 +2940,166 @@ function cardReadyFx(p){
   [0,1,2,3].forEach(k=>tone('sine',1046.5*Math.pow(1.26,k),1046.5*Math.pow(1.26,k),.35,.06,k*.07));
   toast(`${roleOf(p)}の必殺技「${CARDS[el].name}」が使えるようになった！`);
 }
+// 岩石巨城: relocated stones arc over the board, the rest are flung off the screen
 async function fxQuake(idx, movesTxt){
   const E=ELS.rock, [x,y]=center(idx);
-  shake(26); flash('#c08a4a',.22,220);
+  shake(32); flash('#c08a4a',.25,220);
   nz('lowpass',300,40,1,.8); tone('sine',55,22,.9,.9); nz('bandpass',900,300,.3,.4,.05,2);
-  ring(x,y,{vr:340,life:.5,w:8,color:E.c1}); ring(x,y,{vr:200,life:.7,w:3,color:E.c2});
-  for (let j=0;j<40*FXQ;j++){ const a=rnd(0,TAU), s=rnd(120,420); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-100,g:900,drag:.98,life:rnd(.5,1),size:rnd(2,5),color:pick(['#8a7458','#5a4a38','#c9b28a']),mode:'chunk',rot:rnd(0,TAU)}); }
+  ring(x,y,{vr:380,life:.5,w:9,color:E.c1}); ring(x,y,{vr:220,life:.7,w:3,color:E.c2});
+  for (let j=0;j<50*FXQ;j++){ const a=rnd(0,TAU), s=rnd(150,520); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-120,g:900,drag:.98,life:rnd(.5,1),size:rnd(2,6),color:pick(['#8a7458','#5a4a38','#c9b28a']),mode:'chunk',rot:rnd(0,TAU)}); }
+  let flung=0, moved=0;
   for (const mv of movesTxt.split('.').filter(Boolean)){
-    const [a,b]=mv.split('-').map(Number); if (!(a>=0&&a<64&&b>=0&&b<64)) continue;
-    const [ax,ay]=center(a), [bx2,by2]=center(b);
-    discs[b].animate([{transform:`translate(${ax-bx2}px,${ay-by2}px)`},{transform:'translate(0,0)'}],{duration:380,easing:'cubic-bezier(.2,.8,.3,1.25)'});
+    const [aS,bS]=mv.split('-'); const a=+aS; if (!(a>=0&&a<64) || !bS) continue;
+    const [ax,ay]=center(a);
     for (let j=0;j<8*FXQ;j++) part({x:ax,y:ay,vx:rnd(-60,60),vy:rnd(-60,20),drag:.95,life:rnd(.5,.9),size:rnd(8,14),color:'#3a2c1e',mode:'smoke',alpha:.5});
+    if (bS[0]==='X'){
+      const owner=+bS.slice(1), el=cfg.el[owner]; if (!el) continue;
+      flung++;
+      const r=cells[a].getBoundingClientRect(), fly=document.createElement('div');
+      fly.className='disc flyaway'; fly.dataset.el=el; fly.dataset.k=ELS[el].k; if (altSide()===owner) fly.setAttribute('data-alt','');
+      Object.assign(fly.style,{inset:'auto',left:(r.left+r.width*.09)+'px',top:(r.top+r.height*.09)+'px',width:(r.width*.82)+'px',height:(r.height*.82)+'px'});
+      document.body.appendChild(fly);
+      const ang=Math.atan2(ay-y,ax-x)+rnd(-.35,.35), dist=Math.max(W,H)*1.3;
+      fly.animate([{transform:'none'},{transform:`translate(${Math.cos(ang)*dist*.25}px,${Math.sin(ang)*dist*.25-140}px) rotate(${rnd(-360,360)}deg) scale(1.4)`,offset:.3},{transform:`translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist+260}px) rotate(${rnd(-1080,1080)}deg) scale(.7)`}],{duration:1100,easing:'cubic-bezier(.2,.6,.4,1)',fill:'forwards'});
+      setTimeout(()=>fly.remove(),1200);
+    } else {
+      const b=+bS; if (!(b>=0&&b<64)) continue;
+      moved++;
+      const [bx2,by2]=center(b);
+      discs[b].animate([{transform:`translate(${ax-bx2}px,${ay-by2}px)`},{transform:`translate(${(ax-bx2)/2}px,${(ay-by2)/2-150}px) scale(1.7) rotate(360deg)`,offset:.5},{transform:'none'}],{duration:820,easing:'cubic-bezier(.3,.6,.4,1)'});
+      setTimeout(()=>{ burst('rock',bx2,by2,.8); shake(10); tone('sine',80,40,.2,.4); }, 790);
+    }
   }
-  toast(`${CARDS.rock.name}：まわりの石を押し出した`);
-  await wait(500);
+  toast(`${CARDS.rock.name}：${moved}枚を盤上へ、${flung}枚を画面の外へ吹き飛ばした`);
+  await wait(1000);
+}
+/* ---------- 忍・竜・時: scenes and passive effects ---------- */
+function bfireCol(k){ return k<.18?'#ffffff':k<.4?'#bff0ff':k<.7?'#3fb6ff':'#1a3fa0'; }
+// an eastern dragon, head to the right, wreathed in blue
+function dragonSvg(){
+  return `<svg viewBox="0 0 400 140" aria-hidden="true"><defs><linearGradient id="dgb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a1f5a" stop-opacity="0"/><stop offset=".25" stop-color="#1a3fa0"/><stop offset=".8" stop-color="#3fb6ff"/><stop offset="1" stop-color="#d8f4ff"/></linearGradient></defs>
+  <path d="M4 78 C 50 34, 92 112, 140 70 S 226 26, 276 66 C 300 84, 322 78, 336 62 L 352 50 L 394 56 L 370 64 L 396 74 L 364 76 C 352 88, 324 100, 294 88 C 256 72, 208 116, 156 94 S 66 48, 18 90 Z" fill="url(#dgb)" stroke="#bff0ff" stroke-width="1.2"/>
+  <path d="M60 56 l6 -14 l6 12 M100 70 l6 -14 l6 13 M170 58 l6 -15 l6 13 M220 46 l6 -15 l6 14 M262 56 l6 -14 l6 13" stroke="#bff0ff" stroke-width="2" fill="none"/>
+  <path d="M346 52 L330 22 L352 46 Z M354 50 L356 18 L362 48 Z" fill="#d8f4ff"/>
+  <circle cx="370" cy="58" r="6" fill="#3fb6ff" opacity=".5"/><circle cx="370" cy="58" r="3" fill="#fff"/>
+  <path d="M388 70 C402 82,404 104,390 116 M380 74 C388 92,382 110,368 120" stroke="#9fe0ff" stroke-width="1.6" fill="none"/>
+  <path d="M120 92 l-8 18 l14 -10 M200 84 l-8 18 l14 -10" stroke="#9fe0ff" stroke-width="2" fill="none"/>
+  </svg>`;
+}
+function flyDragon(x0,y0,x1,y1,dur,w){
+  const el=document.createElement('div'); el.className='dragonfly'; el.innerHTML=dragonSvg(); el.style.width=w+'px';
+  document.body.appendChild(el);
+  const ang=Math.atan2(y1-y0,x1-x0), deg=ang*180/Math.PI, h=w*140/400;
+  el.style.left=(-w/2)+'px'; el.style.top=(-h/2)+'px';
+  el.animate([{transform:`translate(${x0}px,${y0}px) rotate(${deg}deg)`},{transform:`translate(${x1}px,${y1}px) rotate(${deg}deg)`}],{duration:dur,easing:'linear',fill:'forwards'});
+  el.firstElementChild.animate([{transform:'scaleY(1)'},{transform:'scaleY(.82)'},{transform:'scaleY(1.08)'},{transform:'scaleY(1)'}],{duration:600,iterations:Infinity});
+  emit(dur/1000,(dt,t)=>{
+    const k=Math.min(1,t/(dur/1000)), cx0=x0+(x1-x0)*k, cy0=y0+(y1-y0)*k;
+    const hx=cx0+Math.cos(ang)*w*.46, hy=cy0+Math.sin(ang)*w*.46;
+    for (let j=0;j<9*FXQ;j++) part({x:hx+rnd(-6,6),y:hy+rnd(-6,6),vx:Math.cos(ang)*rnd(250,560)+rnd(-80,80),vy:Math.sin(ang)*rnd(250,560)+rnd(-80,80),drag:.92,life:rnd(.3,.65),size:rnd(6,15),mode:'bfire'});
+    for (let j=0;j<4*FXQ;j++){ const s=rnd(-.45,.4); part({x:cx0+Math.cos(ang)*w*s+rnd(-10,10),y:cy0+Math.sin(ang)*w*s+rnd(-10,10),vx:rnd(-30,30),vy:rnd(-60,-10),drag:.95,life:rnd(.4,.8),size:rnd(4,9),mode:'bfire'}); }
+  });
+  setTimeout(()=>el.remove(), dur+60);
+}
+function roar(len=1){
+  tone('sawtooth',120,55,1.1*len,.16); tone('sawtooth',90,42,1.2*len,.12,.02);
+  nz('bandpass',300,1400,.9*len,.35,0,1.2); nz('lowpass',600,60,1.2*len,.4,.1); tone('sine',55,26,1.3*len,.6);
+}
+// a bamboo grove that rises, gets cut in one stroke and falls apart
+async function bambooScene(){
+  const ov=document.createElement('div'); ov.className='scene bamboo';
+  let st='';
+  for (let k=0;k<12;k++){
+    const x=k*34+rnd(-6,8), w=rnd(9,14), cut=rnd(90,130);
+    const nodes=(y0,y1)=>{ let o=''; for (let y=y0+18;y<y1;y+=rnd(26,34)) o+=`<rect x="${x-1}" y="${y.toFixed(1)}" width="${w+2}" height="3" rx="1.5" fill="#2e6b45"/>`; return o; };
+    st+=`<g class="stalk" style="--d:${k}"><g class="sbot"><rect x="${x}" y="${cut}" width="${w}" height="${270-cut}" fill="url(#bg)"/>${nodes(cut,270)}</g><g class="stop"><rect x="${x}" y="-20" width="${w}" height="${cut+20}" fill="url(#bg)"/>${nodes(-20,cut)}<path d="M${x+w} ${cut-40} q20 -6 34 4 q-18 4 -34 -4z M${x} ${cut-80} q-18 -8 -32 0 q16 6 32 0z" fill="#7bd88f"/></g></g>`;
+  }
+  ov.innerHTML=`<svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMax slice"><defs><linearGradient id="bg" x1="0" x2="1"><stop offset="0" stop-color="#2e6b45"/><stop offset=".45" stop-color="#9be8a6"/><stop offset="1" stop-color="#2e6b45"/></linearGradient></defs>${st}</svg>`;
+  document.body.appendChild(ov);
+  ov.animate([{opacity:0},{opacity:1}],{duration:250,fill:'forwards'});
+  ov.querySelectorAll('.stalk').forEach((s,k)=>s.animate([{transform:'translateY(110%)'},{transform:'none'}],{duration:520,delay:k*45,easing:'cubic-bezier(.2,.9,.3,1.1)',fill:'backwards'}));
+  for (let k=0;k<4;k++) tone('sine',rnd(80,110),50,.3,.5,k*.12);
+  await wait(950);
+  // the cut
+  [[-.1,.62,1.1,.38],[1.1,.55,-.1,.45],[-.1,.48,1.1,.52]].forEach(([a,b,c,d],k)=>setTimeout(()=>{
+    LINES.push({x1:W*a,y1:H*b,x2:W*c,y2:H*d,t:0,delay:0,life:.45,draw:.08,color:'#ffffff',w:3});
+    tone('triangle',4200,2600,.18,.08); nz('highpass',8000,4000,.12,.25); flash('#ffffff',.25,120);
+  }, k*110));
+  await wait(420);
+  ov.querySelectorAll('.stop').forEach(s=>s.animate([{transform:'none'},{transform:`translate(${rnd(-60,60)}px,${rnd(260,360)}px) rotate(${rnd(-70,70)}deg)`,opacity:0}],{duration:1100,easing:'cubic-bezier(.5,0,.9,.6)',fill:'forwards'}));
+  for (let j=0;j<60*FXQ;j++) part({x:rnd(0,W),y:rnd(H*.3,H*.6),vx:rnd(-160,160),vy:rnd(-140,40),g:220,drag:.98,life:rnd(1,1.8),size:rnd(6,12),color:pick(['#7bd88f','#9be8a6','#4fa868']),mode:'leaf',rot:rnd(0,TAU),spin:rnd(-6,6)});
+  for (let j=0;j<24*FXQ;j++) part({x:rnd(0,W),y:H*.9,vx:rnd(-40,40),vy:rnd(-80,-20),drag:.97,life:rnd(1.2,2),size:rnd(30,60),color:'#8a8f98',mode:'smoke',alpha:.35});
+  await wait(900);
+  ov.animate([{opacity:1},{opacity:0}],{duration:500,fill:'forwards'}); setTimeout(()=>ov.remove(),540);
+}
+// a brass clock face with hands that spin forward or backward
+function clockSvg(){
+  let ticks=''; for (let k=0;k<60;k++){ const a=k*6*Math.PI/180, r1=k%5?88:82; ticks+=`<line x1="${100+Math.sin(a)*r1}" y1="${100-Math.cos(a)*r1}" x2="${100+Math.sin(a)*92}" y2="${100-Math.cos(a)*92}" stroke="#5a3e08" stroke-width="${k%5?1:2.4}"/>`; }
+  const nums=['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'].map((t,k)=>{ const a=k*30*Math.PI/180; return `<text x="${100+Math.sin(a)*70}" y="${100-Math.cos(a)*70+4}" text-anchor="middle" font-size="11" font-family="Cinzel,serif" fill="#3a2604">${t}</text>`; }).join('');
+  const gear=(cx,cy,r,cls)=>{ let d=''; for (let k=0;k<12;k++){ const a=k*30*Math.PI/180; d+=`<rect x="${cx-3}" y="${cy-r-6}" width="6" height="8" fill="#c8a040" transform="rotate(${k*30} ${cx} ${cy})"/>`; } return `<g class="${cls}">${d}<circle cx="${cx}" cy="${cy}" r="${r}" fill="#a07a28" stroke="#5a3e08" stroke-width="2"/><circle cx="${cx}" cy="${cy}" r="${r*.35}" fill="#5a3e08"/></g>`; };
+  return `<svg viewBox="-20 -20 240 240" aria-hidden="true"><defs><radialGradient id="cf" cx=".4" cy=".35"><stop offset="0" stop-color="#fffdf0"/><stop offset=".8" stop-color="#efe2b8"/><stop offset="1" stop-color="#c8a96a"/></radialGradient><linearGradient id="cb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2b8"/><stop offset=".5" stop-color="#b8862e"/><stop offset="1" stop-color="#5a3e08"/></linearGradient></defs>
+  ${gear(20,175,26,'g1')}${gear(185,20,20,'g2')}
+  <circle cx="100" cy="100" r="104" fill="url(#cb)"/><circle cx="100" cy="100" r="95" fill="url(#cf)" stroke="#5a3e08" stroke-width="2"/>
+  ${ticks}${nums}
+  <g class="hh"><path d="M97 100 L100 52 L103 100 Z" fill="#2a1b06"/></g>
+  <g class="mh"><path d="M98.5 100 L100 26 L101.5 100 Z" fill="#2a1b06"/></g>
+  <g class="sh"><line x1="100" y1="114" x2="100" y2="20" stroke="#b3120b" stroke-width="1.4"/></g>
+  <circle cx="100" cy="100" r="5" fill="#b8862e" stroke="#2a1b06"/>
+  </svg>`;
+}
+async function clockScene(dir,dur){
+  const ov=document.createElement('div'); ov.className='scene clockov'; ov.innerHTML=clockSvg(); document.body.appendChild(ov);
+  ov.animate([{opacity:0,transform:'scale(.6) rotate(-20deg)'},{opacity:.95,transform:'none'}],{duration:350,fill:'forwards',easing:'cubic-bezier(.2,.9,.3,1.2)'});
+  const spin=(sel,turns)=>{ const g=ov.querySelector(sel); if (g) g.animate([{transform:'rotate(0deg)'},{transform:`rotate(${turns*360}deg)`}],{duration:dur,easing:'cubic-bezier(.3,0,.7,1)',fill:'forwards'}); };
+  spin('.hh',dir*1); spin('.mh',dir*12); spin('.sh',dir*40); spin('.g1',dir*-3); spin('.g2',dir*4);
+  const n=Math.floor(dur/90); for (let k=0;k<n;k++) tone('square',k%2?1600:2400,k%2?1600:2400,.018,.05,k*.09*(1-k/(n*2.2)));
+  if (dir<0) nz('bandpass',3000,300,dur/1000,.18,0,1.5); else nz('bandpass',300,3000,dur/1000,.18,0,1.5);
+  await wait(dur);
+  bell(1046.5,1.4,.07); bell(1568,1.2,.05,.05);
+  ov.animate([{opacity:.95},{opacity:0,transform:'scale(1.3)'}],{duration:450,fill:'forwards'}); setTimeout(()=>ov.remove(),490);
+}
+async function fxTrap(idx,victim){
+  const [x,y]=center(idx), E=ELS.ninja;
+  for (let j=0;j<10;j++) setTimeout(()=>part({x:x+rnd(-80,80),y:y-rnd(160,260),vx:0,vy:0,attract:{x,y,s:22},drag:.98,life:.5,size:rnd(6,10),color:pick(['#c8ccd8','#9aa0aa']),mode:'shuriken',rot:rnd(0,TAU),spin:20}), j*40);
+  await wait(380);
+  for (let j=0;j<26*FXQ;j++){ const a=rnd(0,TAU), s=rnd(40,200); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.94,life:rnd(.8,1.4),size:rnd(16,30),color:'#8a8f98',mode:'smoke',alpha:.55}); }
+  tone('sine',160,70,.25,.6); nz('lowpass',1500,120,.35,.5); nz('bandpass',1800,600,.3,.3,.05,2);
+  shake(14);
+  const el=document.createElement('div'); el.className='stamp trap'; el.innerHTML=`<span>罠</span><small>隠れた石に触れた！ ${ELS[cfg.el[victim]].k}はこのターンを失う</small>`;
+  document.body.appendChild(el);
+  el.animate([{transform:'translate(-50%,-50%) rotate(-10deg) scale(2.4)',opacity:0},{transform:'translate(-50%,-50%) rotate(-10deg) scale(.95)',opacity:1,offset:.22},{transform:'translate(-50%,-50%) rotate(-10deg) scale(1)',opacity:1,offset:.82},{transform:'translate(-50%,-50%) rotate(-10deg) scale(1)',opacity:0}],{duration:1700,easing:'cubic-bezier(.3,1.4,.5,1)'}); setTimeout(()=>el.remove(),1780);
+  await wait(1300);
+}
+async function fxRage(d){
+  const E=ELS.dragon, sr=$('side'+d).getBoundingClientRect(), x=sr.left+sr.width/2, y=sr.top+Math.min(60,sr.height/2);
+  showBanner(E,'PASSIVE',PASSIVES.dragon.name,PASSIVES.dragon.sub);
+  roar(1.1);
+  flash('#3fb6ff',.35,400); shake(18);
+  for (let j=0;j<80*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,500); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-80,drag:.93,life:rnd(.5,1.1),size:rnd(5,13),mode:'bfire'}); }
+  for (let j=0;j<3;j++) ring(x,y,{vr:300+j*160,life:.7,w:6-j*1.5,color:j%2?E.c2:E.c1});
+  await wait(1800);
+}
+async function fxWrath(idx,cellsTxt){
+  const E=ELS.dragon, list=cellsTxt.split('.').map(Number).filter(i=>Number.isInteger(i)&&i>=0&&i<64);
+  roar(.7);
+  list.forEach((i,k)=>setTimeout(()=>{
+    const [x,y]=center(i);
+    for (let j=0;j<24*FXQ;j++) part({x:x+rnd(-8,8),y:y+rnd(-6,6),vx:rnd(-60,60),vy:rnd(-260,-60),g:-120,drag:.95,life:rnd(.4,.8),size:rnd(5,11),mode:'bfire'});
+    ring(x,y,{vr:220,life:.45,w:4,color:E.c1});
+    discs[i].animate([{transform:'scale(1.5) rotateY(90deg)',filter:'brightness(3)'},{transform:'none',filter:'none'}],{duration:420,easing:'cubic-bezier(.2,.9,.3,1.3)'});
+    sfx('dragon','flip',k);
+  }, k*90));
+  if (list.length) toast(`${PASSIVES.dragon.name}！ 怒りの蒼炎がさらに${list.length}枚を焼き返した`);
+  await wait(list.length*90+500);
+}
+async function fxForesee(idx){
+  const E=ELS.time, [x,y]=center(idx);
+  for (let j=0;j<3;j++) ring(x,y,{r:70-j*14,vr:-40,life:1,w:2,color:j%2?E.c3:E.c1});
+  for (let k=0;k<12;k++){ const a=k*Math.PI/6; LINES.push({x1:x+Math.cos(a)*34,y1:y+Math.sin(a)*34,x2:x+Math.cos(a)*46,y2:y+Math.sin(a)*46,t:0,delay:k*.03,life:1.1,draw:.08,color:E.c1,w:2}); }
+  bell(1318.5,1,.07); tone('square',2400,2400,.02,.05,.2); tone('square',1600,1600,.02,.05,.32);
+  popText(x,y-30,'未来視 的中',E.c1,26,1300);
+  toast(`${PASSIVES.time.name}：読みが的中！ ${CARDS.time.name}がよみがえった`);
+  await wait(1100);
 }
 
 /* ---------- CPU ---------- */
@@ -2633,6 +3117,25 @@ function cpuCardChoice(p){
     if (Math.random()<.45) return {};
   } else if (el==='rock'){
     if (Math.random()<.3) return {};
+  } else if (el==='ninja'){
+    const opp2=3-p, own=[], theirs=[];
+    for (let i=0;i<64;i++){ if (board[i]===p) own.push(i); else if (board[i]===opp2 && !prot.some(g=>g.idx===i && g.owner===opp2)) theirs.push(i); }
+    if (own.length && theirs.length){
+      const a=own.sort((x,y)=>W8(x)-W8(y))[0], b=theirs.sort((x,y)=>W8(y)-W8(x))[0];
+      if (W8(b)-W8(a)>=25) return {target:[a,b]};
+    }
+  } else if (el==='dragon'){
+    let best=null, bs=2;
+    for (let i=0;i<64;i++) for (const d of [[0,1],[1,0],[1,1],[1,-1]]){
+      const [r,c]=RC[i]; if (r-d[0]>=0&&r-d[0]<8&&c-d[1]>=0&&c-d[1]<8) continue;
+      const line=[]; for (let rr=r,cc=c; rr>=0&&rr<8&&cc>=0&&cc<8; rr+=d[0],cc+=d[1]) line.push(rr*8+cc);
+      if (line.length<3) continue;
+      let sc=0; for (const k of line){ if (prot.some(g=>g.idx===k && g.owner===board[k])) continue; if (board[k]===3-p) sc+=1+(isCorner(k)?3:0); else if (board[k]===p) sc-=1+(isCorner(k)?3:0); }
+      if (sc>bs){ bs=sc; best=line; }
+    }
+    if (best && (bs>=4 || Math.random()<.4)) return {target:best};
+  } else if (el==='time'){
+    if (lastPlace && lastPlace.p===3-p){ let d=0; for (let i=0;i<64;i++) if (board[i]!==lastPlace.before[i]) d++; if (isCorner(lastPlace.idx) || d>=4 || Math.random()<.3) return {}; }
   } else {
     if (legal(board,p).some(isCorner) || Math.random()<.4) return {};
   }
@@ -2649,7 +3152,11 @@ function maybeCPU(){
   if (turn!==cs) return;
   setTimeout(()=>{
     if (myGen!==gen||phase!=='play'||over||busy||decree||turn!==cs) return;
-    const p=turn, c=cpuCardChoice(p);
+    const p=turn;
+    // the CPU can fall for a hidden ninja stone too
+    const ill=illusionMoves(p);
+    if (ill.length && Math.random()<.3){ springTrap(pick(ill)); return; }
+    const c=cpuCardChoice(p);
     if (c){ castCard(p,c.target); return; }
     const mv=movesFor(p);
     const m = mv.length===1 ? mv[0] : cpuPick(board,p);
@@ -2738,7 +3245,8 @@ function stateFields(S){
     used:{1:S.used[1]||0,2:S.used[2]||0}, extra:S.extra||0, cardThisTurn:!!S.cardThisTurn, pass:S.pass||0, blind:S.blind||0,
     pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice(),
     kings:{1:(S.kings&&S.kings[1])??-1, 2:(S.kings&&S.kings[2])??-1}, hush:S.hush?{...S.hush}:null, royal:S.royal||0,
-    decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0, winReason:S.winReason||''};
+    decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0, winReason:S.winReason||'',
+    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null};
 }
 function sendState(S,act){
   if (!online() || !net.kind) return;
@@ -2971,14 +3479,16 @@ function buildHelp(){
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
     <li>星と岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。<strong>王は残り${LATE+KING_EARLY}以下</strong>から使えます。</li>
     <li>カードが使えるようになると、カードが光って知らせます。</li>
+    <li><strong>忍は自分の手番が3回終わったら</strong>、<strong>竜は空きマス残り${DRAGON_OPEN}以下の中盤</strong>から使えます。</li>
+    <li>CPUの強さが魔導士以上だと、CPUがまれに<strong>時属性</strong>を使ってきます（プレイヤーは選べません）。</li>
     <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
     <li>星の<strong>星座封印</strong>を受けると、2ターンのあいだパッシブもカードも使えません。</li>
     <li>パッシブスキルは条件を満たすと自動で発動します。</li>
-  </ul>` + EL_ORDER.map(k=>{
+  </ul>` + ALL_ELS.map(k=>{
     const E=ELS[k], C=CARDS[k], PS=PASSIVES[k];
     return `<section class="h-el" style="--ec:${E.c1}">
       <div class="hk">${E.k}</div>
-      <div class="hn">${E.name}</div>
+      <div class="hn">${E.name}${k==='time'?'（CPU専用）':''}</div>
       <dl>
         <dt>カード</dt><dd>${C.name}<br><small>${C.desc}${k==='fire'?'':`（${C.uses}回）`}</small></dd>
         <dt>パッシブ</dt><dd>${PS.name}<br><small>${PS.desc}</small></dd>
@@ -2999,10 +3509,15 @@ addEventListener('keydown',e=>{ if (e.key==='Escape' && !$('helpBox').hidden) cl
 /* ---------- controls ---------- */
 for (const p of [1,2]){
   $('card'+p).addEventListener('click',()=>{
-    if (aim===p){ aim=0; render(); return; }
+    if (aim===p){ aim=0; aimSel=null; render(); return; }
     if (!canCard(p)) return;
     ac();
-    if (cfg.el[p]==='fire'){ aim=p; render(); toast('燃やすマスを選んでください'); return; }
+    const el=cfg.el[p];
+    if (el==='fire'||el==='ninja'||el==='dragon'){
+      aim=p; aimSel={kind:el, stage:1, first:-1}; render();
+      toast(el==='fire' ? '燃やすマスを選んでください' : el==='ninja' ? '入れ替える自分の石を選んでください' : '蒼炎の起点となるマスを選んでください');
+      return;
+    }
     castCard(p);
   });
 }
@@ -3142,6 +3657,7 @@ function openModal(id){ $(id).hidden=false; uiSfx('open'); const f=$(id).querySe
 function closeModal(id){ if (!$(id).hidden){ $(id).hidden=true; uiSfx('close'); } }
 function closeModals(){ ['menu','settings'].forEach(closeModal); }
 $('menuBtn').addEventListener('click',()=>openModal('menu'));
+$('hudSet').addEventListener('click',()=>openModal('settings'));
 $('mResume').addEventListener('click',()=>closeModal('menu'));
 $('newgame').addEventListener('click',()=>closeModal('menu'));
 $('mGuide').addEventListener('click',()=>{ closeModal('menu'); openHelp(); });
@@ -3183,13 +3699,14 @@ function popText(x,y,txt,color,size=28,dur=900){
   const el=document.createElement('div'); el.className='pop'; el.textContent=txt;
   el.style.left=x+'px'; el.style.top=y+'px'; el.style.setProperty('--pc',color); el.style.fontSize=size+'px';
   document.body.appendChild(el);
-  el.animate([{transform:'translate(-50%,-30%) scale(.4)',opacity:0},{transform:'translate(-50%,-70%) scale(1.15)',opacity:1,offset:.25},{transform:'translate(-50%,-90%) scale(1)',opacity:1,offset:.7},{transform:'translate(-50%,-130%) scale(.95)',opacity:0}],{duration:dur,easing:'ease-out'}).onfinish=()=>el.remove();
+  el.animate([{transform:'translate(-50%,-30%) scale(.4)',opacity:0},{transform:'translate(-50%,-70%) scale(1.15)',opacity:1,offset:.25},{transform:'translate(-50%,-90%) scale(1)',opacity:1,offset:.7},{transform:'translate(-50%,-130%) scale(.95)',opacity:0}],{duration:dur,easing:'ease-out'});
+  setTimeout(()=>el.remove(),dur+80);
 }
 function stamp(p){
   const el=document.createElement('div'); el.className='stamp';
   el.innerHTML=`<span>PASS</span><small>${ELS[cfg.el[p]].k}は置ける場所がない</small>`;
   el.style.setProperty('--sc',tint(p)); document.body.appendChild(el);
-  el.animate([{transform:'translate(-50%,-50%) rotate(-12deg) scale(2.4)',opacity:0},{transform:'translate(-50%,-50%) rotate(-12deg) scale(.95)',opacity:1,offset:.22},{transform:'translate(-50%,-50%) rotate(-12deg) scale(1)',opacity:1,offset:.82},{transform:'translate(-50%,-50%) rotate(-12deg) scale(1)',opacity:0}],{duration:1600,easing:'cubic-bezier(.3,1.4,.5,1)'}).onfinish=()=>el.remove();
+  el.animate([{transform:'translate(-50%,-50%) rotate(-12deg) scale(2.4)',opacity:0},{transform:'translate(-50%,-50%) rotate(-12deg) scale(.95)',opacity:1,offset:.22},{transform:'translate(-50%,-50%) rotate(-12deg) scale(1)',opacity:1,offset:.82},{transform:'translate(-50%,-50%) rotate(-12deg) scale(1)',opacity:0}],{duration:1600,easing:'cubic-bezier(.3,1.4,.5,1)'}); setTimeout(()=>el.remove(),1680);
   setTimeout(()=>{ uiSfx('stamp'); shake(10); }, 300);
 }
 // skill cut-in: a slanted band races across with the element emblem and the skill's name
@@ -3199,7 +3716,7 @@ function cutIn(p,el,label,name,sub){
   c.innerHTML=`<div class="ci-k">${E.k}</div><div class="ci-txt"><div class="ci-label">${label}</div><div class="ci-name">${name}</div><div class="ci-sub">${sub}</div></div>`;
   c.querySelector('.ci-k').style.fontFamily=E.font||''; c.querySelector('.ci-name').style.fontFamily=E.font||''; c.querySelector('.ci-sub').style.fontFamily=E.sfont||'';
   document.body.appendChild(c);
-  c.animate([{transform:'skewY(-7deg) translateX(-110%)'},{transform:'skewY(-7deg) translateX(0)',offset:.18},{transform:'skewY(-7deg) translateX(2%)',offset:.82},{transform:'skewY(-7deg) translateX(110%)'}],{duration:1500,easing:'cubic-bezier(.2,.8,.2,1)'}).onfinish=()=>c.remove();
+  c.animate([{transform:'skewY(-7deg) translateX(-110%)'},{transform:'skewY(-7deg) translateX(0)',offset:.18},{transform:'skewY(-7deg) translateX(2%)',offset:.82},{transform:'skewY(-7deg) translateX(110%)'}],{duration:1500,easing:'cubic-bezier(.2,.8,.2,1)'}); setTimeout(()=>c.remove(),1580);
   c.querySelector('.ci-k').animate([{transform:'translateY(-50%) skewY(7deg) translateX(30%) scale(1.3)',opacity:0},{transform:'translateY(-50%) skewY(7deg) scale(1)',opacity:.95,offset:.25},{transform:'translateY(-50%) skewY(7deg) translateX(-6%) scale(1)',opacity:.95}],{duration:1500});
   uiSfx('whoosh'); setTimeout(()=>uiSfx('impact'),230);
 }
