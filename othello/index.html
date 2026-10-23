@@ -10,7 +10,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Yuji+Syuku&family=Potta+One&family=DotGothic16&family=Cinzel+Decorative:wght@900&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&family=Reggae+One&family=RocknRoll+One&family=Kaisei+Decol:wght@700&family=Zen+Antique&family=Creepster&family=Black+Ops+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Nosifer&family=Train+One&family=Orbitron:wght@900&family=Yuji+Syuku&family=Potta+One&family=DotGothic16&family=Cinzel+Decorative:wght@900&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&family=Reggae+One&family=RocknRoll+One&family=Kaisei+Decol:wght@700&family=Zen+Antique&family=Creepster&family=Black+Ops+One&display=swap">
 <style>
 /* Layout: one arena screen — two element "duelist" panels flank a carved stone board; FX canvas floats over everything. Single dark world by design. */
 :root{
@@ -605,6 +605,67 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
   .card .c-top > span:first-child::after,.pas .p-top > span:first-child::after{content:"・長押しで詳細";color:#cbb8ff;letter-spacing:.04em}
 }
 
+/* 鬼 stones: crimson lacquer with a black 鬼 crest, licked by red flame */
+.disc[data-el="oni"]{
+  background:radial-gradient(circle at 34% 28%,#ff7a5a 0%,#d4141a 38%,#6a0008 78%,#1a0004 94%);
+  box-shadow:0 0 0 1.5px #2a0004,0 0 14px #ff1a1a99,0 -4px 16px #ff3a1a55,0 3px 6px #000,inset 0 -4px 8px #1a0004,inset 0 2px 5px #ffb09a66;
+  color:#14000a;animation:oniThrob 1.6s ease-in-out infinite;
+}
+.disc[data-el="oni"]::after{opacity:.6;mix-blend-mode:normal;text-shadow:0 0 4px #ff6a3a}
+@keyframes oniThrob{50%{box-shadow:0 0 0 1.5px #2a0004,0 0 22px #ff1a1a,0 -6px 22px #ff3a1a88,0 3px 6px #000,inset 0 -4px 8px #1a0004,inset 0 2px 5px #ffb09a66}}
+.aura[data-el="oni"]{inset:-16% 6% 22% 6%;border-radius:50% 50% 40% 40%;background:radial-gradient(ellipse 50% 60% at 50% 75%,#ffd0a0cc,#ff1a1a77 45%,transparent 72%);filter:blur(2px);transform-origin:50% 100%;animation:flicker .3s steps(2) infinite alternate}
+.aura[data-el="oni"]::before,.aura[data-el="oni"]::after{content:"";position:absolute;bottom:20%;width:42%;height:120%;border-radius:50% 50% 30% 30%/70% 70% 30% 30%;background:radial-gradient(ellipse 50% 70% at 50% 90%,#fff0e0,#ff3a1a 40%,#6a0008aa 65%,transparent 80%);filter:blur(1.5px);transform-origin:50% 100%}
+.aura[data-el="oni"]::before{left:6%;animation:tongue .55s ease-in-out infinite alternate}
+.aura[data-el="oni"]::after{right:6%;animation:tongue .7s ease-in-out infinite alternate-reverse}
+.disc[data-el="oni"][data-alt]{background:radial-gradient(circle at 34% 28%,#ffb0e0 0%,#c01a8a 40%,#3a0028 88%);box-shadow:0 0 0 1.5px #2a0018,0 0 14px #ff4da699,0 3px 6px #000}
+
+/* 鋼 stones: brushed, polished steel with a sheen that runs round the rim */
+.disc[data-el="steel"]{
+  background:
+    radial-gradient(circle,transparent 0 55%,#2a3038 56% 58%,transparent 59%),
+    repeating-linear-gradient(90deg,#ffffff14 0 1px,transparent 1px 3px),
+    conic-gradient(from 210deg,#f4f7fb,#8a96a6 18%,#e2e8f0 34%,#5b6878 52%,#d8e0ea 70%,#7a8696 86%,#f4f7fb);
+  box-shadow:0 0 0 1.5px #2a3038,0 0 10px #8fd0ff55,0 3px 6px #000c,inset 0 -3px 6px #1a1e24aa,inset 0 2px 4px #ffffffaa;
+  color:#1a1e24;
+}
+.disc[data-el="steel"]::after{opacity:.6;mix-blend-mode:normal;text-shadow:0 1px 0 #ffffff99}
+.aura[data-el="steel"]{inset:-5%;background:conic-gradient(from 0deg,transparent 0 78%,#ffffffdd 86%,#8fd0ff88 90%,transparent 96%);-webkit-mask:radial-gradient(circle,transparent 58%,#000 62%,transparent 70%);mask:radial-gradient(circle,transparent 58%,#000 62%,transparent 70%);animation:auraSpin 2.8s linear infinite}
+.disc[data-el="steel"][data-alt]{background:radial-gradient(circle,transparent 0 55%,#12203a 56% 58%,transparent 59%),conic-gradient(from 210deg,#e8f2ff,#4a6a9a 18%,#c8dcf5 34%,#2a4068 52%,#b8d0ee 70%,#3a5880 86%,#e8f2ff);box-shadow:0 0 0 1.5px #12203a,0 0 10px #8fd0ff88,0 3px 6px #000c}
+
+/* stones taken by 堅牢の極意 sit in a riveted steel frame; stones touching it rust */
+.cell.steel::before{content:"";position:absolute;inset:2%;z-index:3;pointer-events:none;border-radius:16%;
+  background:radial-gradient(circle at 11% 11%,#fff 0 1.5px,#7a8696 2px 3.5px,transparent 4px),radial-gradient(circle at 89% 11%,#fff 0 1.5px,#7a8696 2px 3.5px,transparent 4px),
+    radial-gradient(circle at 11% 89%,#fff 0 1.5px,#7a8696 2px 3.5px,transparent 4px),radial-gradient(circle at 89% 89%,#fff 0 1.5px,#7a8696 2px 3.5px,transparent 4px);
+  border:3px solid #a8b4c4;box-shadow:inset 0 0 0 1px #2a3038,0 0 0 1px #2a3038,inset 0 0 10px #8fd0ff66,0 0 10px #8fd0ff55}
+.cell.steel .disc{box-shadow:0 0 0 2px #e2e8f0,0 0 14px #8fd0ff,0 3px 6px #000c!important}
+.cell.rusted .disc{filter:sepia(.85) saturate(1.6) hue-rotate(-18deg) brightness(.8);box-shadow:inset 0 0 0 3px #8a4a1a,0 0 10px #c0601a!important}
+.cell.rusted::before{content:"錆";position:absolute;right:1px;top:-2px;z-index:5;font-family:var(--f-display);font-size:clamp(9px,1.8vw,14px);color:#ffd0a0;text-shadow:0 0 6px #c0601a,0 0 2px #000;pointer-events:none}
+#board.blind .cell.steel::before,#board.blind .cell.rusted::before{display:none}
+
+/* draft tiles */
+.d-el[data-el="oni"]::before{background:radial-gradient(ellipse 40% 60% at 50% 100%,#ff1a1a99,transparent 70%);animation:flicker .3s steps(2) infinite alternate;transform-origin:50% 100%}
+.d-el[data-el="steel"]::before{background:linear-gradient(105deg,transparent 35%,#ffffff66 50%,transparent 65%),repeating-linear-gradient(90deg,#ffffff0a 0 1px,transparent 1px 3px);inset:0;animation:cardShine 1.8s ease-in-out infinite}
+
+/* oni mask, iron club, steel plates and shutters */
+.onimask{position:fixed;z-index:6;pointer-events:none;filter:drop-shadow(0 0 24px #ff1a1a) drop-shadow(0 16px 30px #000)}
+.onimask svg{width:100%;height:auto;display:block}
+.onimask .glint{transform-box:fill-box;transform-origin:center;opacity:0}
+.onimask .maw{opacity:.2}
+.onimask.parade{z-index:5;opacity:.9}
+.onimask,.kanabo,.steelplate{will-change:transform}
+.kanabo{position:fixed;z-index:6;pointer-events:none;transform-origin:50% 98%;filter:drop-shadow(0 0 10px #ff1a1a) drop-shadow(0 12px 18px #000)}
+.kanabo svg{width:100%;height:100%;display:block}
+.steelplate{position:fixed;z-index:5;pointer-events:none;filter:drop-shadow(0 6px 10px #000) drop-shadow(0 0 10px #8fd0ff88)}
+.steelplate svg{width:100%;height:100%;display:block}
+.scene.shutter{opacity:1;overflow:hidden}
+.scene.shutter .sh{position:absolute;left:0;right:0;height:50.5%;box-shadow:0 0 40px #000;
+  background:radial-gradient(circle,#ffffff 0 2px,#7a8696 3px 5px,#1a1e24 6px,transparent 7px) 22px 18px/90px 70px,
+    repeating-linear-gradient(0deg,transparent 0 22px,#0006 22px 24px,#fff2 24px 25px),
+    linear-gradient(180deg,#d8e0ea,#8a96a6 40%,#5b6878 60%,#c0ccd8)}
+.scene.shutter .top{top:0;transform:translateY(-102%);border-bottom:12px solid #ffc400;border-image:repeating-linear-gradient(45deg,#ffc400 0 16px,#141414 16px 32px) 12}
+.scene.shutter .bot{bottom:0;transform:translateY(102%);border-top:12px solid #ffc400;border-image:repeating-linear-gradient(45deg,#ffc400 0 16px,#141414 16px 32px) 12}
+.scene.shutter .sh-k{position:absolute;left:50%;top:50%;opacity:0;font-family:"Train One","Dela Gothic One",sans-serif;font-size:min(42vw,42vh);line-height:1;color:#e8eef5;-webkit-text-stroke:3px #2a3038;text-shadow:0 0 30px #8fd0ff,0 8px 0 #1a1e24}
+
 /* 省ドパモード: keep the game, drop the spectacle */
 html.lite .aura,html.lite #aura{display:none!important}
 html.lite .flame:not(.chain)::before,html.lite .flame:not(.chain)::after{animation:none!important}
@@ -836,8 +897,12 @@ const ELS = {
              glow:'0 0 18px #3fb6ff, 0 0 60px #1a3fa0', fill:'linear-gradient(180deg,#ffffff,#9fe0ff 40%,#3fb6ff 70%,#1a3fa0)' },
   time:    { k:'時', name:'時属性', ult:'時空断絶', sub:'CHRONO RUPTURE',       c1:'#e6c26a', c2:'#fff8e0', c3:'#5fd3c8', aura:'rgba(230,194,106,0.8)',
              glow:'0 0 16px #e6c26a, 0 0 50px #5fd3c8', fill:'linear-gradient(180deg,#fffdf0,#e6c26a 50%,#8a6420)' },
+  oni:     { k:'鬼', name:'鬼属性', ult:'百鬼夜行', sub:'NIGHT PARADE OF ONI',  c1:'#ff2a2a', c2:'#ffd0a0', c3:'#6a0008', aura:'rgba(200,10,20,0.85)',
+             glow:'0 0 18px #ff2a2a, 0 0 60px #6a0008', fill:'linear-gradient(180deg,#fff0e0,#ff5a3a 35%,#d4141a 65%,#3a0004)' },
+  steel:   { k:'鋼', name:'鋼属性', ult:'鋼鉄要塞', sub:'IRON BASTION',          c1:'#c8d4e2', c2:'#ffffff', c3:'#6f9fd8', aura:'rgba(170,190,215,0.8)',
+             glow:'0 0 14px #c8d4e2, 0 0 50px #4a6a9a', fill:'linear-gradient(180deg,#ffffff 0%,#c8d4e2 30%,#6b7888 48%,#e8eef5 52%,#8a96a6 75%,#3a4450)' },
 };
-const EL_ORDER = ['dark','light','fire','thunder','star','king','rock','ninja','dragon'];
+const EL_ORDER = ['dark','light','fire','thunder','star','king','rock','ninja','dragon','oni','steel'];
 const ALL_ELS = [...EL_ORDER,'time'];   // 時 is only ever chosen by the CPU
 // banner lettering per element: font, sub-title font, and any extra shaping
 const LETTERING = {
@@ -851,11 +916,13 @@ const LETTERING = {
   ninja:   { font:'"Yuji Syuku","Yuji Boku",serif',                   sfont:'"Black Ops One","Cinzel",sans-serif', bf:'drop-shadow(0 4px 0 #0c1420) drop-shadow(0 0 12px #7bd88f)', bt:'skewX(-6deg)' },
   dragon:  { font:'"Potta One","Dela Gothic One",sans-serif',         sfont:'"Cinzel Decorative","Cinzel",serif', bf:'drop-shadow(0 5px 0 #06123a) drop-shadow(0 0 18px #3fb6ff)', bt:'scaleY(1.06)' },
   time:    { font:'"DotGothic16","Zen Kaku Gothic New",monospace',    sfont:'"Black Ops One","Cinzel",sans-serif' },
+  oni:     { font:'"Yuji Boku","Dela Gothic One",serif',             sfont:'"Nosifer","Creepster",serif', bf:'drop-shadow(0 6px 0 #2a0004) drop-shadow(0 0 18px #ff1a1a) drop-shadow(0 0 40px #000)', bt:'scale(1.08) skewX(-4deg)' },
+  steel:   { font:'"Train One","Dela Gothic One",sans-serif',        sfont:'"Orbitron","Black Ops One",sans-serif', bf:'drop-shadow(0 4px 0 #1a1e24) drop-shadow(0 0 14px #8fd0ff)', bt:'scaleY(1.04)' },
 };
 for (const k of ALL_ELS) Object.assign(ELS[k], LETTERING[k]);
 // when two elements look alike, the 後手 side's stones and accents take a shifted shade
-const CLASH=[['thunder','fire'],['thunder','light'],['fire','rock'],['dark','king'],['dark','star'],['king','star'],['dragon','star'],['king','time'],['ninja','time'],['dragon','time']];
-const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star:'#3ec9c9',king:'#ff5a7a',rock:'#b8b8b8',ninja:'#c7d84a',dragon:'#7a6cff',time:'#9ad0ff'};
+const CLASH=[['thunder','fire'],['thunder','light'],['fire','rock'],['dark','king'],['dark','star'],['king','star'],['dragon','star'],['king','time'],['ninja','time'],['dragon','time'],['fire','oni'],['light','steel']];
+const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star:'#3ec9c9',king:'#ff5a7a',rock:'#b8b8b8',ninja:'#c7d84a',dragon:'#7a6cff',time:'#9ad0ff',oni:'#ff4da6',steel:'#7fb0ff'};
 
 /* ---------- state ---------- */
 let cfg = { el:{1:'dark',2:'light'}, mode:'cpu2', lv:2, sound:true };
@@ -868,6 +935,7 @@ let pas = {1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}}, p
 let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, quake = 0, curses = [], winOverride = 0, winReason = '', prot = [];
 let prevBlock = {1:null,2:null};
 let hidden = [], lastPlace = null, predict = null, aimSel = null, sneakyIdx = -1;
+let steel = [], rust = [];
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
@@ -882,15 +950,22 @@ for (let i=0;i<64;i++){ RC[i]=[i>>3,i&7]; GRID[((i>>3)+1)*10+(i&7)+1]=i; }
 { let k=64; for (let r=-1;r<=8;r++) for (let c=-1;c<=8;c++){ if (r>=0&&r<8&&c>=0&&c<8) continue; RC[k]=[r,c]; GRID[(r+1)*10+(c+1)]=k; k++; } }
 const idxAt = (r,c) => GRID[(r+1)*10+(c+1)];
 const at = (b,r,c) => (r<-1||r>8||c<-1||c>8) ? undefined : b[idxAt(r,c)];
-// guards plus every king not under a star seal: stones that can never be flipped
-function protOf(gs,ks,hs){ const out=gs.slice(); if (ks) for (const q of [1,2]){ const k=ks[q]; if (k>=0 && !(hs && hs.p===q)) out.push({idx:k,owner:q}); } return out; }
+// guards, steel and every king not under a star seal: stones that can never be flipped.
+// Rusted stones ride along as {idx,rust:owner}: they can be flipped, but their owner cannot sandwich with them.
+function protOf(gs,ks,hs,st,rs){
+  const out=gs.slice();
+  if (ks) for (const q of [1,2]){ const k=ks[q]; if (k>=0 && !(hs && hs.p===q)) out.push({idx:k,owner:q}); }
+  if (st) for (const x of st) out.push({idx:x.idx,owner:x.owner});
+  if (rs) for (const x of rs) out.push({idx:x.idx,rust:x.owner});
+  return out;
+}
 function flipsFor(b, i, p, gs=prot){
   if (b[i]!==0) return [];
   const o = 3-p, [r,c] = RC[i], out = [];
   for (const [dr,dc] of D8){
     let rr=r+dr, cc=c+dc, v; const tmp=[];
     while ((v=at(b,rr,cc))===o){ tmp.push(idxAt(rr,cc)); rr+=dr; cc+=dc; }
-    if (tmp.length && v===p) for (const k of tmp) if (k<64 && !gs.some(g=>g.idx===k && g.owner===o)) out.push(k);
+    if (tmp.length && v===p && !gs.some(g=>g.rust===p && g.idx===idxAt(rr,cc))) for (const k of tmp) if (k<64 && !gs.some(g=>g.idx===k && g.owner===o)) out.push(k);
   }
   return out;
 }
@@ -1012,6 +1087,8 @@ function sfx(el, kind, i=0){
     else if (el==='ninja'){ nz('bandpass',800,3000,.12,.25,0,2); tone('triangle',3400*up,2800,.14,.05,.02); tone('sine',170,80,.12,.25); }
     else if (el==='dragon'){ tone('sawtooth',95*up,45,.32,.1); nz('bandpass',400,1700,.28,.3,0,1.2); tone('sine',70,35,.3,.3); }
     else if (el==='time'){ tone('square',2400*up,2400,.02,.06); tone('square',1600*up,1600,.02,.06,.11); bell(1318.5*up,.5,.04,.05); }
+    else if (el==='oni'){ tone('sine',130*up,46,.38,.62); nz('lowpass',420,70,.22,.42); tone('sawtooth',82*up,38,.22,.07); nz('bandpass',1200,400,.08,.15,0,2); }
+    else if (el==='steel'){ clang(560*up,.075,0,.55); tone('square',95,50,.07,.08); nz('highpass',6000,3000,.04,.2); }
     else { nz('highpass',4000,900,.16,.35); nz('highpass',2500,600,.08,.3,.06); tone('square',70,30,.25,.08); }
     return;
   }
@@ -1043,6 +1120,8 @@ function sfx(el, kind, i=0){
     else if (el==='ninja'){ [293.7,329.6,440,493.9,587.3,493.9,440].forEach((f,k)=>tone('sawtooth',f,f*.99,.22,.06,k*.11)); [0,.45,.9].forEach(t=>tone('sine',70,40,.4,.7,t)); tone('triangle',4200,2600,.3,.07,1.1); nz('highpass',8000,4000,.2,.25,1.1); }
     else if (el==='dragon'){ roar(1.4); nz('lowpass',3000,60,2.2,.7,.9); tone('sine',50,20,1.8,.8,.9); }
     else if (el==='time'){ for (let k=0;k<14;k++) tone('square',k%2?1600:2400,k%2?1600:2400,.02,.06,k*(.16-k*.007)); [523.3,659.3,784,1046.5].forEach((f,k)=>bell(f,1.6,.06,1.3+k*.08)); nz('bandpass',300,3200,1.2,.15,0,1.5); }
+    else if (el==='oni'){ for (let k=0;k<8;k++) tone('sine',k%2?150:100,46,.35,.7,k*.14); tone('sawtooth',55,28,2,.18,.9); nz('lowpass',2400,60,2,.7,1.1); }
+    else if (el==='steel'){ [0,.18,.36].forEach((t,k)=>clang(200+k*60,.18,t,1.4)); nz('highpass',7000,2500,.9,.18,.5); tone('sine',48,22,1.8,.9,.9); nz('lowpass',2400,60,1.4,.6,.9); }
     else { for(let k=0;k<8;k++) nz('highpass',5000,700,.18,.35,k*.13); tone('square',60,22,.6,.15,.5); nz('highpass',6000,300,.6,.7,1.15); tone('sine',65,18,1.6,.9,1.15); nz('lowpass',1500,60,1.6,.6,1.2); }
   }
 }
@@ -1119,11 +1198,12 @@ function frame(now){
   for(const p of P){ if(p.mode!=='smoke') continue; const k=p.t/p.life; cx.globalAlpha=(1-k)*(p.alpha??.5); cx.fillStyle=p.color; cx.beginPath(); cx.arc(p.x,p.y,p.size*(1+k*1.6),0,TAU); cx.fill(); }
   for(const p of P){ if(p.mode==='ghost') drawGhost(p); }
   for(const p of P){
-    if (p.mode!=='chunk' && p.mode!=='coin' && p.mode!=='shuriken' && p.mode!=='leaf' && p.mode!=='kunai') continue;
+    if (p.mode!=='chunk' && p.mode!=='coin' && p.mode!=='shuriken' && p.mode!=='leaf' && p.mode!=='kunai' && p.mode!=='gear') continue;
     const k=p.t/p.life; cx.globalAlpha=Math.min(1,(1-k)*2); cx.save(); cx.translate(p.x,p.y); cx.rotate((p.rot||0)+p.t*(p.spin||6));
     if (p.mode==='coin'){ cx.scale(Math.cos(p.t*9+(p.rot||0)),1); cx.fillStyle=p.color; cx.beginPath(); cx.arc(0,0,p.size,0,TAU); cx.fill(); cx.strokeStyle='#7a5410'; cx.lineWidth=Math.max(.5,p.size*.2); cx.stroke(); }
     else if (p.mode==='shuriken'){ cx.fillStyle=p.color; cx.beginPath(); for (let j=0;j<8;j++){ const rr=j%2?p.size*.28:p.size, an=j*Math.PI/4; cx.lineTo(Math.cos(an)*rr,Math.sin(an)*rr); } cx.closePath(); cx.fill(); cx.fillStyle='#16161c'; cx.beginPath(); cx.arc(0,0,p.size*.18,0,TAU); cx.fill(); }
     else if (p.mode==='kunai'){ const z=p.size; cx.fillStyle='#d8dce6'; cx.beginPath(); cx.moveTo(z,0); cx.lineTo(0,-z*.24); cx.lineTo(-z*.2,0); cx.lineTo(0,z*.24); cx.closePath(); cx.fill(); cx.fillStyle='#2a2a30'; cx.fillRect(-z*.95,-z*.08,z*.78,z*.16); cx.strokeStyle='#2a2a30'; cx.lineWidth=1.2; cx.beginPath(); cx.arc(-z*1.12,0,z*.16,0,TAU); cx.stroke(); }
+    else if (p.mode==='gear'){ const z=p.size; cx.fillStyle=p.color; cx.beginPath(); for (let j=0;j<10;j++){ const an=j*TAU/10; cx.lineTo(Math.cos(an-.16)*z*.8,Math.sin(an-.16)*z*.8); cx.lineTo(Math.cos(an-.1)*z,Math.sin(an-.1)*z); cx.lineTo(Math.cos(an+.1)*z,Math.sin(an+.1)*z); cx.lineTo(Math.cos(an+.16)*z*.8,Math.sin(an+.16)*z*.8); } cx.closePath(); cx.fill(); cx.strokeStyle='#ffffff55'; cx.lineWidth=Math.max(.5,z*.06); cx.stroke(); cx.fillStyle='#14181e'; cx.beginPath(); cx.arc(0,0,z*.28,0,TAU); cx.fill(); }
     else if (p.mode==='leaf'){ cx.fillStyle=p.color; cx.beginPath(); cx.ellipse(0,0,p.size,p.size*.3,0,0,TAU); cx.fill(); cx.strokeStyle='#2e6b45'; cx.lineWidth=.6; cx.beginPath(); cx.moveTo(-p.size,0); cx.lineTo(p.size,0); cx.stroke(); }
     else { cx.fillStyle=p.color; cx.beginPath(); cx.moveTo(-p.size,-p.size*.4); cx.lineTo(-p.size*.2,-p.size); cx.lineTo(p.size,-p.size*.3); cx.lineTo(p.size*.6,p.size); cx.lineTo(-p.size*.7,p.size*.7); cx.closePath(); cx.fill(); }
     cx.restore();
@@ -1163,10 +1243,10 @@ function frame(now){
   }
   // glow particles
   for(const p of P){
-    if (p.mode==='smoke'||p.mode==='ghost'||p.mode==='chunk'||p.mode==='coin'||p.mode==='shuriken'||p.mode==='leaf'||p.mode==='kunai') continue;
+    if (p.mode==='smoke'||p.mode==='ghost'||p.mode==='chunk'||p.mode==='coin'||p.mode==='shuriken'||p.mode==='leaf'||p.mode==='kunai'||p.mode==='gear') continue;
     const k=p.t/p.life; let a=1-k; let s=p.size;
     if (p.tw) { s*=.55+.45*Math.sin(p.t*p.tw+p.x); a*=Math.min(1,p.t*3); }
-    const col = p.mode==='fire' ? fireCol(k) : p.mode==='bfire' ? bfireCol(k) : p.color;
+    const col = p.mode==='fire' ? fireCol(k) : p.mode==='bfire' ? bfireCol(k) : p.mode==='ofire' ? ofireCol(k) : p.color;
     cx.fillStyle=col; cx.strokeStyle=col;
     if (p.mode==='glyph'){
       cx.globalAlpha=a; cx.font=`${Math.max(6,s*(1-k*.3))}px "Zen Kaku Gothic New",sans-serif`; cx.textAlign='center'; cx.textBaseline='middle';
@@ -1177,7 +1257,7 @@ function frame(now){
     } else if (p.mode==='spark'){
       cx.globalAlpha=a; cx.lineWidth=s; cx.beginPath(); cx.moveTo(p.x,p.y); cx.lineTo(p.x-p.vx*.035,p.y-p.vy*.035); cx.stroke();
     } else {
-      const r=Math.max(.3, (p.mode==='fire'||p.mode==='bfire')? s*(1-k*.5) : s*(1-k*.4));
+      const r=Math.max(.3, (p.mode==='fire'||p.mode==='bfire'||p.mode==='ofire')? s*(1-k*.5) : s*(1-k*.4));
       cx.globalAlpha=a*.22; cx.beginPath(); cx.arc(p.x,p.y,r*2.6,0,TAU); cx.fill();
       cx.globalAlpha=a; cx.beginPath(); cx.arc(p.x,p.y,r,0,TAU); cx.fill();
     }
@@ -1275,6 +1355,17 @@ function burst(el,x,y,pw=1,i=0){
     for(let k2=0;k2<12;k2++){ const a=k2*Math.PI/6; LINES.push({x1:x+Math.cos(a)*14*pw,y1:y+Math.sin(a)*14*pw,x2:x+Math.cos(a)*26*pw,y2:y+Math.sin(a)*26*pw,t:0,delay:k2*.015,life:.5,draw:.05,color:E.c1,w:1.6}); }
     for(let j=0;j<18*n;j++){ const a=rnd(0,TAU), s=rnd(60,260)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.9,life:rnd(.4,.8),size:rnd(2,3.5),color:pick([E.c1,'#c8a040']),mode:'coin',rot:rnd(0,TAU)}); }
     ring(x,y,{vr:260*pw,life:.5,w:3,color:E.c3});
+  } else if (el==='oni'){
+    for(let j=0;j<26*n;j++) part({x:x+rnd(-10,10),y:y+rnd(-6,6),vx:rnd(-110,110)*pw,vy:rnd(-300,-60)*pw,g:-200,drag:.95,life:rnd(.4,.85),size:rnd(4,9)*Math.sqrt(pw),mode:'ofire',wob:5});
+    for(let j=0;j<6*n;j++){ const a=rnd(0,TAU), s=rnd(40,140)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.94,life:rnd(.6,1),size:rnd(8,14)*pw,color:'#1a0004',mode:'smoke',alpha:.6}); }
+    for(let j=0;j<6*n;j++){ const a=rnd(0,TAU), s=rnd(140,420)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-80,g:900,drag:.97,life:rnd(.4,.7),size:rnd(2,4),color:pick(['#2a1a18','#5a4a48']),mode:'chunk',rot:rnd(0,TAU)}); }
+    ring(x,y,{vr:300*pw,life:.4,w:5*pw,color:E.c1});
+    if (Math.random()<.35*pw) part({x,y:y-10,vx:0,vy:-60,drag:.97,life:.7,size:22*Math.sqrt(pw),color:'#ff2a2a',mode:'glyph',ch:'鬼',rot:rnd(-.3,.3)});
+  } else if (el==='steel'){
+    weldSpark(x,y,pw);
+    for(let j=0;j<6*n;j++){ const a=rnd(0,TAU), s=rnd(120,360)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-100,g:900,drag:.97,life:rnd(.5,.9),size:rnd(2.5,5),color:pick(['#e8eef5','#9aa8b8','#5b6878']),mode:'chunk',rot:rnd(0,TAU)}); }
+    if (Math.random()<.5*pw) part({x,y,vx:rnd(-120,120),vy:rnd(-260,-140),g:700,drag:.98,life:rnd(.8,1.1),size:rnd(6,10)*Math.sqrt(pw),color:pick(['#c8d2de','#8a96a6']),mode:'gear',rot:rnd(0,TAU),spin:rnd(-8,8)});
+    ring(x,y,{vr:340*pw,life:.35,w:4*pw,color:'#ffffff'}); ring(x,y,{vr:180*pw,life:.5,w:2,color:E.c3});
   } else {
     const sx=x+rnd(-90,90), sy=y-rnd(160,320)*pw;
     bolt(sx,sy,x,y,pick([E.c1,E.c3]),.28,1.3*Math.sqrt(pw),2);
@@ -1427,6 +1518,34 @@ async function ultimate(el,x,y,top='CORNER BREAK'){
     for(let i=0;i<4;i++) ring(x,y,{vr:600+i*300,life:1,w:10-i*2,color:i%2?E.c3:E.c1});
     for(let i=0;i<200*FXQ;i++){ const a=rnd(0,TAU), s=rnd(150,800); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.92,life:rnd(.6,1.3),size:rnd(2,4),color:pick([E.c1,'#c8a040',E.c3]),mode:'coin',rot:rnd(0,TAU)}); }
     undim(1300);
+  } else if (el==='oni'){
+    dim('radial-gradient(circle at 50% 50%, rgba(90,0,10,.6), rgba(6,0,2,.96))',300);
+    emit(4,(dt,t)=>{ for (let j=0;j<3;j++){ const a=t*1.6+j*TAU/3; part({x:x+Math.cos(a)*R*.3,y:y+Math.sin(a)*R*.18,vx:0,vy:-40,drag:.95,life:.6,size:rnd(8,14),mode:'ofire'}); } });
+    await oniRoar();
+    for (let k=0;k<8;k++) setTimeout(()=>oniParade(k%2?-1:1, rnd(H*.12,H*.88), Math.min(W,H)*rnd(.13,.26), rnd(1300,1900)), k*160);
+    for (let k=0;k<12;k++) tone('sine',k%3?150:100,46,.32,.6,k*.16);
+    await wait(1900);
+    roar(1.2); flash('#ff1a1a',.7,600); shake(46);
+    for(let i=0;i<5;i++) ring(x,y,{vr:650+i*320,life:1.1,w:12-i*2,color:i%2?E.c2:E.c1});
+    for(let i=0;i<340*FXQ;i++){ const a=rnd(0,TAU), s=rnd(150,1000); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-100,g:-100,drag:.92,life:rnd(.6,1.4),size:rnd(4,14),mode:'ofire'}); }
+    for(let i=0;i<40*FXQ;i++){ const a=rnd(0,TAU), s=rnd(80,400); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.94,life:rnd(1,1.8),size:rnd(16,32),color:'#1a0004',mode:'smoke',alpha:.7}); }
+    for(let i=0;i<14*FXQ;i++){ const a=rnd(0,TAU), s=rnd(200,700); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.92,life:rnd(.8,1.3),size:rnd(20,40),color:'#ff2a2a',mode:'glyph',ch:'鬼',rot:rnd(-.6,.6)}); }
+    undim(1500);
+  } else if (el==='steel'){
+    dim('radial-gradient(circle at 50% 50%, rgba(40,55,75,.55), rgba(4,6,10,.95))',300);
+    for (let k=0;k<7;k++) part({x:rnd(0,W),y:rnd(0,H),drag:1,life:3.6,size:R*rnd(.08,.17),color:pick(['#3a4450','#4a5868','#2a3038']),mode:'gear',rot:rnd(0,TAU),spin:rnd(-1.2,1.2)});
+    await steelShutter();
+    const rect=boardEl.getBoundingClientRect();
+    for (let k=0;k<12;k++) setTimeout(()=>{ const px=rnd(rect.left,rect.right), py=rnd(rect.top,rect.bottom); weldSpark(px,py,1); ring(px,py,{vr:220,life:.35,w:3,color:'#ffffff'}); clang(300+rnd(0,400),.06); shake(8); }, k*85);
+    await wait(1100);
+    clang(140,.25); clang(210,.15,.03); tone('sine',50,22,1.6,.9); nz('lowpass',2400,60,1.2,.7);
+    flash('#ffffff',.85,600); shake(46);
+    for(let i=0;i<5;i++) ring(x,y,{vr:650+i*320,life:1.1,w:12-i*2,color:i%2?E.c3:E.c1});
+    for(let i=0;i<300*FXQ;i++){ const a=rnd(0,TAU), s=rnd(300,1300); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:900,drag:.95,life:rnd(.5,1.2),size:rnd(1.2,3),color:pick(['#ffffff','#fff3c0','#ffc04a','#ff8a2a']),mode:'spark'}); }
+    for(let i=0;i<50*FXQ;i++){ const a=rnd(0,TAU), s=rnd(150,700); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-150,g:900,drag:.97,life:rnd(.7,1.3),size:rnd(3,8),color:pick(['#e8eef5','#9aa8b8','#5b6878']),mode:'chunk',rot:rnd(0,TAU)}); }
+    for(let i=0;i<10*FXQ;i++){ const a=rnd(0,TAU), s=rnd(200,600); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-200,g:700,drag:.98,life:rnd(1,1.6),size:rnd(10,22),color:pick(['#c8d2de','#8a96a6']),mode:'gear',rot:rnd(0,TAU),spin:rnd(-6,6)}); }
+    for (let k=0;k<3;k++) LINES.push({x1:-50+k*60,y1:H,x2:W*.6+k*60,y2:-50,t:0,delay:.1+k*.08,life:.8,draw:.3,color:'#ffffff',w:10-k*3});
+    undim(1400);
   } else {
     dim('linear-gradient(180deg, rgba(0,6,30,.95), rgba(0,0,10,.85))',220);
     emit(1.15,(dt)=>{
@@ -1501,6 +1620,15 @@ function spawnAmbient(el){
     if (Math.random()<.006*amb.level){ const w=Math.min(W,H)*.3, fromL=Math.random()<.5, yy=rnd(H*.08,H*.35); flyDragon(fromL?-w:W+w,yy,fromL?W+w:-w,yy+rnd(-60,60),2600,w,{alpha:.4,quiet:true}); }
   } else if (el==='time'){
     part({x,y,vx:ix*20+rnd(-8,8),vy:iy*20+rnd(-8,8),drag:.998,life:rnd(2,3),size:rnd(1.4,2.6),color:pick([E.c1,E.c3]),tw:6});
+  } else if (el==='oni'){
+    if (Math.random()<.6){ x=rnd(0,W); y=H+5; }
+    part({x,y,vx:ix*30+rnd(-20,20),vy:-rnd(50,150),g:-20,drag:.995,life:rnd(1.6,3),size:rnd(1.5,4.5),mode:'ofire',wob:3});
+    if (Math.random()<.12) part({x,y,vx:rnd(-10,10),vy:-rnd(20,50),drag:.995,life:rnd(2,3),size:rnd(20,40),color:'#1a0004',mode:'smoke',alpha:.4});
+    if (Math.random()<.004*amb.level) oniParade(Math.random()<.5?1:-1, rnd(H*.1,H*.3), Math.min(W,H)*.16, 3200, .35);
+  } else if (el==='steel'){
+    if (Math.random()<.5) part({x:rnd(0,W),y:-5,vx:rnd(-60,60),vy:rnd(40,160),g:900,drag:.99,life:rnd(.8,1.4),size:rnd(.8,1.6),color:pick(['#ffffff','#ffd27a','#ffc04a']),mode:'spark'});
+    else part({x,y,vx:ix*30+rnd(-10,10),vy:iy*30+rnd(-10,10),drag:.998,life:rnd(2,3),size:rnd(1,2.2),color:pick([E.c1,E.c2,E.c3]),tw:8});
+    if (Math.random()<.01*amb.level) part({x:rnd(0,W),y:Math.random()<.5?-20:H+20,drag:1,life:4,size:Math.min(W,H)*rnd(.05,.09),color:'#3a4450',mode:'gear',rot:rnd(0,TAU),spin:rnd(-.8,.8)});
   } else {
     part({x,y,vx:rnd(-120,120)+ix*80,vy:rnd(-120,120)+iy*80,drag:.9,life:rnd(.2,.5),size:rnd(1,2),color:pick([E.c1,E.c3]),mode:'spark'});
     if (Math.random()<.05*amb.level){
@@ -1517,7 +1645,10 @@ const FIRE_OPEN = 3;      // the fire card unlocks after the fire side's third t
 const FIRE_CD = 5;        // ...and then recharges after five of its own turns
 const THUNDER_EARLY = 10; // 雷帝 unlocks ten squares before light/dark
 const KING_EARLY = 3;     // ロイヤルアーツ unlocks three squares before light/dark
-const STAR_LINE = 7;     // 星座封印 needs this many in a row
+const STAR_LINE = 7;     // 星座封印 needs this many in a row across or down
+const STAR_DIAG = 6;     // ...and this many on a diagonal
+const STEEL_N = 4;       // 堅牢の極意 takes this many stones
+const GOUKETSU_N = 2;    // 豪傑 knocks down this many more
 const NINJA_OPEN = 3;     // 神出鬼没 unlocks after the ninja's third turn
 const DRAGON_OPEN = 44;  // 暴虐 unlocks in the midgame
 const TIME_OPEN = 36;    // 秒針自在 unlocks at the end of the midgame
@@ -1531,6 +1662,8 @@ const CARDS = {
   rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石のうち、半分を盤のどこかへ、残り半分を画面の外へ吹き飛ばす。' },
   ninja:   { name:'神出鬼没',               sub:'NOW YOU SEE ME',     uses:2,      desc:'自分の石1つと相手の石1つを選び、位置を入れ替える。前半のみ使える。' },
   dragon:  { name:'暴虐',                   sub:'TYRANNY',            uses:1,      desc:'荒ぶる蒼炎が、選んだ直線上の石をすべて焼き払って消し去る。その直線には2ターンのあいだ誰も置けない。' },
+  oni:     { name:'鉄血粉砕',               sub:'IRON-BLOOD CRUSH',   uses:1,      desc:'マスを1つ選んで金棒を振り下ろし、そのマスとまわり8マスにいる相手の石をすべて自分の色に変える。反動で豪傑はそのターンと続く2ターン休む。' },
+  steel:   { name:'堅牢の極意',             sub:'ART OF THE IRONCLAD', uses:1,     desc:'相手の石を4つ選んで鋼で覆い、自分の色に変える。鋼の石は二度と裏返らず、スキルでも動かない。' },
   time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が1ターン選べなくなる。' },
 };
 const PASSIVES = {
@@ -1538,11 +1671,13 @@ const PASSIVES = {
   dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の画面が1ターン真っ暗に。置ける場所だけは見える。' },
   fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'毎ターン、置いた石は相手の2ターンのあいだ裏返らず、スキルも効かない。' },
   thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前のターンに裏返した枚数×3%。' },
-  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦・横・斜めに7つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
+  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦か横に7つ、または斜めに6つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
   king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王の上下左右4マスすべてと、斜め4マスのうち2マスが相手の石になると負け。まわり8マスすべてが味方になると勝ち。' },
   rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'盤の外周36マスのうち3マスに岩が現れ、岩には自分だけが石を置ける。' },
   ninja:   { name:'隠密と罠',         sub:'SHADOW TRAP',       desc:'置いた石は相手の次のターンのあいだ相手から見えない。見えない石のマスに置こうとすると罠にかかり、そのターンを失う。' },
   dragon:  { name:'逆鱗',             sub:"DRAGON'S WRATH",    desc:'自分の石を一度に5枚以上裏返されると怒り状態になる。次に置いたとき、裏返した石の上下左右にいる相手の石も裏返す。' },
+  oni:     { name:'豪傑',             sub:'MIGHTY BRUTE',      desc:'自分の石が盤上の石の3分の1未満のとき、置いた石のまわり8マスにいる相手の石を、さらに2枚までなぎ倒して自分の色に変える。' },
+  steel:   { name:'鋼の忠誠',         sub:'IRON LOYALTY',      desc:'相手が鋼の石の隣に石を置くと、その石は錆びつく。相手の次のターンのあいだ、錆びた石は挟むための石として使えない。' },
   time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。' },
 };
 const freshPas = () => ({1:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0},2:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0}});
@@ -1578,6 +1713,19 @@ function skillTargets(b,p,gs,el){
   for (let i=0;i<64;i++) if (b[i]===opp){ oc++; if (!gs.some(g=>g.idx===i && g.owner===opp)) os.push(i); }
   return {os, n:Math.min(CARDS[el].n||1, oc-1, os.length)};
 }
+// 鉄血粉砕: the opponent stones in the 3x3 block around a square
+function oniBlock(b,c,p,gs){
+  const [r,cc]=RC[c], out=[];
+  for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++){ const rr=r+dr, c2=cc+dc; if (rr<0||rr>7||c2<0||c2>7) continue; const k=rr*8+c2; if (b[k]===3-p && !gs.some(g=>g.idx===k && g.owner===3-p)) out.push(k); }
+  return out;
+}
+function oniBest(b,p,gs){ let best=-1, n=0; for (let i=0;i<64;i++){ const m=oniBlock(b,i,p,gs).length; if (m>n){ n=m; best=i; } } return {best,n}; }
+// 堅牢の極意: opponent stones steel can take
+function steelPool(b,p,gs){ const out=[]; for (let i=0;i<64;i++) if (b[i]===3-p && !gs.some(g=>g.idx===i && g.owner===3-p)) out.push(i); return out; }
+const steelPick = p => steelPool(board,p,prot).filter(i=>!concealed(i));
+const steelNeed = p => Math.min(STEEL_N, steelPick(p).length);
+// 豪傑 is roused while the oni holds under a third of the stones, unless it is resting after 鉄血粉砕
+function oniFierce(b,p){ let own=0, all=0; for (let i=0;i<b.length;i++){ if (b[i]===p) own++; if (b[i]>0) all++; } return own*3<all; }
 function cardBlock(p){
   const el=cfg.el[p];
   if (isHushed(p)) return `星座に封じられている（あと${hush.left}ターン）`;
@@ -1601,6 +1749,8 @@ function cardBlock(p){
   if (el==='time' && !(lastPlace && lastPlace.p===3-p)) return '巻き戻せる相手の一手がない';
   if (el==='ninja' && !board.some((v,i)=>i<64 && v===3-p && !prot.some(g=>g.idx===i && g.owner===3-p))) return '入れ替えられる相手の石がない';
   if ((el==='light'||el==='dark') && skillTargets(board,p,prot,el).n<3) return '狙える相手の石が3枚未満';
+  if (el==='oni' && oniBest(board,p,prot).n<3) return '3枚以上まとめて砕ける場所がない';
+  if (el==='steel' && steelPick(p).length<2) return '鋼で覆える相手の石が2枚未満';
   if (el==='fire' && !board.some((v,i)=>i<64 && v===0 && !burns.some(b=>b.idx===i))) return '燃やせるマスがありません';
   if (el==='star' && !board.some((v,i)=>i<64 && v===0)) return '空きマスがありません';
   return '';
@@ -1616,12 +1766,14 @@ function pasState(p){
   if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(20,s.flips||0)} / 20`;
   if (el==='fire') return '毎ターン発動';
   if (el==='thunder') return `次ターン ${Math.round(jinraiChance(s)*100)}%`;
-  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${hush.left}）` : `${STAR_LINE}つ並びで発動`;
+  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${hush.left}）` : `縦横${STAR_LINE}・斜め${STAR_DIAG}で発動`;
   if (el==='king') return kings[p]>=0 ? '王 健在' : kings[p]===-2 ? '王冠を失った' : '最初の石が王に';
   if (el==='rock'){ let n=0; for (let i=64;i<N;i++) if (board[i]===0) n++; return `空いている岩 ${n}`; }
   if (el==='ninja') return hidden.some(h=>h.owner===p) ? '隠密中' : '置いた石を隠す';
   if (el==='dragon') return s.rage ? '逆鱗 発動中' : '5枚返されると発動';
   if (el==='time') return predict && predict.p===3-p ? '未来を見ている' : '相手の手を予測';
+  if (el==='oni') return s.rest>0 ? `反動で休止中（あと${s.rest}）` : oniFierce(board,p) ? '豪傑 発動中' : '石が3分の1未満で発動';
+  if (el==='steel'){ const n=steel.filter(x=>x.owner===p && board[x.idx]===p).length; return n ? `鋼の石 ${n}つ` : '鋼の石の隣で発動'; }
   return '4枚以上で発動';
 }
 const W8 = i => i<64 ? WT[i] : 60;
@@ -1629,6 +1781,8 @@ function aimOk(i){
   if (!aim || !aimSel || i>=64) return false;
   const p=aim, k=aimSel.kind;
   if (k==='fire') return board[i]===0 && !burns.some(b=>b.idx===i);
+  if (k==='oni') return oniBlock(board,i,p,prot).length>0;
+  if (k==='steel') return aimSel.picks.includes(i) || (aimSel.picks.length<steelNeed(p) && steelPick(p).includes(i));
   if (k==='ninja') return aimSel.stage===1 ? board[i]===p : (board[i]===3-p && !prot.some(g=>g.idx===i && g.owner===3-p));
   if (k==='dragon'){
     if (aimSel.stage===1) return true;
@@ -1742,7 +1896,7 @@ function render(){
     paintDisc(i); paintDeco(i);
     const b=burns.find(x=>x.idx===i);
     const aimable = human && aimOk(i);
-    cells[i].classList.toggle('aimfirst', !!aimSel && aimSel.stage===2 && aimSel.first===i);
+    cells[i].classList.toggle('aimfirst', !!aimSel && ((aimSel.stage===2 && aimSel.first===i) || (aimSel.picks||[]).includes(i)));
     const cl=cells[i];
     cl.classList.toggle('hint', lm.includes(i));
     cl.classList.toggle('aim', aimable);
@@ -1751,6 +1905,8 @@ function render(){
     cl.classList.toggle('rock', i>=64 && board[i]!==-1);
     cl.classList.toggle('guard', play && guards.some(g=>g.idx===i && board[i]===g.owner));
     cl.classList.toggle('cursed', play && curses.some(c=>c.idx===i && board[i]===c.owner));
+    cl.classList.toggle('steel', play && steel.some(x=>x.idx===i && board[i]===x.owner));
+    cl.classList.toggle('rusted', play && rust.some(x=>x.idx===i && board[i]===x.owner) && !concealed(i));
     cl.tabIndex = (lm.includes(i)||aimable||dOpts.includes(i)) ? 0 : -1;
     flames[i].hidden = !b;
     if (b) paintSeal(i,b);
@@ -1791,7 +1947,7 @@ function render(){
     pb.querySelector('.p-name').textContent=PS.name;
     pb.querySelector('.p-desc').textContent=PS.desc;
     pb.querySelector('.p-state').textContent=pasState(p);
-    pb.classList.toggle('awake', (cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph)) || (cfg.el[p]==='star' && isHushed(3-p)) || (cfg.el[p]==='king' && kings[p]>=0) || (cfg.el[p]==='dragon' && !!(pas[p]&&pas[p].rage)) || (cfg.el[p]==='ninja' && hidden.some(h=>h.owner===p)));
+    pb.classList.toggle('awake', (cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph)) || (cfg.el[p]==='star' && isHushed(3-p)) || (cfg.el[p]==='king' && kings[p]>=0) || (cfg.el[p]==='dragon' && !!(pas[p]&&pas[p].rage)) || (cfg.el[p]==='ninja' && hidden.some(h=>h.owner===p)) || (cfg.el[p]==='steel' && steel.some(x=>x.owner===p && board[x.idx]===p)) || (cfg.el[p]==='oni' && !isHushed(p) && !((pas[p]||{}).rest>0) && oniFierce(board,p)));
   }
   renderDraft();
   const st=$('status');
@@ -1804,6 +1960,8 @@ function render(){
   let hot = '';
   if (decree) hot = localSide(decree.by) && !(cfg.mode==='pvp' && false) ? '王命：相手が次に置くマスを指定してください' : '王が次の一手を指定しています…';
   else if (bv) hot='ゴーストパレード：置ける場所しか見えない';
+  else if (aim && aimSel && aimSel.kind==='oni') hot='金棒を振り下ろすマスを選択（まわり8マスごと砕く）';
+  else if (aim && aimSel && aimSel.kind==='steel') hot=`鋼で覆う相手の石を選択（${aimSel.picks.length} / ${steelNeed(aim)}）`;
   else if (aim && aimSel) hot = aimSel.kind==='fire' ? '燃やすマスを選択（カードをもう一度押すと取り消し）' : aimSel.kind==='ninja' ? (aimSel.stage===1 ? '入れ替える自分の石を選択' : '入れ替える相手の石を選択') : (aimSel.stage===1 ? '蒼炎の起点となるマスを選択' : '焼き払う方向のマスを選択');
   else if (forced && forced.p===turn) hot='王命により、置けるマスは1つだけ';
   else if (extra>0) hot='雷帝：もう1手置ける';
@@ -1839,6 +1997,10 @@ function elementMote(el,x,y,n,spread){
       part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-110,-40),g:-70,drag:.96,life:rnd(.3,.6),size:rnd(3,6),mode:'bfire'});
     } else if (el==='time'){
       part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-20,20),drag:.95,life:rnd(.4,.8),size:rnd(1,2),color:pick([E.c1,E.c3]),tw:10});
+    } else if (el==='oni'){
+      part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-110,-40),g:-70,drag:.96,life:rnd(.3,.6),size:rnd(3,6),mode:'ofire'});
+    } else if (el==='steel'){
+      part({x:px,y:py,vx:rnd(-160,160),vy:rnd(-200,-40),g:900,drag:.97,life:rnd(.25,.5),size:rnd(.8,1.5),color:pick(['#ffffff','#ffd27a','#c8d4e2']),mode:'spark'});
     } else {
       part({x:px,y:py,vx:rnd(-220,220),vy:rnd(-220,220),drag:.86,life:rnd(.12,.3),size:rnd(.8,1.6),color:pick([E.c1,E.c3]),mode:'spark'});
     }
@@ -1916,6 +2078,12 @@ function stoneFx(el,x,y,rad){
     part({x:x+rnd(-rad*.6,rad*.6),y:y-rad*.3,vx:rnd(-10,10),vy:rnd(-130,-50),g:-80,drag:.96,life:rnd(.35,.6),size:rnd(rad*.12,rad*.22),mode:'bfire',wob:5});
   } else if (el==='time'){
     if (q<.2) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:0,vy:rnd(-12,-4),drag:.99,life:rnd(.6,1),size:rnd(1,2),color:pick([E.c1,E.c3]),tw:8});
+  } else if (el==='oni'){
+    if (q<.5) part({x:x+rnd(-rad*.6,rad*.6),y:y-rad*.3,vx:rnd(-10,10),vy:rnd(-120,-40),g:-70,drag:.96,life:rnd(.35,.6),size:rnd(rad*.1,rad*.2),mode:'ofire',wob:5});
+    if (q<.025) part({x,y:y-rad*.8,vx:0,vy:-30,drag:.98,life:.8,size:rad*.9,color:'#ff2a2a',mode:'glyph',ch:'鬼'});
+  } else if (el==='steel'){
+    if (q<.12) part({x:x+rnd(-rad*.7,rad*.7),y:y+rnd(-rad*.7,rad*.7),drag:1,life:rnd(.4,.7),size:rnd(1.2,2.2),color:'#ffffff',tw:18});
+    if (q<.04) for (let j=0;j<4;j++) part({x:x+rnd(-rad*.5,rad*.5),y:y-rad*.5,vx:rnd(-90,90),vy:rnd(-160,-40),g:900,drag:.97,life:rnd(.25,.45),size:rnd(.8,1.4),color:pick(['#fff3c0','#ffc04a']),mode:'spark'});
   } else {
     if (q<.45) part({x:x+rnd(-rad*.6,rad*.6),y:y+rnd(-rad*.3,rad*.3),vx:rnd(-10,10),vy:rnd(-40,-12),drag:.98,life:rnd(.8,1.3),size:rnd(rad*.25,rad*.45),color:'#000',mode:'smoke',alpha:.6});
     if (q<.25) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:rnd(-10,10),vy:rnd(-25,-5),drag:.98,life:rnd(.6,1),size:rnd(1,2),color:pick([E.c1,E.c2])});
@@ -1956,13 +2124,13 @@ function drawGhost(p){
 /* ---------- pure state transitions (shared by local play, CPU and online) ---------- */
 const initBoard = () => { const b=new Array(N).fill(-1); for (let i=0;i<64;i++) b[i]=0; b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
 const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], guards:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0, blind:0, pas:freshPas(),
-  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, ev:[]});
+  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, steel:[], rust:[], ev:[]});
 function curState(){
   return {board:board.slice(), turn, over, lastMove, burns:clone(burns), guards:clone(guards), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0, blind, pas:clone(pas),
     kings:{...kings}, hush:hush?{...hush}:null, royal, decree:decree?clone(decree):null, forced:forced?{...forced}:null, quake, curses:clone(curses), winner:0,
-    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, ev:[]};
+    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, steel:clone(steel), rust:clone(rust), ev:[]};
 }
-const protS = S => protOf(S.guards, S.kings, S.hush);
+const protS = S => protOf(S.guards, S.kings, S.hush, S.steel||[], S.rust||[]);
 const legalS = (S,p) => legal(S.board,p,S.burns,protS(S),S.hush);
 function addRocks(S){ const ring=[]; for (let i=64;i<N;i++) ring.push(i); for (const i of shuffle(ring).slice(0,3)) S.board[i]=0; }
 // seals, guards and curses count down each time their owner's opponent finishes a turn
@@ -1970,6 +2138,8 @@ function endTurnS(S,ended){
   // 蒼炎 lines (owner 0) burn for two whole turns, whoever's they are
   S.burns.forEach(b=>{ if (b.kind==='blaze'){ if (b.fresh) b.fresh=false; else b.left--; } else if (b.owner!==ended) b.left--; }); S.burns=S.burns.filter(b=>b.left>0);
   S.hidden=(S.hidden||[]).filter(h=>h.owner===ended);
+  // rust holds through its owner's next turn
+  S.rust=(S.rust||[]).filter(r=>{ if (r.owner!==ended) return true; if (r.fresh){ r.fresh=false; return true; } return false; });
   S.guards.forEach(g=>{ if (g.owner!==ended) g.left--; }); S.guards=S.guards.filter(g=>g.left>0);
   S.curses.forEach(c=>{ if (c.owner!==ended) c.left--; }); S.curses=S.curses.filter(c=>c.left>0);
   if (S.blind===ended) S.blind=0;
@@ -2018,6 +2188,8 @@ function cleanupS(S){
   S.guards=S.guards.filter(g=>S.board[g.idx]===g.owner);
   S.curses=S.curses.filter(c=>S.board[c.idx]===c.owner);
   S.hidden=(S.hidden||[]).filter(h=>S.board[h.idx]===h.owner);
+  S.steel=(S.steel||[]).filter(x=>S.board[x.idx]===x.owner);
+  S.rust=(S.rust||[]).filter(x=>S.board[x.idx]===x.owner);
   for (const k of [1,2]) if (S.kings[k]>=0 && S.board[S.kings[k]]!==k) S.kings[k]=-2;
 }
 function advanceS(S,p){
@@ -2050,7 +2222,7 @@ function fiveLine(b,p,changed){
       const run=[i];
       for (let s=1;;s++){ const rr=r+dr*s, cc=c+dc*s; if (rr<0||rr>7||cc<0||cc>7||b[rr*8+cc]!==p) break; run.push(rr*8+cc); }
       for (let s=1;;s++){ const rr=r-dr*s, cc=c-dc*s; if (rr<0||rr>7||cc<0||cc>7||b[rr*8+cc]!==p) break; run.unshift(rr*8+cc); }
-      if (run.length>=STAR_LINE) return run;
+      if (run.length>=(dr&&dc ? STAR_DIAG : STAR_LINE)) return run;
     }
   }
   return null;
@@ -2077,6 +2249,23 @@ function placeS(S,idx,p){
     for (const k of f){ const [r,c]=RC[k]; for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; const n=rr*8+cc; if (S.board[n]===3-p && !pr.some(g=>g.idx===n && g.owner===3-p) && !extra.includes(n)) extra.push(n); } }
     extra.forEach(n=>S.board[n]=p); f.push(...extra);
     ps.rage=false; S.ev.push('wrath:'+idx+':'+extra.join('.'));
+  }
+  // 豪傑: while the oni is behind, each placement knocks down two more neighbours
+  if (el==='oni'){
+    if (ps.rest>0) ps.rest--;
+    else if (!quiet && oniFierce(S.lastPlace.before,p)){
+      const pr=protS(S), [r,c]=RC[idx], cand=[];
+      for (const [dr,dc] of D8){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; const n=rr*8+cc; if (S.board[n]===3-p && !pr.some(g=>g.idx===n && g.owner===3-p)) cand.push(n); }
+      const extra=shuffle(cand).slice(0,GOUKETSU_N);
+      if (extra.length){ extra.forEach(n=>S.board[n]=p); f.push(...extra); S.ev.push('gouketsu:'+idx+':'+extra.join('.')); }
+    }
+  }
+  // 鋼の忠誠: a stone placed against steel rusts
+  if (cfg.el[3-p]==='steel' && !hushedS(S,3-p)){
+    const [r,c]=RC[idx];
+    if ((S.steel||[]).some(x=>x.owner===3-p && S.board[x.idx]===3-p && Math.max(Math.abs(RC[x.idx][0]-r),Math.abs(RC[x.idx][1]-c))===1)){
+      (S.rust=S.rust||[]).push({idx,owner:p,fresh:true}); S.ev.push('rust:'+idx);
+    }
   }
   ps.flips+=f.length; ps.turns++;
   if (!quiet){
@@ -2120,9 +2309,10 @@ async function commit(S){
   pas=S.pas ? clone(S.pas) : freshPas();
   kings=S.kings ? {1:S.kings[1]??-1, 2:S.kings[2]??-1} : {1:-1,2:-1};
   hidden=clone(S.hidden||[]); lastPlace=S.lastPlace?clone(S.lastPlace):null; predict=S.predict?{...S.predict}:null;
+  steel=clone(S.steel||[]); rust=clone(S.rust||[]);
   hush=S.hush ? {...S.hush} : null; royal=S.royal||0; decree=S.decree ? clone(S.decree) : null; forced=S.forced ? {...S.forced} : null; quake=S.quake||0;
   winOverride=S.winner||0; winReason=S.winReason||'';
-  prot=protOf(guards,kings,hush);
+  prot=protOf(guards,kings,hush,steel,rust);
   if (S.pass && phase==='play') stamp(S.pass);
   const ev=(Array.isArray(S.ev)?S.ev:[]).filter(x=>typeof x==='string');
   if (ev.length && phase==='play'){
@@ -2285,7 +2475,14 @@ function cellClick(i){
   if (aim){
     if (busy||over||!isLocalTurn(turn)||!aimOk(i)) return;
     const p=aim, k=aimSel.kind;
-    if (k==='fire'){ aim=0; aimSel=null; castCard(p,i); return; }
+    if (k==='fire'||k==='oni'){ aim=0; aimSel=null; castCard(p,i); return; }
+    if (k==='steel'){
+      const ps=aimSel.picks, j=ps.indexOf(i);
+      if (j>=0) ps.splice(j,1); else ps.push(i);
+      if (cfg.sound) tone('square',1200+ps.length*220,1200+ps.length*220,.05,.05);
+      if (ps.length>=steelNeed(p)){ const t=ps.slice(); aim=0; aimSel=null; castCard(p,t); return; }
+      render(); return;
+    }
     if (aimSel.stage===1){ aimSel={kind:k, stage:2, first:i}; render(); return; }
     const first=aimSel.first; aim=0; aimSel=null;
     castCard(p, k==='ninja' ? [first,i] : dragonLine(first,i)); return;
@@ -2429,6 +2626,14 @@ async function castCard(p, target, remoteS, remoteTargets){
         if (S.board[i]>0 && !pr.some(g=>g.idx===i && g.owner===S.board[i])) S.board[i]=0;
         if (S.board[i]===0){ S.burns=S.burns.filter(b=>b.idx!==i); S.burns.push({idx:i,owner:0,left:2,kind:'blaze',fresh:true}); }
       }
+    }
+    else if (el==='oni'){
+      const conv=oniBlock(S.board,target,p,pr); targets=[target,...conv];
+      conv.forEach(i=>S.board[i]=p); S.pas[p].rest=3;
+    }
+    else if (el==='steel'){
+      targets=target.filter(i=>i>=0 && i<64 && S.board[i]===3-p && !pr.some(g=>g.idx===i && g.owner===3-p));
+      S.steel=S.steel||[]; targets.forEach(i=>{ S.board[i]=p; S.steel.push({idx:i,owner:p}); });
     }
     else if (el==='time'){
       const lp=S.lastPlace; targets=[lp.idx];
@@ -2645,6 +2850,31 @@ async function playCard(el,p,targets,myGen){
     ring(x,y,{vr:220,life:.6,w:4,color:E.c1});
     await wait(700);
     undim(800);
+  } else if (el==='oni'){
+    const [ci,...conv]=targets; if (!(ci>=0)) return;
+    dim('radial-gradient(circle at 50% 50%, rgba(80,0,8,.55), rgba(8,0,2,.94))',300);
+    await oniRoar(); if (!alive()) return;
+    conv.forEach(i=>{ cells[i].style.setProperty('--mk',E.c1); cells[i].classList.add('marked'); });
+    const [tx,ty]=center(ci);
+    await kanaboSmash(tx,ty); if (!alive()) return;
+    conv.forEach((i,k)=>{ setTimeout(()=>{ if (!alive()) return; cells[i].classList.remove('marked'); flipDisc(i,p,2,k); }, k*70); });
+    await wait(conv.length*70+800);
+    undim(900);
+  } else if (el==='steel'){
+    dim('radial-gradient(circle at 50% 50%, rgba(40,55,75,.5), rgba(4,6,10,.9))',300);
+    targets.forEach(i=>{ cells[i].style.setProperty('--mk',E.c3); cells[i].classList.add('marked'); });
+    await steelShutter(); if (!alive()) return;
+    for (let k=0;k<targets.length;k++){
+      const i=targets[k];
+      await plateDrop(i); if (!alive()) return;
+      cells[i].classList.remove('marked');
+      flipDisc(i,p,1.6,k);
+      await wait(140);
+    }
+    { const r2=boardEl.getBoundingClientRect(); for (let k=0;k<3;k++) LINES.push({x1:r2.left-40+k*30,y1:r2.bottom,x2:r2.right+40+k*30,y2:r2.top,t:0,delay:k*.08,life:.7,draw:.3,color:'#ffffff',w:6-k*2}); }
+    clang(660,.08,.1,1.4);
+    await wait(700);
+    undim(800);
   } else {
     const sr=$('side'+p).getBoundingClientRect(), sx=sr.left+sr.width/2, sy=sr.top+Math.min(60,sr.height/2);
     dim('linear-gradient(180deg, rgba(0,6,30,.92), rgba(0,0,10,.8))',220);
@@ -2682,6 +2912,8 @@ async function playEvents(ev){
     else if (k==='wrath' && n>=0 && n<64) await fxWrath(n, extra||'');
     else if (k==='foresee' && n>=0 && n<64) await fxForesee(n);
     else if (k==='quake' && n>=0 && n<N) await fxQuake(n, extra||'');
+    else if (k==='gouketsu' && n>=0 && n<N) await fxGouketsu(n, extra||'');
+    else if (k==='rust' && n>=0 && n<N) await fxRust(n);
   }
 }
 async function fxSeraph(p){
@@ -3287,6 +3519,219 @@ async function fxWrath(idx,cellsTxt){
   if (list.length) toast(`${PASSIVES.dragon.name}！ 怒りの蒼炎がさらに${list.length}枚を焼き返した`);
   await wait(list.length*90+500);
 }
+/* ---------- 鬼 and 鋼 ---------- */
+function ofireCol(k){ return k<.15?'#fff0e0':k<.35?'#ff6a3a':k<.65?'#d4141a':'#4a0008'; }
+// a struck iron bell: inharmonic partials that ring and die away
+function clang(f=420,vol=.12,delay=0,dur=1.2){
+  [1,2.76,5.4,8.93,1.5].forEach((m,k)=>tone(k%2?'triangle':'sine',f*m,f*m*.995,dur*(1-k*.15),vol*(k?.45/k:1),delay));
+  nz('highpass',5000,2500,.06,.35,delay,2);
+}
+let oniId=0, plateId=0;
+// a hannya mask: ivory horns, gold eyes with burning pupils, a fanged mouth whose jaw drops open
+function oniMaskSvg(id){
+  return `<svg viewBox="0 0 200 220" aria-hidden="true"><defs>
+    <radialGradient id="of${id}" cx=".5" cy=".42" r=".62"><stop offset="0" stop-color="#ff5a3a"/><stop offset=".5" stop-color="#c4101a"/><stop offset="1" stop-color="#4a0008"/></radialGradient>
+    <linearGradient id="oh${id}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#8a7a5a"/><stop offset=".5" stop-color="#f4ead0"/><stop offset="1" stop-color="#fffaf0"/></linearGradient>
+    <linearGradient id="oe${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c0"/><stop offset=".5" stop-color="#ffcc22"/><stop offset="1" stop-color="#b87400"/></linearGradient>
+    <radialGradient id="op${id}"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#ff3a1a"/><stop offset="1" stop-color="#ff0000" stop-opacity="0"/></radialGradient>
+    <radialGradient id="om${id}" cx=".5" cy=".3"><stop offset="0" stop-color="#ff6a1a"/><stop offset=".5" stop-color="#a00010"/><stop offset="1" stop-color="#160004" stop-opacity="0"/></radialGradient>
+  </defs>
+  <path d="M42 70 L6 98 L28 104 L0 140 L24 138 L6 180 L34 160 L30 204 L52 172 Z M158 70 L194 98 L172 104 L200 140 L176 138 L194 180 L166 160 L170 204 L148 172 Z" fill="#0a0406" stroke="#3a0a10" stroke-width="1"/>
+  <path d="M60 66 C 48 44, 36 22, 14 2 C 44 12, 68 32, 84 56 Z M140 66 C 152 44, 164 22, 186 2 C 156 12, 132 32, 116 56 Z" fill="url(#oh${id})" stroke="#5a4a30" stroke-width="1.2"/>
+  <path d="M30 22 l10 -4 M40 36 l11 -4 M50 50 l11 -4 M170 22 l-10 -4 M160 36 l-11 -4 M150 50 l-11 -4" stroke="#8a7a5a" stroke-width="1.5"/>
+  <path d="M100 40 C 60 40, 34 62, 32 100 C 30 130, 40 160, 62 184 C 78 200, 122 200, 138 184 C 160 160, 170 130, 168 100 C 166 62, 140 40, 100 40 Z" fill="url(#of${id})" stroke="#2a0004" stroke-width="2"/>
+  <path d="M74 64 Q100 54 126 64 M80 74 Q100 66 120 74 M88 84 Q100 79 112 84" stroke="#4a0008" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M48 94 C 62 76, 82 78, 98 100 L 92 106 C 80 92, 64 88, 52 102 Z M152 94 C 138 76, 118 78, 102 100 L 108 106 C 120 92, 136 88, 148 102 Z" fill="#14060a"/>
+  <path d="M56 108 C 68 98, 84 100, 96 114 C 82 120, 66 118, 56 108 Z M144 108 C 132 98, 116 100, 104 114 C 118 120, 134 118, 144 108 Z" fill="url(#oe${id})" stroke="#3a1a00" stroke-width="1.4"/>
+  <circle cx="82" cy="110" r="4.2" fill="#2a0000"/><circle cx="118" cy="110" r="4.2" fill="#2a0000"/>
+  <circle class="glint" cx="82" cy="110" r="12" fill="url(#op${id})"/><circle class="glint" cx="118" cy="110" r="12" fill="url(#op${id})"/>
+  <path d="M92 118 C 90 130, 82 136, 84 144 C 94 149, 106 149, 116 144 C 118 136, 110 130, 108 118 Z" fill="#a80c16" stroke="#2a0004" stroke-width="1.4"/>
+  <ellipse cx="93" cy="142" rx="4" ry="2.4" fill="#1a0004"/><ellipse cx="107" cy="142" rx="4" ry="2.4" fill="#1a0004"/>
+  <path d="M58 124 C 62 142, 68 152, 70 160 M142 124 C 138 142, 132 152, 130 160" stroke="#4a0008" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M62 156 C 80 150, 120 150, 138 156 C 136 176, 120 196, 100 196 C 80 196, 64 176, 62 156 Z" fill="#160004"/>
+  <ellipse class="maw" cx="100" cy="176" rx="30" ry="16" fill="url(#om${id})"/>
+  <path d="M72 156 L80 180 L88 155 Z M112 155 L120 180 L128 156 Z" fill="#fffaf0" stroke="#8a7a5a" stroke-width=".8"/>
+  <path d="M88 155 h24 v6 h-24 Z" fill="#f4ead0"/>
+  <g class="jaw">
+    <path d="M62 168 C 70 198, 130 198, 138 168 C 124 180, 76 180, 62 168 Z" fill="url(#of${id})" stroke="#2a0004" stroke-width="2"/>
+    <path d="M76 180 L82 160 L88 180 Z M112 180 L118 160 L124 180 Z" fill="#fffaf0" stroke="#8a7a5a" stroke-width=".8"/>
+  </g>
+  </svg>`;
+}
+// the mask rises out of the dark, its eyes catch fire, and it roars
+async function oniRoar(){
+  const w=Math.min(W*.8,H*.72), h=w*1.1, el=document.createElement('div');
+  el.className='onimask big'; el.innerHTML=oniMaskSvg('R'+(++oniId)); el.style.width=w+'px';
+  el.style.left=(W/2-w/2)+'px'; el.style.top=(H*.5-h*.52)+'px';
+  document.body.appendChild(el);
+  [0,.26,.48].forEach(t=>{ tone('sine',120,46,.45,.8,t); nz('lowpass',500,60,.3,.5,t); });
+  el.animate([{transform:'translateY(40vh) scale(.4)',opacity:0,filter:'brightness(0)'},{transform:'translateY(0) scale(1.05)',opacity:1,filter:'brightness(.3)',offset:.7},{transform:'none',opacity:1,filter:'brightness(.35)'}],{duration:700,easing:'cubic-bezier(.2,.9,.3,1)',fill:'forwards'});
+  await wait(760);
+  // the eyes ignite
+  el.animate([{filter:'brightness(.35)'},{filter:'brightness(1.1)'}],{duration:240,fill:'forwards'});
+  el.querySelectorAll('.glint').forEach(g=>g.animate([{opacity:0,transform:'scale(.2)'},{opacity:1,transform:'scale(1.8)',offset:.4},{opacity:.95,transform:'scale(1)'}],{duration:520,fill:'forwards'}));
+  tone('sawtooth',1800,700,.3,.05); nz('highpass',6000,1800,.25,.22);
+  const r=el.getBoundingClientRect(), ey=r.top+r.height*110/220;
+  for (const fx of [82,118]){
+    const ex=r.left+r.width*fx/200;
+    ring(ex,ey,{r:6,vr:240,life:.6,w:4,color:'#ff3a1a'});
+    for (let k=0;k<5;k++){ const a=(fx<100?Math.PI:0)+rnd(-.35,.35); LINES.push({x1:ex,y1:ey,x2:ex+Math.cos(a)*rnd(80,200),y2:ey+Math.sin(a)*rnd(20,60),t:0,delay:k*.02,life:.5,draw:.08,color:'#ff3a1a',w:2}); }
+  }
+  await wait(420);
+  // the roar
+  el.querySelector('.jaw').animate([{transform:'none'},{transform:'translateY(18px)',offset:.18},{transform:'translateY(15px)',offset:.85},{transform:'none'}],{duration:1300,fill:'forwards'});
+  el.querySelector('.maw').animate([{opacity:.2},{opacity:1,offset:.2},{opacity:.9,offset:.85},{opacity:.2}],{duration:1300,fill:'forwards'});
+  el.animate([{transform:'none'},{transform:'scale(1.08)',offset:.15},{transform:'scale(1.06) translateX(-5px)',offset:.3},{transform:'scale(1.07) translateX(5px)',offset:.45},{transform:'scale(1.06) translateX(-3px)',offset:.6},{transform:'scale(1.05)'}],{duration:1250,fill:'forwards'});
+  roar(1.6); tone('sawtooth',70,30,1.4,.22); nz('bandpass',180,700,1.2,.5,0,.7);
+  shake(36); flash('#ff1a1a',.35,300);
+  stage.animate([{filter:'none'},{filter:'saturate(2) contrast(1.3) brightness(.8)',offset:.2},{filter:'none'}],{duration:1000});
+  const mx=r.left+r.width/2, my=r.top+r.height*176/220;
+  for (let k=0;k<6;k++) setTimeout(()=>ring(mx,my,{r:20,vr:900,life:.8,w:7-k,color:k%2?'#ffd0a0':'#ff1a1a'}), k*110);
+  emit(.9,()=>{ for (let j=0;j<10*FXQ;j++){ const a=rnd(0,TAU), s=rnd(300,900); part({x:mx,y:my,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.93,life:rnd(.4,.8),size:rnd(6,14),mode:'ofire'}); } });
+  await wait(1250);
+  el.animate([{opacity:1,transform:'scale(1.05)',filter:'brightness(1.1)'},{opacity:0,transform:'scale(1.5)',filter:'blur(8px) brightness(2)'}],{duration:380,easing:'ease-in',fill:'forwards'});
+  setTimeout(()=>el.remove(),420);
+  await wait(200);
+}
+// a mask bobbing across the screen with a trail of will-o'-wisps
+function oniParade(dir,y,w,dur,alpha){
+  const el=document.createElement('div'); el.className='onimask parade'; el.innerHTML=oniMaskSvg('P'+(++oniId)); el.style.width=w+'px';
+  el.style.left=(-w/2)+'px'; el.style.top=(-w*.55)+'px'; if (alpha) el.style.opacity=alpha;
+  el.querySelectorAll('.glint').forEach(g=>g.style.opacity=1);
+  document.body.appendChild(el);
+  const x0=dir>0?-w:W+w, x1=dir>0?W+w:-w, kf=[];
+  for (let k=0;k<=8;k++){ const t=k/8; kf.push({transform:`translate(${x0+(x1-x0)*t}px,${y+Math.sin(t*TAU*1.5)*w*.25}px) rotate(${Math.sin(t*TAU*1.5+1)*12}deg)`}); }
+  el.animate(kf,{duration:dur,easing:'linear',fill:'forwards'});
+  const q=alpha ? .3 : 1;
+  emit(dur/1000,(dt,t)=>{
+    const k=Math.min(1,t/(dur/1000)), px=x0+(x1-x0)*k, py=y+Math.sin(k*TAU*1.5)*w*.25;
+    for (let j=0;j<3*FXQ*q;j++) part({x:px-dir*w*.3+rnd(-8,8),y:py+rnd(-w*.2,w*.3),vx:-dir*rnd(40,120),vy:rnd(-80,-20),g:-60,drag:.95,life:rnd(.4,.8),size:rnd(4,9)*(w/150),mode:'ofire'});
+  });
+  setTimeout(()=>el.remove(),dur+60);
+}
+// a studded iron club
+function kanaboSvg(){
+  let studs='';
+  for (let y=26,row=0;y<196;y+=15,row++) for (let k=0;k<4;k++){ const x=15+k*11+(row%2?5:0); if (x>49) continue; studs+=`<path d="M${x-4} ${y+3} L${x} ${y-6} L${x+4} ${y+3} Z" fill="#d8dce6" stroke="#1a1a20" stroke-width=".8"/>`; }
+  return `<svg viewBox="0 0 64 300" aria-hidden="true"><defs>
+    <linearGradient id="kbg" x1="0" x2="1"><stop offset="0" stop-color="#121216"/><stop offset=".35" stop-color="#4a4a54"/><stop offset=".5" stop-color="#9a9aa8"/><stop offset=".65" stop-color="#3a3a44"/><stop offset="1" stop-color="#0a0a0e"/></linearGradient></defs>
+  <path d="M8 16 Q32 0 56 16 L50 204 L40 242 L24 242 L14 204 Z" fill="url(#kbg)" stroke="#000" stroke-width="1.5"/>
+  ${studs}
+  <rect x="24" y="240" width="16" height="54" rx="4" fill="#2a1208"/>
+  <path d="M24 248 h16 M24 258 h16 M24 268 h16 M24 278 h16 M24 288 h16" stroke="#c4101a" stroke-width="3"/>
+  <circle cx="32" cy="294" r="6" fill="#8a7a5a" stroke="#000"/>
+  </svg>`;
+}
+// the club is raised high and brought down on a square; resolves at the moment of impact
+async function kanaboSmash(tx,ty){
+  const R=Math.min(W,H), side=tx<W/2 ? 1 : -1;
+  const px=tx+side*R*.42, py=ty+R*.42, d=Math.hypot(px-tx,py-ty), L=d/.73, w=L*64/300;
+  const el=document.createElement('div'); el.className='kanabo'; el.innerHTML=kanaboSvg();
+  el.style.width=w+'px'; el.style.height=L+'px'; el.style.left=(px-w/2)+'px'; el.style.top=(py-L*294/300)+'px';
+  document.body.appendChild(el);
+  const a1=Math.atan2(tx-px,-(ty-py))*180/Math.PI, a0=a1+side*100;
+  el.animate([{transform:`rotate(${a0}deg)`,opacity:0},{transform:`rotate(${a0}deg)`,opacity:1,offset:.3},{transform:`rotate(${a0+side*18}deg)`,offset:.55,easing:'cubic-bezier(.7,0,1,1)'},{transform:`rotate(${a1}deg)`,offset:.8},{transform:`rotate(${a1+side*4}deg)`,offset:.88},{transform:`rotate(${a1}deg)`}],{duration:900,fill:'forwards'});
+  nz('bandpass',400,1600,.35,.18,.45,1.5);
+  await wait(720);
+  // impact
+  tone('sine',90,28,1,1); nz('lowpass',1800,50,.8,.9); clang(150,.16); tone('sawtooth',60,30,.5,.15);
+  shake(50); flash('#ff1a1a',.5,250); flash('#ffffff',.3,90);
+  for (let k=0;k<4;k++) ring(tx,ty,{vr:500+k*260,life:.8,w:9-k*2,color:k%2?'#ffd0a0':'#ff1a1a'});
+  for (let k=0;k<10;k++){
+    let x=tx, y=ty, a=k/10*TAU+rnd(-.2,.2);
+    for (let s=0;s<4;s++){ const L2=rnd(26,60)*(1+s*.3), nx=x+Math.cos(a)*L2, ny=y+Math.sin(a)*L2; LINES.push({x1:x,y1:y,x2:nx,y2:ny,t:0,delay:s*.04,life:1.4,draw:.05,color:'#ff3a1a',w:3.2-s*.5}); x=nx; y=ny; a+=rnd(-.5,.5); }
+  }
+  for (let j=0;j<60*FXQ;j++){ const a=rnd(-Math.PI,0), s=rnd(200,700); part({x:tx,y:ty,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:1100,drag:.97,life:rnd(.5,1),size:rnd(2.5,6),color:pick(['#3a2a24','#6a5a54','#1a1010']),mode:'chunk',rot:rnd(0,TAU)}); }
+  for (let j=0;j<70*FXQ;j++){ const a=rnd(0,TAU), s=rnd(100,600); part({x:tx,y:ty,vx:Math.cos(a)*s,vy:Math.sin(a)*s-80,g:-80,drag:.93,life:rnd(.4,.9),size:rnd(5,12),mode:'ofire'}); }
+  for (let j=0;j<20*FXQ;j++){ const a=rnd(0,TAU), s=rnd(40,200); part({x:tx,y:ty,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.95,life:rnd(.8,1.4),size:rnd(14,28),color:'#1a0004',mode:'smoke',alpha:.6}); }
+  setTimeout(()=>{ el.animate([{opacity:1},{opacity:0,transform:`rotate(${a1+side*30}deg) translateY(-30px)`}],{duration:420,easing:'ease-in',fill:'forwards'}); setTimeout(()=>el.remove(),450); }, 380);
+}
+// 豪傑: a mask flashes over the stone and two more fall
+async function fxGouketsu(idx,txt){
+  const E=ELS.oni, list=txt.split('.').map(Number).filter(i=>Number.isInteger(i)&&i>=0&&i<64);
+  const [x,y]=center(idx), cw=cells[idx].getBoundingClientRect().width, mw=cw*3;
+  const m=document.createElement('div'); m.className='onimask'; m.innerHTML=oniMaskSvg('G'+(++oniId)); m.style.width=mw+'px';
+  m.style.left=(x-mw/2)+'px'; m.style.top=(y-mw*1.3)+'px'; document.body.appendChild(m);
+  m.querySelectorAll('.glint').forEach(g=>g.style.opacity=1);
+  m.animate([{transform:'scale(.3)',opacity:0},{transform:'scale(1.1)',opacity:1,offset:.3},{transform:'scale(1)',opacity:1,offset:.75},{transform:'scale(1.3)',opacity:0}],{duration:950,fill:'forwards'});
+  setTimeout(()=>m.remove(),1000);
+  tone('sine',120,45,.4,.8); nz('lowpass',500,60,.3,.5); roar(.5);
+  shake(16); ring(x,y,{vr:360,life:.5,w:6,color:E.c1});
+  popText(x,y-cw*.7,'豪傑',E.c1,30,1100);
+  list.forEach((i,k)=>setTimeout(()=>{
+    const [px,py]=center(i); burst('oni',px,py,1.2,k);
+    discs[i].animate([{transform:'scale(1.5) rotateY(90deg)',filter:'brightness(3)'},{transform:'none',filter:'none'}],{duration:420,easing:'cubic-bezier(.2,.9,.3,1.3)'});
+    sfx('oni','flip',k);
+  }, 280+k*120));
+  if (list.length) toast(`${PASSIVES.oni.name}！ 劣勢の鬼が、さらに${list.length}枚をなぎ倒した`);
+  await wait(280+list.length*120+450);
+}
+// welding sparks thrown up and falling
+function weldSpark(x,y,pw=1){
+  for (let j=0;j<26*FXQ*pw;j++){ const a=rnd(-Math.PI,0), s=rnd(250,700)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:1400,drag:.97,life:rnd(.35,.8),size:rnd(1,2.2),color:pick(['#ffffff','#fff3c0','#ffc04a','#ff8a2a']),mode:'spark'}); }
+  part({x,y,life:.18,size:16*pw,color:'#ffffff'});
+}
+// a riveted steel plate stamped with 鋼
+function plateSvg(id){
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs>
+    <linearGradient id="sp${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f7fb"/><stop offset=".3" stop-color="#9aa8b8"/><stop offset=".5" stop-color="#e2e8f0"/><stop offset=".75" stop-color="#5b6878"/><stop offset="1" stop-color="#c0ccd8"/></linearGradient>
+    <radialGradient id="sr${id}" cx=".35" cy=".35"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#8a96a6"/><stop offset="1" stop-color="#2a3038"/></radialGradient></defs>
+  <rect x="3" y="3" width="94" height="94" rx="10" fill="url(#sp${id})" stroke="#2a3038" stroke-width="3"/>
+  <rect x="13" y="13" width="74" height="74" rx="6" fill="none" stroke="#ffffff88" stroke-width="1.5"/>
+  ${[[14,14],[86,14],[14,86],[86,86]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="6" fill="url(#sr${id})" stroke="#1a1e24" stroke-width="1"/>`).join('')}
+  <text x="50" y="64" text-anchor="middle" font-size="40" fill="#2a3038" font-family="'Train One','Dela Gothic One',sans-serif" opacity=".75">鋼</text>
+  </svg>`;
+}
+async function plateDrop(i){
+  const r=cells[i].getBoundingClientRect(), el=document.createElement('div'); el.className='steelplate'; el.innerHTML=plateSvg(++plateId);
+  el.style.left=r.left+'px'; el.style.top=r.top+'px'; el.style.width=r.width+'px'; el.style.height=r.height+'px';
+  document.body.appendChild(el);
+  nz('bandpass',800,3000,.25,.15,0,2);
+  el.animate([{transform:'translateY(-40vh) scale(2.4) rotate(-25deg)',opacity:0},{opacity:1,offset:.3},{transform:'none',opacity:1}],{duration:280,easing:'cubic-bezier(.6,0,1,1)',fill:'forwards'});
+  await wait(280);
+  const x=r.left+r.width/2, y=r.top+r.height/2;
+  clang(380+rnd(-60,60),.16); tone('sine',90,40,.3,.5); shake(14); flash('#ffffff',.18,120);
+  weldSpark(x,y,1.2); ring(x,y,{vr:300,life:.4,w:5,color:'#ffffff'});
+  [[.14,.14],[.86,.14],[.86,.86],[.14,.86]].forEach(([fx,fy],k)=>setTimeout(()=>{
+    const px=r.left+r.width*fx, py=r.top+r.height*fy;
+    for (let j=0;j<8*FXQ;j++) part({x:px,y:py,vx:rnd(-200,200),vy:rnd(-260,40),g:1200,drag:.97,life:rnd(.2,.45),size:rnd(.8,1.6),color:pick(['#ffffff','#ffd27a']),mode:'spark'});
+    tone('square',2400,1800,.03,.05); nz('highpass',7000,4000,.03,.2);
+  }, 90+k*70));
+  setTimeout(()=>{ el.animate([{opacity:1,filter:'brightness(1)'},{opacity:0,filter:'brightness(2.5)'}],{duration:350,fill:'forwards'}); setTimeout(()=>el.remove(),380); }, 560);
+  await wait(420);
+}
+// steel shutters slam shut over the whole screen, then grind open
+async function steelShutter(){
+  const ov=document.createElement('div'); ov.className='scene shutter';
+  ov.innerHTML='<div class="sh top"></div><div class="sh bot"></div><div class="sh-k">鋼</div>';
+  document.body.appendChild(ov);
+  const top=ov.querySelector('.top'), bot=ov.querySelector('.bot'), k=ov.querySelector('.sh-k');
+  top.animate([{transform:'translateY(-102%)'},{transform:'none'}],{duration:260,easing:'cubic-bezier(.7,0,1,1)',fill:'forwards'});
+  bot.animate([{transform:'translateY(102%)'},{transform:'none'}],{duration:260,easing:'cubic-bezier(.7,0,1,1)',fill:'forwards'});
+  await wait(260);
+  clang(180,.22); clang(262,.14,.02); tone('sine',60,30,.6,.8); nz('lowpass',2000,80,.5,.6);
+  shake(30); flash('#ffffff',.5,200);
+  emit(.5,()=>{ for (let j=0;j<14*FXQ;j++) part({x:rnd(0,W),y:H/2,vx:rnd(-500,500),vy:rnd(-500,100),g:1400,drag:.97,life:rnd(.4,.9),size:rnd(1,2.4),color:pick(['#ffffff','#fff3c0','#ffc04a','#ff8a2a']),mode:'spark'}); });
+  k.animate([{opacity:0,transform:'translate(-50%,-50%) scale(2.4)'},{opacity:1,transform:'translate(-50%,-50%) scale(1)',offset:.22},{opacity:1,transform:'translate(-50%,-50%) scale(1)',offset:.8},{opacity:0,transform:'translate(-50%,-50%) scale(1.1)'}],{duration:1000,fill:'forwards'});
+  await wait(900);
+  nz('highpass',6000,3000,.5,.25); tone('sawtooth',90,140,.4,.05);
+  top.animate([{transform:'none'},{transform:'translateY(-102%)'}],{duration:380,easing:'ease-in',fill:'forwards'});
+  bot.animate([{transform:'none'},{transform:'translateY(102%)'}],{duration:380,easing:'ease-in',fill:'forwards'});
+  await wait(400);
+  ov.remove();
+}
+// 鋼の忠誠: the stone placed against steel rusts over
+async function fxRust(idx){
+  const [x,y]=center(idx), w=cells[idx].getBoundingClientRect().width;
+  for (let j=0;j<16*FXQ;j++) part({x:x+rnd(-w*.3,w*.3),y:y+rnd(-w*.3,w*.3),vx:rnd(-30,30),vy:rnd(-50,-10),drag:.96,life:rnd(.6,1.1),size:rnd(w*.12,w*.25),color:pick(['#8a4a1a','#a0581e','#5a2a0a']),mode:'smoke',alpha:.55});
+  for (let j=0;j<10*FXQ;j++) part({x,y,vx:rnd(-90,90),vy:rnd(-120,0),g:500,drag:.97,life:rnd(.4,.7),size:rnd(1.5,3),color:pick(['#c0601a','#8a4a1a']),mode:'chunk',rot:rnd(0,TAU)});
+  discs[idx].animate([{filter:'none'},{filter:'sepia(1) saturate(2) hue-rotate(-20deg) brightness(.7)',offset:.5},{filter:'sepia(.85) saturate(1.6) hue-rotate(-18deg) brightness(.8)'}],{duration:700});
+  tone('sawtooth',180,120,.5,.05); nz('bandpass',500,250,.5,.25,0,6); clang(520,.05,.05,.6);
+  popText(x,y-w*.6,'錆',`#e07a2a`,26,1000);
+  toast(`${PASSIVES.steel.name}：鋼に触れた石が錆びついた（次のターン、挟む石に使えない）`);
+  await wait(700);
+}
+
 async function fxForesee(idx){
   const E=ELS.time, [x,y]=center(idx);
   for (let j=0;j<3;j++) ring(x,y,{r:70-j*14,vr:-40,life:1,w:2,color:j%2?E.c3:E.c1});
@@ -3329,6 +3774,12 @@ function cpuCardChoice(p){
       if (sc>bs){ bs=sc; best=line; }
     }
     if (best && (bs>=4 || Math.random()<.4)) return {target:best};
+  } else if (el==='oni'){
+    const {best,n}=oniBest(board,p,prot);
+    if (best>=0 && (n>=4 || e<=14 || Math.random()<.3)) return {target:best};
+  } else if (el==='steel'){
+    const pool=steelPick(p).sort((a,b)=>W8(b)-W8(a)), t=pool.slice(0,Math.min(STEEL_N,pool.length));
+    if (t.length>=2 && (t.some(isCorner) || e<=14 || Math.random()<.3)) return {target:t};
   } else if (el==='time'){
     if (lastPlace && lastPlace.p===3-p){ let d=0; for (let i=0;i<64;i++) if (board[i]!==lastPlace.before[i]) d++; if (isCorner(lastPlace.idx) || d>=4 || Math.random()<.3) return {}; }
   } else {
@@ -3441,7 +3892,7 @@ function stateFields(S){
     pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice(),
     kings:{1:(S.kings&&S.kings[1])??-1, 2:(S.kings&&S.kings[2])??-1}, hush:S.hush?{...S.hush}:null, royal:S.royal||0,
     decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0, winReason:S.winReason||'',
-    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null};
+    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null, steel:clone(S.steel||[]), rust:clone(S.rust||[])};
 }
 function sendState(S,act){
   if (!online() || !net.kind) return;
@@ -3675,6 +4126,7 @@ function buildHelp(){
     <li>星と岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。<strong>王は序盤・中盤・終盤にそれぞれ1回ずつ</strong>使えます（空きマス41以上が序盤、21〜40が中盤、20以下が終盤）。</li>
     <li>カードが使えるようになると、カードが光って知らせます。</li>
     <li><strong>忍は自分の手番が3回終わってから前半のあいだだけ</strong>、<strong>竜は空きマス残り${DRAGON_OPEN}以下の中盤</strong>から使えます。</li>
+    <li><strong>鬼と鋼</strong>のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。鋼の石は二度と裏返りません。</li>
     <li>スマホでは、カードやパッシブを長押しすると詳しい説明が開きます。</li>
     <li>CPUの強さが魔導士以上だと、CPUがまれに<strong>時属性</strong>を使ってきます（プレイヤーは選べません）。</li>
     <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
@@ -3710,9 +4162,9 @@ for (const p of [1,2]){
     if (!canCard(p)) return;
     ac();
     const el=cfg.el[p];
-    if (el==='fire'||el==='ninja'||el==='dragon'){
-      aim=p; aimSel={kind:el, stage:1, first:-1}; render();
-      toast(el==='fire' ? '燃やすマスを選んでください' : el==='ninja' ? '入れ替える自分の石を選んでください' : '蒼炎の起点となるマスを選んでください');
+    if (el==='fire'||el==='ninja'||el==='dragon'||el==='oni'||el==='steel'){
+      aim=p; aimSel={kind:el, stage:1, first:-1, picks:[]}; render();
+      toast(el==='fire' ? '燃やすマスを選んでください' : el==='ninja' ? '入れ替える自分の石を選んでください' : el==='oni' ? '金棒を振り下ろすマスを選んでください' : el==='steel' ? `鋼で覆う相手の石を${steelNeed(p)}つ選んでください` : '蒼炎の起点となるマスを選んでください');
       return;
     }
     castCard(p);
