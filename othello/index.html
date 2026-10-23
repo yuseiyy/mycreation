@@ -588,6 +588,23 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .d-el[data-el="ninja"]::before{background:repeating-linear-gradient(90deg,transparent 0 16px,#4fa86833 16px 20px);animation:none}
 .d-el[data-el="dragon"]::before{background:radial-gradient(ellipse 40% 60% at 50% 100%,#3fb6ff99,transparent 70%);animation:flicker .32s steps(2) infinite alternate;transform-origin:50% 100%}
 
+/* wyvern rig */
+.dragonfly .wing{transform-box:view-box;transform-origin:152px 97px}
+.dragonfly .head{transform-box:view-box;transform-origin:222px 64px}
+.dragonfly .jaw{transform-box:view-box;transform-origin:234px 71px}
+.dragonfly.roaring{z-index:6;filter:drop-shadow(0 0 30px #3fb6ff) drop-shadow(0 20px 40px #000)}
+
+/* skill detail panel */
+.card,.pas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.si-panel{--ec:#fff;border-color:color-mix(in srgb,var(--ec) 70%,#8a7444);box-shadow:0 20px 60px #000c,0 0 30px -6px var(--ec),inset 0 1px 0 #ffffff14}
+.si-kind{font-size:11px;letter-spacing:.18em;color:var(--muted)}
+.si-name{font-size:26px;line-height:1.2;text-shadow:0 0 14px color-mix(in srgb,var(--ec) 60%,transparent)}
+.si-state{font-size:13px;font-weight:700;color:#ffd08a;font-variant-numeric:tabular-nums}
+.si-desc{margin:0;font-size:14px;line-height:1.75;color:var(--ink)}
+@media (max-width:520px){
+  .card .c-top > span:first-child::after,.pas .p-top > span:first-child::after{content:"・長押しで詳細";color:#cbb8ff;letter-spacing:.04em}
+}
+
 /* 省ドパモード: keep the game, drop the spectacle */
 html.lite .aura,html.lite #aura{display:none!important}
 html.lite .flame:not(.chain)::before,html.lite .flame:not(.chain)::after{animation:none!important}
@@ -687,6 +704,15 @@ html.lite .disc{filter:none!important}
     <button class="gbtn" id="mGuide" type="button">スキル図鑑</button>
     <button class="gbtn" id="mSettings" type="button">設定</button>
     <button class="gbtn" id="mTitle" type="button">タイトルへ戻る</button>
+  </div>
+</div>
+<div id="skillInfo" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="siName">
+  <div class="m-panel si-panel">
+    <div class="si-kind" id="siKind"></div>
+    <div class="si-name" id="siName"></div>
+    <div class="si-state" id="siState"></div>
+    <p class="si-desc" id="siDesc"></p>
+    <button class="gbtn primary" id="siClose" type="button">閉じる</button>
   </div>
 </div>
 <div id="settings" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="setTitle">
@@ -841,7 +867,7 @@ let burns = [], guards = [], used = {1:0,2:0}, extra = 0, cardThisTurn = false, 
 let pas = {1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}}, phase = 'draft', picks = {1:'',2:''}, coinInfo = null;
 let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, quake = 0, curses = [], winOverride = 0, winReason = '', prot = [];
 let prevBlock = {1:null,2:null};
-let hidden = [], lastPlace = null, predict = null, aimSel = null;
+let hidden = [], lastPlace = null, predict = null, aimSel = null, sneakyIdx = -1;
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
@@ -1378,6 +1404,7 @@ async function ultimate(el,x,y,top='CORNER BREAK'){
     undim(900);
   } else if (el==='dragon'){
     dim('radial-gradient(circle at 50% 50%, rgba(10,30,80,.6), rgba(0,4,16,.95))',300);
+    await dragonRoar();
     roar(1.4);
     flyDragon(-W*.4,H*.85,W*1.4,H*.15,1300,Math.min(W,H)*.75);
     setTimeout(()=>flyDragon(W*1.4,H*.25,-W*.4,H*.75,1200,Math.min(W,H)*.55),350);
@@ -1500,9 +1527,9 @@ const CARDS = {
   fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:0,      desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。5ターンに1回使える。' },
   thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
   star:    { name:'流星群',                 sub:'METEOR SHOWER',      uses:1,      desc:'空きマス3つに流れ星が落ちて自分の石になる（挟めば裏返す）。さらに相手の石1枚をランダムに自分の色に変える。' },
-  king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から旗で指定する。角を指定できるのは1回だけ。' },
+  king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から旗で指定する。序盤・中盤・終盤にそれぞれ1回ずつ使える。角を指定できるのは1回だけ。' },
   rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石のうち、半分を盤のどこかへ、残り半分を画面の外へ吹き飛ばす。' },
-  ninja:   { name:'神出鬼没',               sub:'NOW YOU SEE ME',     uses:2,      desc:'自分の石1つと相手の石1つを選び、位置を入れ替える。' },
+  ninja:   { name:'神出鬼没',               sub:'NOW YOU SEE ME',     uses:2,      desc:'自分の石1つと相手の石1つを選び、位置を入れ替える。前半のみ使える。' },
   dragon:  { name:'暴虐',                   sub:'TYRANNY',            uses:1,      desc:'荒ぶる蒼炎が、選んだ直線上の石をすべて焼き払って消し去る。その直線には2ターンのあいだ誰も置けない。' },
   time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が1ターン選べなくなる。' },
 };
@@ -1512,7 +1539,7 @@ const PASSIVES = {
   fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'毎ターン、置いた石は相手の2ターンのあいだ裏返らず、スキルも効かない。' },
   thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前のターンに裏返した枚数×3%。' },
   star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦・横・斜めに7つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
-  king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王のまわり8マスのうち6マスが相手の石になると負け。8マスすべてが味方になると勝ち。' },
+  king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王の上下左右4マスすべてと、斜め4マスのうち2マスが相手の石になると負け。まわり8マスすべてが味方になると勝ち。' },
   rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'盤の外周36マスのうち3マスに岩が現れ、岩には自分だけが石を置ける。' },
   ninja:   { name:'隠密と罠',         sub:'SHADOW TRAP',       desc:'置いた石は相手の次のターンのあいだ相手から見えない。見えない石のマスに置こうとすると罠にかかり、そのターンを失う。' },
   dragon:  { name:'逆鱗',             sub:"DRAGON'S WRATH",    desc:'自分の石を一度に5枚以上裏返されると怒り状態になる。次に置いたとき、裏返した石の上下左右にいる相手の石も裏返す。' },
@@ -1529,7 +1556,18 @@ function fireReadyIn(p){
   if (t<FIRE_OPEN) return FIRE_OPEN-t;
   return Math.max(0, FIRE_CD-(t-(s.fireAt??-99)));
 }
-const cardLeft = p => cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0) : Math.max(0, cardOf(p).uses - (used[p]||0));
+const PHASES=['序盤','中盤','終盤'];
+const phaseOf = e => e>40 ? 0 : e>20 ? 1 : 2;
+const royalDone = p => (pas[p] && pas[p].royal) || [];
+const cardLeft = p => cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0)
+  : cfg.el[p]==='king' ? (royalDone(p).includes(phaseOf(emptyCount())) ? 0 : 1)
+  : Math.max(0, cardOf(p).uses - (used[p]||0));
+function usesLabel(p){
+  const el=cfg.el[p];
+  if (el==='fire') return '5ターンに1回';
+  if (el==='king'){ const d=royalDone(p), cur=phaseOf(emptyCount()); return PHASES.map((n,k)=>`${n[0]}${d.includes(k)?'×':k<cur?'－':'○'}`).join(' '); }
+  return `残り ${cardLeft(p)} / ${cardOf(p).uses}`;
+}
 const cardOpenAt = el => el==='thunder' ? LATE+THUNDER_EARLY : el==='king' ? LATE+KING_EARLY : el==='dragon' ? DRAGON_OPEN : el==='time' ? TIME_OPEN : LATE;
 const emptyCount = () => counts(board)[2];
 const roleOf = p => p===1 ? '先手' : '後手';
@@ -1551,6 +1589,10 @@ function cardBlock(p){
     const t=(pas[p]&&pas[p].turns)||0;
     if (cardLeft(p)<=0) return '使い切りました';
     if (t<NINJA_OPEN) return `忍の手番があと${NINJA_OPEN-t}回で使用可能`;
+    if (emptyCount()<=LATE) return '前半のみ使用可能（後半に入りました）';
+  } else if (el==='king'){
+    const ph=phaseOf(emptyCount());
+    if (royalDone(p).includes(ph)) return `${PHASES[ph]}ではもう使いました`;
   } else {
     if (cardLeft(p)<=0) return '使い切りました';
     const e=emptyCount(), at=cardOpenAt(el);
@@ -1639,7 +1681,7 @@ for (let i=0;i<N;i++){
 function center(i){ const r=cells[i].getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]; }
 function paintDisc(i){
   const v=board[i], d=discs[i], au=auras[i];
-  if (!(v>0) || concealed(i)){ d.hidden=true; au.hidden=true; return; }
+  if (!(v>0) || concealed(i) || i===sneakyIdx){ d.hidden=true; au.hidden=true; return; }
   d.hidden=false;
   if (phase!=='play'){ d.dataset.el='none'+v; d.dataset.k=''; au.hidden=true; return; }
   const el=cfg.el[v]; d.dataset.el=el; d.dataset.k=ELS[el].k;
@@ -1705,7 +1747,7 @@ function render(){
     cl.classList.toggle('hint', lm.includes(i));
     cl.classList.toggle('aim', aimable);
     cl.classList.toggle('decree', dOpts.includes(i));
-    cl.classList.toggle('last', i===lastMove);
+    cl.classList.toggle('last', i===lastMove && !concealed(i) && i!==sneakyIdx);
     cl.classList.toggle('rock', i>=64 && board[i]!==-1);
     cl.classList.toggle('guard', play && guards.some(g=>g.idx===i && board[i]===g.owner));
     cl.classList.toggle('cursed', play && curses.some(c=>c.idx===i && board[i]===c.owner));
@@ -1740,7 +1782,7 @@ function render(){
     if (!over && prevBlock[p]!==null && prevBlock[p] && !blk) cardReadyFx(p);
     prevBlock[p]=blk;
     cb.querySelector('.c-desc').textContent=C.desc;
-    cb.querySelector('.c-uses').textContent = cfg.el[p]==='fire' ? '5ターンに1回' : `残り ${cardLeft(p)} / ${C.uses}`;
+    cb.querySelector('.c-uses').textContent = usesLabel(p);
     cb.querySelector('.c-note').textContent=cardBlock(p);
     cb.disabled = !ok && aim!==p;
     cb.classList.toggle('ready', ok && aim!==p);
@@ -1953,15 +1995,21 @@ function startTurnS(S,x){
     if (lm.length){ let m=cpuPick(S.board,x); if (!lm.includes(m)) m=lm.slice().sort((a,b)=>W8(b)-W8(a))[0]; S.predict={p:x, idx:m}; }
   }
 }
-// 威光の王家: six enemies among the eight squares round the king take the castle;
+// 威光の王家: enemy stones on all four sides and two of the corners take the castle;
 // eight friends round it win the kingdom outright
 function checkRegicide(S){
   for (const k of [1,2]){
     const i=S.kings[k]; if (!(i>=0) || i>=64 || S.board[i]!==k) continue;
-    const [r,c]=RC[i]; let n=0, enemy=0, own=0;
-    for (const [dr,dc] of D8){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; n++; const v=S.board[rr*8+cc]; if (v===3-k) enemy++; else if (v===k) own++; }
+    const [r,c]=RC[i]; let n=0, own=0, orth=0, diag=0;
+    for (const [dr,dc] of D8){
+      const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; n++;
+      const v=S.board[rr*8+cc];
+      if (v===k) own++;
+      else if (v===3-k){ if (dr && dc) diag++; else orth++; }
+    }
     if (n===8 && own===8){ S.over=true; S.winner=k; S.winReason='coronation'; S.ev.push('coronation:'+k); return true; }
-    if (enemy>=6){ S.over=true; S.winner=3-k; S.winReason='regicide'; S.ev.push('regicide:'+k); return true; }
+    // fallen: all four sides plus two of the four corners are enemy stones
+    if (orth===4 && diag>=2){ S.over=true; S.winner=3-k; S.winReason='regicide'; S.ev.push('regicide:'+k); return true; }
   }
   return false;
 }
@@ -2063,6 +2111,7 @@ function placeS(S,idx,p){
   return advanceS(S,p);
 }
 async function commit(S){
+  sneakyIdx=-1;
   board=S.board.length===N ? S.board.slice() : S.board.slice().concat(new Array(N-S.board.length).fill(-1));
   turn=S.turn; lastMove=S.lastMove??-1;
   burns=clone(S.burns||[]); guards=clone(S.guards||[]); curses=clone(S.curses||[]);
@@ -2274,22 +2323,25 @@ async function doMove(idx, remoteS){
   const strike = el==='thunder' && cardThisTurn;
   const S = remoteS || placeS(curState(),idx,p);
   if (!remoteS) sendState(S,['place',p,idx]);
+  // a ninja's placement stays out of sight on the opponent's screen
+  const sneaky = el==='ninja' && cfg.mode!=='pvp' && viewerSide()!==p && !(hushedS(S,p));
+  if (sneaky) sneakyIdx=idx;
   busy=true; lastMove=idx; aim=0;
   board[idx]=p; burns=burns.filter(b=>b.idx!==idx); render();
   const corner=isCorner(idx);
   const [x,y]=center(idx);
-  discs[idx].animate([{transform:'translateZ(120px) scale(2.2)',opacity:0},{transform:'translateZ(0) scale(.92)',opacity:1,offset:.75},{transform:'scale(1)'}],{duration:corner?520:260,easing:'cubic-bezier(.3,1.4,.5,1)'});
+  if (!sneaky) discs[idx].animate([{transform:'translateZ(120px) scale(2.2)',opacity:0},{transform:'translateZ(0) scale(.92)',opacity:1,offset:.75},{transform:'scale(1)'}],{duration:corner?520:260,easing:'cubic-bezier(.3,1.4,.5,1)'});
   sfx(el,'place');
   if (strike) thunderStrike(x,y);
   if (!corner && !cfg.lite){
     if (el==='dragon'){ const fromL=Math.random()<.5, w=Math.min(W,H)*.34; flyDragon(fromL?-w:W+w, y+rnd(-140,-60), fromL?W+w:-w, y+rnd(-50,30), 1000, w); tone('sawtooth',110,60,.5,.07); }
-    if (el==='ninja') shadowClones(x,y,cells[idx].getBoundingClientRect().width);
+    if (el==='ninja' && !sneaky) shadowClones(x,y,cells[idx].getBoundingClientRect().width);
   }
   if (corner){
     shake(14);
     await ultimate(el,x,y);
     if (myGen!==gen) return;
-  } else if (!strike){
+  } else if (!strike && !sneaky){
     burst(el,x,y,.7);
   }
   const pw = corner ? 1.7 : 1 + Math.min(.6, flips.length*.06);
@@ -2299,7 +2351,7 @@ async function doMove(idx, remoteS){
   let maxDelay=0;
   order.forEach((o,k)=>{ const delay=(o.d-1)*step + (corner?0:k*8); maxDelay=Math.max(maxDelay,delay); setTimeout(()=>{ if(myGen===gen) flipDisc(o.f,p,pw,k); }, delay); });
   shake(Math.min(16, 2+flips.length*1.6)*(corner?1.6:1));
-  { const ch=cells[idx].getBoundingClientRect().height; setTimeout(()=>{ if (myGen===gen) popText(x,y-ch*.6,'+'+flips.length,tint(p),22+Math.min(20,flips.length*2)); }, 140); }
+  if (!sneaky){ const ch=cells[idx].getBoundingClientRect().height; setTimeout(()=>{ if (myGen===gen) popText(x,y-ch*.6,'+'+flips.length,tint(p),22+Math.min(20,flips.length*2)); }, 140); }
   if (flips.length>=6 && !corner) setTimeout(()=>{ if(myGen!==gen) return; const r=boardEl.getBoundingClientRect(); flash(ELS[el].c1,.18,300); popText(r.left+r.width/2,r.top+r.height/2,`REVERSE ×${flips.length}`,tint(p),46,1300); shake(18); }, maxDelay);
   await wait(maxDelay + 520);
   if (myGen!==gen) return;
@@ -2368,7 +2420,7 @@ async function castCard(p, target, remoteS, remoteTargets){
       if (os.length && oc>1){ const cv=pick(os); S.board[cv]=p; targets.push(cv); changed.push(cv); }
       starPassive(S,p,changed);
     }
-    else if (el==='king'){ targets=[]; S.royal=p; }
+    else if (el==='king'){ targets=[]; S.royal=p; S.pas[p].royal=[...(S.pas[p].royal||[]), phaseOf(counts(S.board)[2])]; }
     else if (el==='rock'){ targets=[]; S.quake=1; }
     else if (el==='ninja'){ const [a,b]=target; targets=[a,b]; S.board[a]=3-p; S.board[b]=p; }
     else if (el==='dragon'){
@@ -2548,8 +2600,7 @@ async function playCard(el,p,targets,myGen){
     const line=targets; if (!line.length) return;
     dim('radial-gradient(circle at 50% 50%, rgba(10,30,80,.55), rgba(0,4,16,.93))',300);
     line.forEach(i=>{ cells[i].style.setProperty('--mk',E.c1); cells[i].classList.add('marked'); });
-    roar(1.2);
-    await wait(700); if (!alive()) return;
+    await dragonRoar(); if (!alive()) return;
     const [ax,ay]=center(line[0]), [bx2,by2]=center(line[line.length-1]);
     const ang=Math.atan2(by2-ay,bx2-ax), ext=Math.max(W,H)*.65;
     const x0=ax-Math.cos(ang)*ext, y0=ay-Math.sin(ang)*ext, x1=bx2+Math.cos(ang)*ext, y1=by2+Math.sin(ang)*ext, L=Math.hypot(x1-x0,y1-y0), dur=1300;
@@ -3000,40 +3051,82 @@ async function fxQuake(idx, movesTxt){
 }
 /* ---------- 忍・竜・時: scenes and passive effects ---------- */
 function bfireCol(k){ return k<.18?'#ffffff':k<.4?'#bff0ff':k<.7?'#3fb6ff':'#1a3fa0'; }
-// an eastern dragon, head to the right: horns, mane, whiskers, clawed legs, tail fin
+// a western wyvern in profile, head to the right: bat wings, long neck, horns, clawed legs, spiked tail
 function dragonSvg(){
-  return `<svg viewBox="0 0 410 150" aria-hidden="true"><defs>
-    <linearGradient id="dgb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a1f5a" stop-opacity="0"/><stop offset=".22" stop-color="#1a3fa0"/><stop offset=".78" stop-color="#3fb6ff"/><stop offset="1" stop-color="#d8f4ff"/></linearGradient>
-    <linearGradient id="dgm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#3fb6ff"/></linearGradient></defs>
-  <path d="M12 82 l-12 -16 l16 8 l-4 -18 l14 20 Z" fill="#3fb6ff" opacity=".85"/>
-  <path d="M150 96 q-8 14 -18 22 m18 -22 q2 14 10 22 M266 80 q-6 14 -16 22 m16 -22 q4 14 12 20" stroke="#9fe0ff" stroke-width="5" fill="none" stroke-linecap="round"/>
-  <path d="M130 118 l-6 4 l2 -6 M164 118 l6 4 l-2 -6 M248 102 l-6 4 l2 -6 M280 100 l6 4 l-2 -6" stroke="#ffffff" stroke-width="2" fill="none"/>
-  <path d="M8 80 C 50 36, 92 114, 140 72 S 226 28, 276 68 C 300 86, 322 80, 336 64 L 352 52 L 400 58 L 374 66 L 404 76 L 368 78 C 356 90, 326 102, 294 90 C 256 74, 208 118, 156 96 S 66 50, 20 92 Z" fill="url(#dgb)" stroke="#bff0ff" stroke-width="1.4"/>
-  <path d="M40 74 C 80 50, 110 96, 150 70 S 230 44, 280 74" stroke="#ffffff" stroke-opacity=".35" stroke-width="2" fill="none" stroke-dasharray="3 6"/>
-  <path d="M60 58 l6 -15 l6 13 M100 72 l6 -15 l6 14 M170 60 l6 -16 l6 14 M220 48 l6 -16 l6 15 M262 58 l6 -15 l6 14" stroke="#bff0ff" stroke-width="2.2" fill="none"/>
-  <path d="M334 62 l-16 -12 l5 13 l-16 -6 l8 13 l-14 -2 l12 11" fill="url(#dgm)" opacity=".95"/>
-  <path d="M346 54 L328 20 L353 48 Z M355 52 L357 14 L364 50 Z" fill="#e8faff" stroke="#3fb6ff" stroke-width=".8"/>
-  <circle cx="374" cy="61" r="7" fill="#3fb6ff" opacity=".5"/><circle cx="374" cy="61" r="3.4" fill="#fff"/><circle cx="375" cy="61" r="1.4" fill="#06123a"/>
-  <path d="M392 72 C408 86,410 110,394 124 M382 76 C392 96,384 116,368 128" stroke="#9fe0ff" stroke-width="1.8" fill="none"/>
-  <path d="M396 74 l10 -2 l-6 6 z" fill="#ffffff"/>
+  return `<svg viewBox="0 0 320 220" aria-hidden="true"><defs>
+    <linearGradient id="wyb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1640"/><stop offset=".55" stop-color="#16367e"/><stop offset="1" stop-color="#2f86d8"/></linearGradient>
+    <linearGradient id="wym" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fb6ff" stop-opacity=".9"/><stop offset="1" stop-color="#0a1f5a" stop-opacity=".95"/></linearGradient>
+    <radialGradient id="wyf"><stop offset="0" stop-color="#ffffff"/><stop offset=".4" stop-color="#9fe0ff"/><stop offset="1" stop-color="#3fb6ff" stop-opacity="0"/></radialGradient></defs>
+  <g class="wing far"><path d="M150 96 L118 30 L96 8 L104 38 L70 22 L80 54 L44 46 L64 78 L30 80 L70 100 Z" fill="#081438" stroke="#2a5aa8" stroke-width="1"/></g>
+  <path d="M118 118 C 82 130, 52 150, 22 150 C 12 150, 6 146, 2 140 L 14 146 L 4 130 L 24 142 C 52 140, 82 120, 112 106 Z" fill="url(#wyb)" stroke="#9fe0ff" stroke-width="1"/>
+  <path d="M60 136 l4 -8 l4 7 M84 126 l4 -8 l4 7 M104 116 l4 -8 l4 7" stroke="#bff0ff" stroke-width="1.6" fill="none"/>
+  <path d="M140 124 L132 150 L124 164 M132 150 L142 164 M164 122 L162 150 L154 166 M162 150 L172 164" stroke="#16367e" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M120 166 l-6 4 M126 166 l-2 6 M150 168 l-6 4 M156 168 l-2 6 M140 166 l6 4 M170 166 l6 4" stroke="#e8f8ff" stroke-width="2" stroke-linecap="round"/>
+  <path d="M108 112 C 110 92, 150 82, 180 92 C 196 98, 200 112, 188 122 C 170 136, 128 136, 110 124 Z" fill="url(#wyb)" stroke="#9fe0ff" stroke-width="1.2"/>
+  <path d="M124 118 C 140 128, 166 128, 184 116" stroke="#5fa8e8" stroke-width="5" stroke-dasharray="4 3" fill="none" opacity=".7"/>
+  <path d="M176 96 C 196 84, 206 68, 222 60 L 232 70 C 216 80, 204 98, 188 112 Z" fill="url(#wyb)" stroke="#9fe0ff" stroke-width="1.2"/>
+  <path d="M184 88 l2 -9 l5 7 M196 78 l2 -9 l5 7 M208 68 l2 -9 l5 7 M150 86 l3 -10 l5 8 M166 84 l3 -10 l5 8" stroke="#bff0ff" stroke-width="1.6" fill="none"/>
+  <g class="head">
+    <path d="M228 54 L204 28 L234 50 Z M238 52 L232 20 L246 50 Z" fill="#e8f8ff" stroke="#3fb6ff" stroke-width=".8"/>
+    <g class="jaw"><path d="M232 70 L 290 74 L 264 84 C 252 86, 240 82, 232 70 Z" fill="#102a66" stroke="#9fe0ff" stroke-width="1"/><path d="M246 76 l3 -4 l3 4 M258 77 l3 -4 l3 4 M270 77 l3 -4 l3 4" stroke="#ffffff" stroke-width="1.2" fill="none"/></g>
+    <path d="M216 60 C 228 48, 248 48, 264 54 L 300 64 L 274 70 L 240 72 C 228 72, 220 68, 216 60 Z" fill="url(#wyb)" stroke="#9fe0ff" stroke-width="1.2"/>
+    <path d="M262 68 l3 4 l3 -4 M274 67 l3 4 l3 -4 M286 66 l3 4 l2 -4" stroke="#ffffff" stroke-width="1.2" fill="none"/>
+    <circle cx="250" cy="59" r="5" fill="#3fb6ff" opacity=".55"/><path d="M246 59 L254 57 L252 61 Z" fill="#e8ffff"/>
+    <circle class="maw" cx="296" cy="72" r="14" fill="url(#wyf)" opacity="0"/>
+  </g>
+  <g class="wing near"><path d="M154 98 L132 20 L112 -6 L118 30 L82 6 L90 44 L50 30 L70 70 L28 66 L60 92 L100 102 Z" fill="url(#wym)" stroke="#9fe0ff" stroke-width="1.2"/>
+    <path d="M154 98 L112 -6 M154 98 L82 6 M154 98 L50 30 M154 98 L28 66" stroke="#bff0ff" stroke-width="2" fill="none"/></g>
   </svg>`;
+}
+function flapWings(el,period=520){
+  el.querySelectorAll('.wing').forEach((g,k)=>g.animate([{transform:'rotate(-16deg) scaleY(1)'},{transform:'rotate(26deg) scaleY(.5)'},{transform:'rotate(-16deg) scaleY(1)'}],{duration:period,iterations:Infinity,delay:k*55,easing:'ease-in-out'}));
 }
 function flyDragon(x0,y0,x1,y1,dur,w,opt={}){
   const el=document.createElement('div'); el.className='dragonfly'; el.innerHTML=dragonSvg(); el.style.width=w+'px';
   if (opt.alpha) el.style.opacity=opt.alpha;
   document.body.appendChild(el);
-  const ang=Math.atan2(y1-y0,x1-x0), deg=ang*180/Math.PI, h=w*150/410;
+  const ang=Math.atan2(y1-y0,x1-x0), flip=Math.cos(ang)<0, h=w*220/320;
+  // keep the wyvern upright: mirror it when flying left instead of turning it upside down
+  const deg=(flip ? ang-Math.PI : ang)*180/Math.PI, sx=flip ? -1 : 1;
   el.style.left=(-w/2)+'px'; el.style.top=(-h/2)+'px';
-  el.animate([{transform:`translate(${x0}px,${y0}px) rotate(${deg}deg)`},{transform:`translate(${x1}px,${y1}px) rotate(${deg}deg)`}],{duration:dur,easing:'linear',fill:'forwards'});
-  el.firstElementChild.animate([{transform:'scaleY(1) skewX(0deg)'},{transform:'scaleY(.82) skewX(4deg)'},{transform:'scaleY(1.08) skewX(-4deg)'},{transform:'scaleY(1) skewX(0deg)'}],{duration:620,iterations:Infinity});
-  const q = opt.quiet ? .25 : 1;
+  el.animate([{transform:`translate(${x0}px,${y0}px) rotate(${deg}deg) scaleX(${sx})`},{transform:`translate(${x1}px,${y1}px) rotate(${deg}deg) scaleX(${sx})`}],{duration:dur,easing:'linear',fill:'forwards'});
+  flapWings(el);
+  const q = opt.quiet ? .25 : 1, mx=.42*w, my=-.17*h;
   emit(dur/1000,(dt,t)=>{
     const k=Math.min(1,t/(dur/1000)), cx0=x0+(x1-x0)*k, cy0=y0+(y1-y0)*k;
-    const hx=cx0+Math.cos(ang)*w*.47, hy=cy0+Math.sin(ang)*w*.47;
-    for (let j=0;j<9*FXQ*q;j++) part({x:hx+rnd(-6,6),y:hy+rnd(-6,6),vx:Math.cos(ang)*rnd(250,560)+rnd(-80,80),vy:Math.sin(ang)*rnd(250,560)+rnd(-80,80),drag:.92,life:rnd(.3,.65),size:rnd(6,15)*(w/300),mode:'bfire'});
-    for (let j=0;j<4*FXQ*q;j++){ const s=rnd(-.45,.4); part({x:cx0+Math.cos(ang)*w*s+rnd(-10,10),y:cy0+Math.sin(ang)*w*s+rnd(-10,10),vx:rnd(-30,30),vy:rnd(-60,-10),drag:.95,life:rnd(.4,.8),size:rnd(4,9)*(w/300),mode:'bfire'}); }
+    const dr=flip ? ang-Math.PI : ang, lx=sx*mx;
+    const hx=cx0+Math.cos(dr)*lx-Math.sin(dr)*my, hy=cy0+Math.sin(dr)*lx+Math.cos(dr)*my;
+    for (let j=0;j<8*FXQ*q;j++) part({x:hx+rnd(-6,6),y:hy+rnd(-6,6),vx:Math.cos(ang)*rnd(260,560)+rnd(-80,80),vy:Math.sin(ang)*rnd(260,560)+rnd(-80,80),drag:.92,life:rnd(.3,.65),size:rnd(6,15)*(w/300),mode:'bfire'});
+    for (let j=0;j<2*FXQ*q;j++) part({x:cx0+rnd(-w*.3,w*.3),y:cy0+rnd(-h*.1,h*.2),vx:rnd(-30,30),vy:rnd(-40,10),drag:.95,life:rnd(.4,.8),size:rnd(3,7)*(w/300),mode:'bfire'});
   });
   setTimeout(()=>el.remove(), dur+60);
+}
+// the wyvern rises in front of the board, rears back and roars
+async function dragonRoar(){
+  const w=Math.min(W*.95,H*1.25), h=w*220/320, el=document.createElement('div');
+  el.className='dragonfly roaring'; el.innerHTML=dragonSvg(); el.style.width=w+'px';
+  el.style.left=(W/2-w*.55)+'px'; el.style.top=(H*.5-h*.55)+'px';
+  document.body.appendChild(el);
+  flapWings(el,760);
+  el.animate([{transform:'translateY(70vh) scale(.5)',opacity:0},{transform:'translateY(-2%) scale(1.02)',opacity:1,offset:.75},{transform:'none',opacity:1}],{duration:560,easing:'cubic-bezier(.2,.9,.3,1)',fill:'forwards'});
+  tone('sawtooth',70,140,.5,.08); nz('bandpass',200,900,.5,.2,0,1.2);
+  await wait(560);
+  const head=el.querySelector('.head'), jaw=el.querySelector('.jaw'), maw=el.querySelector('.maw');
+  head.animate([{transform:'rotate(0deg)'},{transform:'rotate(-14deg)',offset:.3},{transform:'rotate(9deg) translateX(6px)',offset:.45},{transform:'rotate(7deg) translateX(4px)',offset:.9},{transform:'rotate(0deg)'}],{duration:1500,easing:'ease-out',fill:'forwards'});
+  jaw.animate([{transform:'rotate(0deg)'},{transform:'rotate(0deg)',offset:.35},{transform:'rotate(30deg)',offset:.48},{transform:'rotate(27deg)',offset:.9},{transform:'rotate(0deg)'}],{duration:1500,fill:'forwards'});
+  maw.animate([{opacity:0},{opacity:0,offset:.4},{opacity:1,offset:.5},{opacity:.9,offset:.9},{opacity:0}],{duration:1500,fill:'forwards'});
+  await wait(620);
+  // the roar
+  roar(2); nz('bandpass',120,600,1.4,.5,0,.8); tone('sawtooth',62,30,1.6,.25);
+  shake(34); flash('#bff0ff',.35,300); stage.animate([{filter:'none'},{filter:'blur(1.5px) brightness(1.2)'},{filter:'none'}],{duration:500});
+  const r=el.getBoundingClientRect(), mx=r.left+r.width*296/320*.98, my=r.top+r.height*72/220;
+  for (let k=0;k<6;k++) setTimeout(()=>ring(mx,my,{r:20,vr:900,life:.8,w:7-k,color:k%2?'#ffffff':'#3fb6ff'}), k*110);
+  for (let k=0;k<16;k++){ const a=-.5+k/15; LINES.push({x1:mx+Math.cos(a)*40,y1:my+Math.sin(a)*40,x2:mx+Math.cos(a)*Math.max(W,H),y2:my+Math.sin(a)*Math.max(W,H),t:0,delay:k*.02,life:.6,draw:.12,color:'#bff0ff',w:1.5}); }
+  emit(.7,()=>{ for (let j=0;j<16*FXQ;j++) part({x:mx,y:my,vx:rnd(500,1100),vy:rnd(-160,240),drag:.94,life:rnd(.4,.8),size:rnd(8,20),mode:'bfire'}); });
+  await wait(900);
+  el.animate([{transform:'none',opacity:1},{transform:'translate(30vw,-20vh) scale(1.3)',opacity:0}],{duration:420,easing:'ease-in',fill:'forwards'});
+  setTimeout(()=>el.remove(),460);
+  await wait(250);
 }
 // a running ninja in silhouette: hood, red headband tails, katana on the back, kunai in hand
 function ninjaSvg(c='#0c0f1a'){
@@ -3216,7 +3309,7 @@ function cpuCardChoice(p){
     if (corner!==undefined) return {target:corner};
     if (om.length && Math.random()<.2){ const best=om.slice().sort((x,y)=>W8(y)-W8(x))[0]; if (W8(best)>=15 && best<64) return {target:best}; }
   } else if (el==='king'){
-    if (Math.random()<.45) return {};
+    if (Math.random()<.6) return {};
   } else if (el==='rock'){
     if (Math.random()<.3) return {};
   } else if (el==='ninja'){
@@ -3579,9 +3672,10 @@ function buildHelp(){
   body.innerHTML = `<ul class="h-rules">
     <li>対局の最初に、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
-    <li>星と岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。<strong>王は残り${LATE+KING_EARLY}以下</strong>から使えます。</li>
+    <li>星と岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。<strong>王は序盤・中盤・終盤にそれぞれ1回ずつ</strong>使えます（空きマス41以上が序盤、21〜40が中盤、20以下が終盤）。</li>
     <li>カードが使えるようになると、カードが光って知らせます。</li>
-    <li><strong>忍は自分の手番が3回終わったら</strong>、<strong>竜は空きマス残り${DRAGON_OPEN}以下の中盤</strong>から使えます。</li>
+    <li><strong>忍は自分の手番が3回終わってから前半のあいだだけ</strong>、<strong>竜は空きマス残り${DRAGON_OPEN}以下の中盤</strong>から使えます。</li>
+    <li>スマホでは、カードやパッシブを長押しすると詳しい説明が開きます。</li>
     <li>CPUの強さが魔導士以上だと、CPUがまれに<strong>時属性</strong>を使ってきます（プレイヤーは選べません）。</li>
     <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
     <li>星の<strong>星座封印</strong>を受けると、2ターンのあいだパッシブもカードも使えません。</li>
@@ -3611,6 +3705,7 @@ addEventListener('keydown',e=>{ if (e.key==='Escape' && !$('helpBox').hidden) cl
 /* ---------- controls ---------- */
 for (const p of [1,2]){
   $('card'+p).addEventListener('click',()=>{
+    if (suppressCardClick){ suppressCardClick=false; return; }
     if (aim===p){ aim=0; aimSel=null; render(); return; }
     if (!canCard(p)) return;
     ac();
@@ -3757,7 +3852,32 @@ paintTitle();
 
 function openModal(id){ $(id).hidden=false; uiSfx('open'); const f=$(id).querySelector('.gbtn'); if (f) f.focus(); }
 function closeModal(id){ if (!$(id).hidden){ $(id).hidden=true; uiSfx('close'); } }
-function closeModals(){ ['menu','settings'].forEach(closeModal); }
+function closeModals(){ ['menu','settings','skillInfo'].forEach(closeModal); }
+function showSkillInfo(p, kind){
+  if (phase!=='play') return;
+  const el=cfg.el[p], E=ELS[el], C = kind==='card' ? CARDS[el] : PASSIVES[el];
+  $('siKind').textContent=`${roleOf(p)}・${E.name}　${kind==='card'?'必殺技カード':'パッシブ'}`;
+  const nm=$('siName'); nm.textContent=C.name; nm.style.fontFamily=E.font||''; nm.style.color=tint(p);
+  $('siDesc').textContent=C.desc;
+  const blk=kind==='card' ? cardBlock(p) : '';
+  $('siState').textContent = kind==='card' ? `${usesLabel(p)}　${blk || '使用可能'}` : pasState(p);
+  $('skillInfo').querySelector('.m-panel').style.setProperty('--ec', tint(p));
+  openModal('skillInfo');
+}
+// press and hold a card or passive to read it in full (narrow screens hide the text)
+let pressT=null, pressAt=null, suppressCardClick=false;
+function holdToRead(elm, fn){
+  elm.addEventListener('pointerdown',e=>{
+    clearTimeout(pressT); pressAt=[e.clientX,e.clientY];
+    pressT=setTimeout(()=>{ suppressCardClick=true; setTimeout(()=>{ suppressCardClick=false; },700); fn(); }, 450);
+  });
+  elm.addEventListener('pointermove',e=>{ if (pressAt && Math.hypot(e.clientX-pressAt[0],e.clientY-pressAt[1])>10) clearTimeout(pressT); });
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>elm.addEventListener(ev,()=>clearTimeout(pressT)));
+  elm.addEventListener('contextmenu',e=>e.preventDefault());
+}
+for (const p of [1,2]){ holdToRead($('card'+p),()=>showSkillInfo(p,'card')); holdToRead($('pas'+p),()=>showSkillInfo(p,'pas')); }
+$('siClose').addEventListener('click',()=>closeModal('skillInfo'));
+$('skillInfo').addEventListener('click',e=>{ if (e.target.id==='skillInfo') closeModal('skillInfo'); });
 $('menuBtn').addEventListener('click',()=>openModal('menu'));
 $('hudSet').addEventListener('click',()=>openModal('settings'));
 $('mResume').addEventListener('click',()=>closeModal('menu'));
