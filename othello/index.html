@@ -85,7 +85,8 @@ h1{
 .role{font-size:11px;letter-spacing:.2em;color:var(--muted)}
 .ename{font-family:var(--f-body);font-weight:700;font-size:20px}
 .count{font-family:var(--f-latin);font-weight:700;font-size:42px;line-height:1;font-variant-numeric:tabular-nums;color:var(--ec);text-shadow:0 0 14px color-mix(in srgb,var(--ec) 60%,transparent)}
-.who{font-size:12px;color:var(--muted);min-height:1.2em}
+.who{max-width:100%;padding:3px 14px;border-radius:999px;font-family:var(--f-display);font-size:15px;letter-spacing:.04em;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:color-mix(in srgb,var(--ec) 16%,#000a);border:1px solid color-mix(in srgb,var(--ec) 55%,transparent);text-shadow:0 0 8px color-mix(in srgb,var(--ec) 60%,transparent)}
+.who:empty{display:none}
 .sel{display:grid;gap:4px;font-size:11px;letter-spacing:.14em;color:var(--muted);width:100%}
 select,button{
   font:inherit;font-size:14px;color:var(--ink);
@@ -666,6 +667,13 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .scene.shutter .bot{bottom:0;transform:translateY(102%);border-top:12px solid #ffc400;border-image:repeating-linear-gradient(45deg,#ffc400 0 16px,#141414 16px 32px) 12}
 .scene.shutter .sh-k{position:absolute;left:50%;top:50%;opacity:0;font-family:"Train One","Dela Gothic One",sans-serif;font-size:min(42vw,42vh);line-height:1;color:#e8eef5;-webkit-text-stroke:3px #2a3038;text-shadow:0 0 30px #8fd0ff,0 8px 0 #1a1e24}
 
+/* VS banner when both players are in the room */
+.vsban{position:fixed;left:0;right:0;top:calc(50% - 40px);z-index:7;pointer-events:none;display:flex;justify-content:center;align-items:center;gap:clamp(10px,3vw,24px);padding:16px;
+  background:linear-gradient(90deg,transparent,#0a0614e6 18%,#0a0614e6 82%,transparent);border-top:1px solid #ffd34d88;border-bottom:1px solid #ffd34d88;
+  font-family:var(--f-display);font-size:clamp(20px,5vw,36px);color:#fff}
+.vsban span{max-width:36vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 0 12px #cbb8ff}
+.vsban b{font-family:"Black Ops One",var(--f-latin);font-weight:400;font-size:1.3em;color:#ffd34d;text-shadow:0 0 16px #ffd34d,0 3px 0 #000}
+
 /* profile */
 #settings .m-panel{max-height:calc(100vh - 32px);overflow:auto}
 .prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
@@ -726,7 +734,7 @@ html.lite .disc{filter:none!important}
   .count{font-size:32px;grid-row:span 2;justify-self:end}
   .meta{min-width:0}
   .ename{font-size:16px}
-  .who{display:none}
+  .who{grid-column:1/-1;justify-self:start;font-size:13px;padding:2px 12px}
   .sel{grid-column:1/-1}
   .card,.pas{grid-column:1/-1}
   .board-wrap{width:100%;min-width:0}
@@ -829,10 +837,10 @@ html.lite .disc{filter:none!important}
 
   <section class="arena">
     <aside class="side" data-p="1" id="side1">
+      <div class="who" id="who1"></div>
       <div class="sigil" id="sig1">闇</div>
       <div class="meta"><div class="role">先手</div><div class="ename" id="name1">闇属性</div></div>
       <div class="count" id="count1">2</div>
-      <div class="who" id="who1"></div>
       <div class="pas" id="pas1"><span class="p-top"><span>パッシブ</span><span class="p-state"></span></span><span class="p-name"></span><span class="p-desc"></span></div>
       <button class="card" id="card1" type="button">
         <span class="c-top"><span>必殺技カード</span><span class="c-uses"></span></span>
@@ -865,10 +873,10 @@ html.lite .disc{filter:none!important}
     </div>
 
     <aside class="side" data-p="2" id="side2">
+      <div class="who" id="who2"></div>
       <div class="sigil" id="sig2">光</div>
       <div class="meta"><div class="role">後手</div><div class="ename" id="name2">光属性</div></div>
       <div class="count" id="count2">2</div>
-      <div class="who" id="who2"></div>
       <div class="pas" id="pas2"><span class="p-top"><span>パッシブ</span><span class="p-state"></span></span><span class="p-name"></span><span class="p-desc"></span></div>
       <button class="card" id="card2" type="button">
         <span class="c-top"><span>必殺技カード</span><span class="c-uses"></span></span>
@@ -1949,7 +1957,7 @@ function render(){
   for (const p of [1,2]){
     const side=$('side'+p), cb=$('card'+p), pb=$('pas'+p);
     $('count'+p).textContent = p===1?a:w;
-    $('who'+p).textContent = online() ? (net.side ? (net.side===p ? (myName()||'あなた') : (net.opp ? (oppName()||'相手') : (phase==='play' ? '復帰待ち…' : '待機中…'))) : '') : cpuSide()===p ? 'CPU' : (cfg.mode==='pvp' ? `プレイヤー${p}` : (myName()||'あなた'));
+    $('who'+p).textContent = online() && net.side && net.side!==p && !net.opp ? (phase==='play' ? '復帰待ち…' : '待機中…') : nameOf(p);
     cb.hidden = pb.hidden = !play;
     side.classList.toggle('hushed', play && isHushed(p));
     if (!play){
@@ -3916,9 +3924,25 @@ try { ME=sessionStorage.getItem('eo-me')||''; } catch(e){}
 if (!ME){ ME='t'+Math.random().toString(36).slice(2,10)+Date.now().toString(36); try{ sessionStorage.setItem('eo-me',ME); }catch(e){} }
 const net={kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],peer:null,conn:null,shared:null,readOnly:false,names:{},pending:null,tries:0,retryT:0,joinT:0};
 const oppName = () => cleanName((net.names||{})[3-net.side]);
+function nameOf(p){
+  if (online()) return !net.side ? '' : net.side===p ? (myName()||'あなた') : (oppName()||'相手');
+  return cpuSide()===p ? 'CPU' : cfg.mode==='pvp' ? `プレイヤー${p}` : (myName()||'あなた');
+}
+const san = n => n ? `${n}さん` : '相手';
+function showVs(){
+  const el=document.createElement('div'); el.className='vsban';
+  el.innerHTML='<span></span><b>VS</b><span></span>';
+  const [a,b]=el.querySelectorAll('span'); a.textContent=nameOf(1); b.textContent=nameOf(2);
+  a.style.color=b.style.color='#fff';
+  document.body.appendChild(el);
+  el.animate([{opacity:0,transform:'scale(1.4)'},{opacity:1,transform:'scale(1)',offset:.15},{opacity:1,transform:'scale(1)',offset:.82},{opacity:0,transform:'scale(.96)'}],{duration:2400,fill:'forwards'});
+  setTimeout(()=>el.remove(),2500);
+  if (cfg.sound){ bell(784,.8,.06); bell(1174.7,.9,.05,.12); }
+}
 function announceName(){ if (net.kind && net.side) netWrite({names:{[net.side]:myName()}, updated:Date.now()}); }
 const netMsgEl=$('netMsg');
 function netMsg(html){ netMsgEl.innerHTML=html; }
+const esc = t => String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function defaultNetMsg(){
   netMsg('ひとりが4桁の数字を決めて<strong>部屋を作る</strong>。もうひとりが同じ数字を入れて<strong>部屋に入る</strong>。それぞれ自分の端末でこのページを開いてください。');
 }
@@ -3988,7 +4012,10 @@ function onNet(d){
   net.opp=!!(seats[1] && seats[2]);
   net.names = d.names && typeof d.names==='object' ? d.names : {};
   const inGame = d.phase==='play' || phase==='play';
-  if (net.opp && !hadOpp) toast(inGame ? `${oppName()||'相手'}が対戦に戻ってきました` : '相手が入室しました。属性を選んでください');
+  if (net.opp && !hadOpp){
+    if (inGame) toast(`${san(oppName())}が対戦に戻ってきました`);
+    else { toast(net.side===1 ? `${san(oppName())}が入室しました。属性を選んでください` : `${oppName() ? san(oppName())+'の' : ''}部屋に入りました。属性を選んでください`); showVs(); }
+  }
   if (!net.opp && hadOpp) toast(inGame ? '相手との接続が切れました。戻ってくるのを待っています' : '相手が退出しました');
   syncPhase(d);
   if ((d.seq||0) > net.seq && validDoc(d)){ net.seq=d.seq; net.queue.push(clone(d)); drainNet(); }
@@ -4023,7 +4050,7 @@ function paintNetStatus(){
   if (!net.kind) return;
   const tail = phase==='play' ? `（<strong>${ELS[cfg.el[net.side]].k}</strong>）` : '';
   netMsg(net.opp
-    ? `部屋 <strong>${net.code}</strong> で対戦中。あなたは${roleOf(net.side)}${tail}です。`
+    ? `部屋 <strong>${net.code}</strong> で対戦中。対戦相手：<strong>${esc(oppName()||'名前なし')}</strong>　あなたは${roleOf(net.side)}${tail}です。`
     : phase==='play'
       ? `部屋 <strong>${net.code}</strong>：相手の復帰を待っています…（相手が同じ端末でページを開き直し、「続きから」を押すと戻れます）`
       : `部屋 <strong>${net.code}</strong> を作りました。相手が同じ数字で「部屋に入る」を押すのを待っています…`);
