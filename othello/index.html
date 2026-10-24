@@ -674,11 +674,50 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .vsban span{max-width:36vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 0 12px #cbb8ff}
 .vsban b{font-family:"Black Ops One",var(--f-latin);font-weight:400;font-size:1.3em;color:#ffd34d;text-shadow:0 0 16px #ffd34d,0 3px 0 #000}
 
+/* 母なる大地: the frame squares you can raise a rock on */
+#board.ext .cell.ring.pick{visibility:visible;cursor:pointer;border-radius:30%;border:2px dashed #d0a066;background:#d0a06622;animation:pickPulse 1s ease-in-out infinite}
+#board.ext .cell.ring.pick:hover{background:#d0a06666;border-style:solid}
+@keyframes pickPulse{50%{background:#d0a06644;box-shadow:0 0 12px #d0a06688}}
+/* a rock you can play on: a bright cyan target instead of the dim dot */
+#board.ext .cell.ring.rock.hint::before{inset:16%;opacity:1;background:radial-gradient(circle,#ffffff 0 22%,#7cf7ff 34%,#00c8ff55 52%,transparent 64%);
+  box-shadow:0 0 0 3px #00e1ff,0 0 16px #00e1ff,inset 0 0 8px #00e1ff;animation:rockHint 1s ease-in-out infinite}
+#board.ext .cell.ring.rock.hint:hover::before{inset:10%}
+@keyframes rockHint{50%{box-shadow:0 0 0 3px #ffffff,0 0 26px #00e1ff,inset 0 0 12px #00e1ff;transform:scale(1.08)}}
+/* stones sealed by 地獄門 */
+.cell.hexed .disc{filter:saturate(.35) brightness(.7);box-shadow:inset 0 0 0 3px #6a1fd0,0 0 14px #a259ff!important}
+.cell.hexed::before{content:"封";position:absolute;right:1px;top:-2px;z-index:5;pointer-events:none;font-family:var(--f-display);font-size:clamp(9px,1.8vw,14px);color:#f0dcff;text-shadow:0 0 6px #a259ff,0 0 10px #a259ff,0 0 2px #000}
+
 /* profile */
 #settings .m-panel{max-height:calc(100vh - 32px);overflow:auto}
 .prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
 .prof input,.prof select{width:150px;padding:8px 10px;border-radius:8px;border:1px solid #8a744499;background:#0f0b1a;color:var(--ink);font:inherit;font-size:14px}
 .prof input:focus,.prof select:focus{outline:2px solid #cbb8ff;outline-offset:1px}
+.prof{gap:10px}
+#profile .m-panel,#friends .m-panel,#friendProf .m-panel,#favPick .m-panel{max-height:calc(100vh - 32px);overflow:auto}
+.p-fav b,.p-fav b{font-family:var(--f-display);font-weight:400;color:var(--ec);text-shadow:0 0 8px color-mix(in srgb,var(--ec) 60%,transparent)}
+.fav-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.fav-tile{--ec:#fff;display:grid;justify-items:center;gap:2px;padding:10px 4px 8px;border-radius:12px;cursor:pointer;font:inherit;color:var(--ink);
+  border:1px solid color-mix(in srgb,var(--ec) 40%,#ffffff1a);background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--ec) 18%,transparent),transparent 70%),linear-gradient(180deg,#241e36,#141020);
+  box-shadow:inset 0 1px 0 #ffffff14,0 6px 14px #0007;transition:transform .15s,box-shadow .15s}
+.fav-tile:hover{transform:translateY(-2px);box-shadow:0 0 16px -2px var(--ec)}
+.fav-tile b{font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1.1;color:var(--ec);text-shadow:0 0 12px var(--ec)}
+.fav-tile span{font-size:11px;color:var(--muted)}
+.fav-tile.on{border-color:var(--ec);box-shadow:0 0 0 2px var(--ec),0 0 18px -2px var(--ec)}
+.fr-note{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
+.fr-list{display:grid;gap:8px}
+.fr-item{--ec:#fff;display:flex;align-items:center;gap:8px}
+.fr-main{flex:1;min-width:0;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;padding:8px 12px;border-radius:12px;cursor:pointer;font:inherit;color:var(--ink);
+  border:1px solid color-mix(in srgb,var(--ec) 40%,#ffffff1a);background:linear-gradient(180deg,#241e36,#141020)}
+.fr-main:hover{box-shadow:0 0 14px -2px var(--ec)}
+.fr-k{grid-row:span 2;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--ec);font-family:var(--f-display);font-weight:400;font-size:19px;color:var(--ec);text-shadow:0 0 8px var(--ec)}
+.fr-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-sub{font-size:11px;color:var(--muted)}
+.fr-inv{flex:none;min-width:84px}
+.fp-name{font-family:var(--f-display);font-size:24px;color:#fff;overflow-wrap:anywhere}
+.fp-status{font-size:11px;color:var(--muted);min-height:1em}
+.ask-text{margin:0;font-size:15px;line-height:1.7;text-align:center;color:var(--ink)}
+.fr-row{justify-content:center}
+.fr-row:not(:has(button:not([hidden]))){display:none}
 .p-head{display:flex;align-items:center;gap:14px}
 .p-sig{--ec:#cbb8ff;flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--ec);
   box-shadow:0 0 18px -2px var(--ec),inset 0 0 18px -6px var(--ec);font-family:var(--f-display);font-size:32px;color:var(--ec);text-shadow:0 0 12px var(--ec);background:radial-gradient(circle,#ffffff08,transparent 70%)}
@@ -811,9 +850,10 @@ html.lite .disc{filter:none!important}
       </div>
       <button class="gbtn" id="tPvp" type="button">ふたりで対戦<small>この画面で交代しながら</small></button>
       <button class="gbtn" id="tNet" type="button">ネット対戦<small>4桁の合言葉で友だちと</small></button>
+      <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.20</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.22</div>
   </div>
 </div>
 
@@ -823,6 +863,7 @@ html.lite .disc{filter:none!important}
     <button class="gbtn primary" id="mResume" type="button">対局に戻る</button>
     <button class="gbtn" id="newgame" type="button">新しい対局（属性選択から）</button>
     <button class="gbtn" id="mGuide" type="button">スキル図鑑</button>
+    <div class="seg" style="--n:2"><button class="gbtn" id="mProf" type="button">プロフィール</button><button class="gbtn" id="mFriends" type="button">フレンド</button></div>
     <button class="gbtn" id="mSettings" type="button">設定</button>
     <button class="gbtn" id="mTitle" type="button">タイトルへ戻る</button>
   </div>
@@ -839,25 +880,56 @@ html.lite .disc{filter:none!important}
 <div id="settings" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="setTitle">
   <div class="m-panel">
     <div class="m-title" id="setTitle">SETTINGS</div>
-    <div class="prof">
-      <div class="t-label">PROFILE</div>
-      <div class="p-head">
-        <div class="p-sig" id="pSig">？</div>
-        <div class="p-id">
-          <label class="p-namebox"><small>プレイヤー名（ネット対戦の相手にも表示）</small><input id="pName" maxlength="12" placeholder="名前を入力" autocomplete="nickname"></label>
-          <div class="p-fav" id="pFavName"></div>
-        </div>
-      </div>
-      <div class="p-lab"><span class="t-label">属性ごとの勝利数</span><small>タップで好きな属性に</small></div>
-      <div class="p-wins" id="pWins"></div>
-      <div class="p-total" id="pTotal"></div>
-      <div class="p-legend"><i class="lb"></i>10勝 銅<i class="ls"></i>20勝 銀<i class="lg"></i>30勝 金</div>
-    </div>
     <div class="m-row"><span>効果音</span><button class="gbtn" id="snd" type="button">ON</button></div>
     <div class="m-row"><span>BGM</span><button class="gbtn" id="bgm" type="button">ON</button></div>
     <div class="m-row"><span>省ドパモード<small>エフェクトを最小限にする</small></span><button class="gbtn" id="lite" type="button">OFF</button></div>
-    <button class="gbtn" id="demo" type="button">角の必殺技を見る</button>
     <button class="gbtn primary" id="setClose" type="button">閉じる</button>
+  </div>
+</div>
+<div id="profile" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="profTitle">
+  <div class="m-panel prof">
+    <div class="m-title" id="profTitle">PROFILE</div>
+    <label class="p-namebox"><small>プレイヤー名（ネット対戦の相手にも表示）</small><input id="pName" maxlength="12" placeholder="名前を入力" autocomplete="nickname"></label>
+    <div class="m-row"><span>好きな属性<small class="p-fav" id="pFavName">未設定</small></span><button class="gbtn" id="pFavBtn" type="button">好きな属性を選ぶ</button></div>
+    <div class="p-lab"><span class="t-label">属性ごとの勝利数</span><small>ネット対戦のみ記録</small></div>
+    <div class="p-wins" id="pWins"></div>
+    <div class="p-total" id="pTotal"></div>
+    <div class="p-legend"><i class="lb"></i>10勝 銅<i class="ls"></i>20勝 銀<i class="lg"></i>30勝 金</div>
+    <button class="gbtn primary" id="profClose" type="button">閉じる</button>
+  </div>
+</div>
+<div id="favPick" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="favTitle">
+  <div class="m-panel">
+    <div class="m-title" id="favTitle">好きな属性</div>
+    <div class="fav-grid" id="favGrid"></div>
+    <div class="seg" style="--n:2"><button class="gbtn" id="favNone" type="button">選ばない</button><button class="gbtn primary" id="favClose" type="button">閉じる</button></div>
+  </div>
+</div>
+<div id="friends" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="frTitle">
+  <div class="m-panel">
+    <div class="m-title" id="frTitle">FRIENDS</div>
+    <p class="fr-note" id="frNote"></p>
+    <div class="fr-list" id="frList"></div>
+    <button class="gbtn primary" id="frClose" type="button">閉じる</button>
+  </div>
+</div>
+<div id="friendProf" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="fpName">
+  <div class="m-panel prof">
+    <div class="t-label">PROFILE</div>
+    <div class="fp-name" id="fpName"></div>
+    <div class="p-fav" id="fpFav"></div>
+    <div class="p-wins" id="fpWins"></div>
+    <div class="p-total" id="fpTotal"></div>
+    <div class="fp-status" id="fpStatus"></div>
+    <div class="seg" style="--n:2"><button class="gbtn" id="fpRemove" type="button">フレンドから外す</button><button class="gbtn primary" id="fpClose" type="button">閉じる</button></div>
+  </div>
+</div>
+<div id="ask" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="askTitle">
+  <div class="m-panel">
+    <div class="m-title" id="askTitle"></div>
+    <p class="ask-text" id="askText"></p>
+    <div class="seg" style="--n:2"><button class="gbtn primary" id="askYes" type="button">承認</button><button class="gbtn" id="askNo" type="button">断る</button></div>
+    <button class="gbtn" id="askCancel" type="button" hidden>やめる</button>
   </div>
 </div>
 <div id="toast"></div>
@@ -942,6 +1014,7 @@ html.lite .disc{filter:none!important}
       <button class="gbtn" id="leave" type="button" hidden>退出</button>
     </div>
     <p class="net-msg" id="netMsg"></p>
+    <div class="online-row fr-row"><button class="gbtn" id="friendReq" type="button" hidden>フレンド申請</button><button class="gbtn" id="inviteBtn" type="button" hidden>フレンドを招待</button></div>
   </section>
 </main>
 
@@ -1006,10 +1079,21 @@ try { const s = JSON.parse(localStorage.getItem('elemental-othello-cfg')||'null'
 function saveCfg(){ try { localStorage.setItem('elemental-othello-cfg', JSON.stringify(cfg)); } catch(e){} }
 // the player on this device: a name, a favourite element and wins per element
 const PROF_KEY='elemental-othello-profile', RESUME_KEY='elemental-othello-resume';
-let prof={name:'', fav:'', wins:{}, plays:{}};
-try { const s=JSON.parse(localStorage.getItem(PROF_KEY)||'null'); if (s && typeof s==='object') prof={name:String(s.name||'').slice(0,12), fav:String(s.fav||''), wins:Object.assign({},s.wins||{}), plays:Object.assign({},s.plays||{})}; } catch(e){}
-function saveProf(){ try { localStorage.setItem(PROF_KEY, JSON.stringify(prof)); } catch(e){} }
 const cleanName = v => String(v||'').replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,12);
+let prof={v:2, id:'', name:'', fav:'', wins:{}, plays:{}, friends:[]};
+try {
+  const s=JSON.parse(localStorage.getItem(PROF_KEY)||'null');
+  if (s && typeof s==='object'){
+    prof.id=/^[A-Za-z0-9_-]{4,64}$/.test(s.id||'') ? s.id : '';
+    prof.name=cleanName(s.name); prof.fav=String(s.fav||'');
+    // earlier versions counted CPU games too; the count restarts with online games only
+    if (s.v===2){ prof.wins=Object.assign({},s.wins||{}); prof.plays=Object.assign({},s.plays||{}); }
+    prof.friends=Array.isArray(s.friends) ? s.friends.filter(f=>f && /^[A-Za-z0-9_-]{4,64}$/.test(f.id||'')) : [];
+  }
+} catch(e){}
+if (!prof.id) prof.id='d'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+function saveProf(){ try { localStorage.setItem(PROF_KEY, JSON.stringify(prof)); } catch(e){} }
+saveProf();
 const myName = () => cleanName(prof.name);
 
 let board, turn, busy = false, over = false, lastMove = -1, gen = 0;
@@ -1018,7 +1102,7 @@ let pas = {1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}}, p
 let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, quake = 0, curses = [], winOverride = 0, winReason = '', prot = [];
 let prevBlock = {1:null,2:null};
 let hidden = [], lastPlace = null, predict = null, aimSel = null, sneakyIdx = -1;
-let steel = [], rust = [];
+let steel = [], rust = [], rockPick = null, rockT = 0;
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
@@ -1730,41 +1814,43 @@ const THUNDER_EARLY = 10; // 雷帝 unlocks ten squares before light/dark
 const KING_EARLY = 3;     // ロイヤルアーツ unlocks three squares before light/dark
 const STAR_LINE = 7;     // 星座封印 needs this many in a row across or down
 const STAR_DIAG = 6;     // ...and this many on a diagonal
-const STEEL_N = 4;       // 堅牢の極意 takes this many stones
+const STEEL_N = 3;       // 堅牢の極意 takes this many stones
+const SERAPH_N = 25;     // 熾天使の契り wakes after this many flips
+const DRAGON_LOCK = 5;   // after one 暴虐, the other waits this many of the dragon's turns
 const GOUKETSU_N = 2;    // 豪傑 knocks down this many more
 const NINJA_OPEN = 3;     // 神出鬼没 unlocks after the ninja's third turn
 const DRAGON_OPEN = 44;  // 暴虐 unlocks in the midgame
 const TIME_OPEN = 36;    // 秒針自在 unlocks at the end of the midgame
 const CARDS = {
   light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。' },
-  dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:3, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。' },
+  dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:3, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。さらに相手の石2枚に封印をかけ、相手の次の2ターンのあいだ、挟むための石として使えなくする。' },
   fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:0,      desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。5ターンに1回使える。' },
   thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
   star:    { name:'流星群',                 sub:'METEOR SHOWER',      uses:1,      desc:'空きマス3つに流れ星が落ちて自分の石になる（挟めば裏返す）。さらに相手の石1枚をランダムに自分の色に変える。' },
   king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から旗で指定する。序盤・中盤・終盤にそれぞれ1回ずつ使える。角を指定できるのは1回だけ。' },
   rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石のうち、半分を盤のどこかへ、残り半分を画面の外へ吹き飛ばす。' },
   ninja:   { name:'神出鬼没',               sub:'NOW YOU SEE ME',     uses:2,      desc:'自分の石1つと相手の石1つを選び、位置を入れ替える。前半のみ使える。' },
-  dragon:  { name:'暴虐',                   sub:'TYRANNY',            uses:1,      desc:'荒ぶる蒼炎が、選んだ直線上の石をすべて焼き払って消し去る。その直線には2ターンのあいだ誰も置けない。' },
+  dragon:  { name:'暴虐',                   sub:'TYRANNY',            uses:2,      desc:'荒ぶる蒼炎で石を焼き払って消し去り、そのマスには2ターンのあいだ誰も置けない。「直線」（選んだ直線すべて）と「正方形」（選んだマスとまわり8マス）を1回ずつ使える。片方を使うと、もう片方はそのあと5ターン使えない。' },
   oni:     { name:'鉄血粉砕',               sub:'IRON-BLOOD CRUSH',   uses:1,      desc:'マスを1つ選んで金棒を振り下ろし、そのマスとまわり8マスにいる相手の石をすべて自分の色に変える。反動で豪傑はそのターンと続く2ターン休む。' },
-  steel:   { name:'堅牢の極意',             sub:'ART OF THE IRONCLAD', uses:1,     desc:'相手の石を4つ選んで鋼で覆い、自分の色に変える。鋼の石は二度と裏返らず、スキルでも動かない。' },
+  steel:   { name:'堅牢の極意',             sub:'ART OF THE IRONCLAD', uses:1,     desc:'相手の石を3つ選んで鋼で覆い、自分の色に変える。鋼の石は二度と裏返らず、スキルでも動かない。' },
   time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が1ターン選べなくなる。' },
 };
 const PASSIVES = {
-  light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計20枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、置ける場所3つにつき1マス（最低1マス）を鎖で封じる。' },
+  light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計25枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、置ける場所3つにつき1マス（最低1マス）を鎖で封じる。' },
   dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の画面が1ターン真っ暗に。置ける場所だけは見える。' },
   fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'毎ターン、置いた石は相手の2ターンのあいだ裏返らず、スキルも効かない。' },
   thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前のターンに裏返した枚数×3%。' },
   star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦か横に7つ、または斜めに6つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
   king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王の上下左右4マスすべてと、斜め4マスのうち2マスが相手の石になると負け。まわり8マスすべてが味方になると勝ち。' },
-  rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'盤の外周36マスのうち3マスに岩が現れ、岩には自分だけが石を置ける。' },
+  rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'対局開始時に、盤の外周36マスから好きな1マスを選んで岩を置く（5秒以内）。さらに2マスにランダムで岩が現れる。岩には自分だけが石を置ける。' },
   ninja:   { name:'隠密と罠',         sub:'SHADOW TRAP',       desc:'置いた石は相手の次のターンのあいだ相手から見えない。見えない石のマスに置こうとすると罠にかかり、そのターンを失う。' },
-  dragon:  { name:'逆鱗',             sub:"DRAGON'S WRATH",    desc:'自分の石を一度に5枚以上裏返されると怒り状態になる。次に置いたとき、裏返した石の上下左右にいる相手の石も裏返す。' },
+  dragon:  { name:'逆鱗',             sub:"DRAGON'S WRATH",    desc:'自分の石を一度に、前半（空きマス31以上）は4枚以上・後半は5枚以上裏返されると怒り状態になる。次に置いたとき、裏返した石の上下左右にいる相手の石も裏返す。' },
   oni:     { name:'豪傑',             sub:'MIGHTY BRUTE',      desc:'自分の石が盤上の石の3分の1未満のとき、置いた石のまわり8マスにいる相手の石を、さらに2枚までなぎ倒して自分の色に変える。' },
   steel:   { name:'鋼の忠誠',         sub:'IRON LOYALTY',      desc:'相手が鋼の石の隣に石を置くと、その石は錆びつく。相手の次のターンのあいだ、錆びた石は挟むための石として使えない。' },
   time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。' },
 };
 // every key is listed so an online state merge overwrites last game's values instead of keeping them
-const freshSide = () => ({flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0});
+const freshSide = () => ({flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99});
 const freshPas = () => ({1:freshSide(),2:freshSide()});
 const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
 const clone = o => JSON.parse(JSON.stringify(o));
@@ -1779,12 +1865,17 @@ function fireReadyIn(p){
 const PHASES=['序盤','中盤','終盤'];
 const phaseOf = e => e>40 ? 0 : e>20 ? 1 : 2;
 const royalDone = p => (pas[p] && pas[p].royal) || [];
-const cardLeft = p => cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0)
+// 暴虐: which shapes are left, and how long the other one is still cooling down
+const dragonLockLeft = p => { const s=pas[p]||{}; return (s.dLine||s.dSq) && !(s.dLine&&s.dSq) ? Math.max(0, DRAGON_LOCK-((s.turns||0)-(s.dAt??-99))) : 0; };
+function sqCells(c){ const [r,cc]=RC[c], out=[]; for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++){ const rr=r+dr, c2=cc+dc; if (rr>=0&&rr<8&&c2>=0&&c2<8) out.push(rr*8+c2); } return out; }
+const cardLeft = p => cfg.el[p]==='dragon' ? (2-(+!!(pas[p]||{}).dLine)-(+!!(pas[p]||{}).dSq))
+  : cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0)
   : cfg.el[p]==='king' ? (royalDone(p).includes(phaseOf(emptyCount())) ? 0 : 1)
   : Math.max(0, cardOf(p).uses - (used[p]||0));
 function usesLabel(p){
   const el=cfg.el[p];
   if (el==='fire') return '5ターンに1回';
+  if (el==='dragon'){ const s=pas[p]||{}; return `直線${s.dLine?'×':'○'} 正方形${s.dSq?'×':'○'}`; }
   if (el==='king'){ const d=royalDone(p), cur=phaseOf(emptyCount()); return PHASES.map((n,k)=>`${n[0]}${d.includes(k)?'×':k<cur?'－':'○'}`).join(' '); }
   return `残り ${cardLeft(p)} / ${cardOf(p).uses}`;
 }
@@ -1822,6 +1913,10 @@ function cardTimeBlock(p){
     if (cardLeft(p)<=0) return '使い切りました';
     if (e<=LATE) return '前半（空きマス31以上）だけのカード。もう使えません';
     if (t<NINJA_OPEN) return `解禁まで あなたの番 あと${NINJA_OPEN-t}回`;
+  } else if (el==='dragon'){
+    if (cardLeft(p)<=0) return '使い切りました';
+    if (e>DRAGON_OPEN && !((pas[p]||{}).dLine||(pas[p]||{}).dSq)) return `解禁まで あと${e-DRAGON_OPEN}手`;
+    const lk=dragonLockLeft(p); if (lk>0) return `もう一方の暴虐まで あと${lk}ターン`;
   } else if (el==='king'){
     const ph=phaseOf(e);
     if (royalDone(p).includes(ph)) return ph<2 ? `${PHASES[ph]}は使用済み。${PHASES[ph+1]}まで あと${e-(ph===0?40:20)}手` : '終盤も使用済み';
@@ -1866,6 +1961,11 @@ function cardWhen(p){
     return ph<2 ? W(`${PHASES[ph+1]}で復活まで`,turnsOf(left),false) : W('使い切りました',null,false);
   }
   if (cardLeft(p)<=0) return W('使い切りました',null,false);
+  if (el==='dragon'){
+    if (e>DRAGON_OPEN && !(s.dLine||s.dSq)) return W('解禁まで',turnsOf(e-DRAGON_OPEN),false);
+    const lk=dragonLockLeft(p), left=!s.dLine ? '直線' : '正方形';
+    return lk>0 ? W(`${left}の解禁まで`,lk,false) : W(s.dLine||s.dSq ? `使用可能（${left}）` : '使用可能',null,true);
+  }
   if (el==='ninja'){
     if (e<=LATE) return W('前半のみ・使用期間終了',null,false);
     if (t<NINJA_OPEN) return W('解禁まで',NINJA_OPEN-t,false);
@@ -1884,14 +1984,14 @@ const canCard = p => cardAllowed(p) && isLocalTurn(p);
 function pasState(p){
   const el=cfg.el[p], s=pas[p]||{};
   if (isHushed(p)) return `封印中（あと${hush.left}）`;
-  if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(20,s.flips||0)} / 20`;
+  if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(SERAPH_N,s.flips||0)} / ${SERAPH_N}`;
   if (el==='fire') return '毎ターン発動';
   if (el==='thunder') return `次ターン ${Math.round(jinraiChance(s)*100)}%`;
   if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${hush.left}）` : `縦横${STAR_LINE}・斜め${STAR_DIAG}で発動`;
   if (el==='king') return kings[p]>=0 ? '王 健在' : kings[p]===-2 ? '王冠を失った' : '最初の石が王に';
   if (el==='rock'){ let n=0; for (let i=64;i<N;i++) if (board[i]===0) n++; return `空いている岩 ${n}`; }
   if (el==='ninja') return hidden.some(h=>h.owner===p) ? '隠密中' : '置いた石を隠す';
-  if (el==='dragon') return s.rage ? '逆鱗 発動中' : '5枚返されると発動';
+  if (el==='dragon') return s.rage ? '逆鱗 発動中' : `${emptyCount()>LATE ? 4 : 5}枚返されると発動`;
   if (el==='time') return predict && predict.p===3-p ? '未来を見ている' : '相手の手を予測';
   if (el==='oni') return s.rest>0 ? `反動で休止中（あと${s.rest}）` : oniFierce(board,p) ? '豪傑 発動中' : '石が3分の1未満で発動';
   if (el==='steel'){ const n=steel.filter(x=>x.owner===p && board[x.idx]===p).length; return n ? `鋼の石 ${n}つ` : '鋼の石の隣で発動'; }
@@ -1906,6 +2006,7 @@ function aimOk(i){
   if (k==='steel') return aimSel.picks.includes(i) || (aimSel.picks.length<steelNeed(p) && steelPick(p).includes(i));
   if (k==='ninja') return aimSel.stage===1 ? board[i]===p : (board[i]===3-p && !prot.some(g=>g.idx===i && g.owner===3-p));
   if (k==='dragon'){
+    if (aimSel.mode==='sq') return true;
     if (aimSel.stage===1) return true;
     const f=aimSel.first; if (i===f) return false;
     const [r1,c1]=RC[f], [r2,c2]=RC[i];
@@ -2011,7 +2112,8 @@ function render(){
   const lm = human && !aim ? (viewerSide()===turn && !(forced && forced.p===turn) ? [...new Set([...movesFor(turn),...illusionMoves(turn)])] : movesFor(turn)) : [];
   const dOpts = play && decree && !busy && localSide(decree.by) ? decree.opts : [];
   boardEl.classList.toggle('blind', bv);
-  boardEl.classList.toggle('ext', board.some((v,i)=>i>=64 && v!==-1));
+  boardEl.classList.toggle('ext', board.some((v,i)=>i>=64 && v!==-1) || !!rockPick);
+  const picking = rockPicker();
   boardEl.style.setProperty('--hint', play ? tint(turn) : '#cbb8ff');
   for (let i=0;i<N;i++){
     paintDisc(i); paintDeco(i);
@@ -2024,10 +2126,12 @@ function render(){
     cl.classList.toggle('decree', dOpts.includes(i));
     cl.classList.toggle('last', i===lastMove && !concealed(i) && i!==sneakyIdx);
     cl.classList.toggle('rock', i>=64 && board[i]!==-1);
+    cl.classList.toggle('pick', picking && i>=64);
     cl.classList.toggle('guard', play && guards.some(g=>g.idx===i && board[i]===g.owner));
     cl.classList.toggle('cursed', play && curses.some(c=>c.idx===i && board[i]===c.owner));
     cl.classList.toggle('steel', play && steel.some(x=>x.idx===i && board[i]===x.owner));
-    cl.classList.toggle('rusted', play && rust.some(x=>x.idx===i && board[i]===x.owner) && !concealed(i));
+    cl.classList.toggle('rusted', play && rust.some(x=>x.idx===i && board[i]===x.owner && !x.hex) && !concealed(i));
+    cl.classList.toggle('hexed', play && rust.some(x=>x.idx===i && board[i]===x.owner && x.hex) && !concealed(i));
     cl.tabIndex = (lm.includes(i)||aimable||dOpts.includes(i)) ? 0 : -1;
     flames[i].hidden = !b;
     if (b) paintSeal(i,b);
@@ -2082,11 +2186,12 @@ function render(){
     ? (!net.kind ? '合言葉で部屋に入ってください' : !net.opp ? '相手の参加を待っています' : turn===net.side ? 'あなたの番' : '相手の番')
     : cpuSide()===turn ? 'CPU思考中…' : (cfg.mode==='pvp' ? '' : 'あなたの番');
   let hot = '';
-  if (decree) hot = localSide(decree.by) && !(cfg.mode==='pvp' && false) ? '王命：相手が次に置くマスを指定してください' : '王が次の一手を指定しています…';
+  if (rockPick) hot = rockPicker() ? `母なる大地：岩を置く外周のマスを1つ選んでください（あと${rockLeft}秒）` : '岩属性が岩の場所を選んでいます…';
+  else if (decree) hot = localSide(decree.by) && !(cfg.mode==='pvp' && false) ? '王命：相手が次に置くマスを指定してください' : '王が次の一手を指定しています…';
   else if (bv) hot='ゴーストパレード：置ける場所しか見えない';
   else if (aim && aimSel && aimSel.kind==='oni') hot='金棒を振り下ろすマスを選択（まわり8マスごと砕く）';
   else if (aim && aimSel && aimSel.kind==='steel') hot=`鋼で覆う相手の石を選択（${aimSel.picks.length} / ${steelNeed(aim)}）`;
-  else if (aim && aimSel) hot = aimSel.kind==='fire' ? '燃やすマスを選択（カードをもう一度押すと取り消し）' : aimSel.kind==='ninja' ? (aimSel.stage===1 ? '入れ替える自分の石を選択' : '入れ替える相手の石を選択') : (aimSel.stage===1 ? '蒼炎の起点となるマスを選択' : '焼き払う方向のマスを選択');
+  else if (aim && aimSel) hot = aimSel.kind==='fire' ? '燃やすマスを選択（カードをもう一度押すと取り消し）' : aimSel.kind==='ninja' ? (aimSel.stage===1 ? '入れ替える自分の石を選択' : '入れ替える相手の石を選択') : (aimSel.mode==='sq' ? '焼き払う正方形の中心マスを選択（まわり8マスごと）' : aimSel.stage===1 ? '蒼炎の起点となるマスを選択' : '焼き払う方向のマスを選択');
   else if (forced && forced.p===turn) hot='王命により、置けるマスは1つだけ';
   else if (extra>0) hot='雷帝：もう1手置ける';
   else if (quake>0) hot='岩石巨城：次に置いた石のまわりを押し出す';
@@ -2248,11 +2353,11 @@ function drawGhost(p){
 /* ---------- pure state transitions (shared by local play, CPU and online) ---------- */
 const initBoard = () => { const b=new Array(N).fill(-1); for (let i=0;i<64;i++) b[i]=0; b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
 const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], guards:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0, blind:0, pas:freshPas(),
-  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, steel:[], rust:[], ev:[]});
+  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, steel:[], rust:[], rockPick:null, ev:[]});
 function curState(){
   return {board:board.slice(), turn, over, lastMove, burns:clone(burns), guards:clone(guards), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0, blind, pas:clone(pas),
     kings:{...kings}, hush:hush?{...hush}:null, royal, decree:decree?clone(decree):null, forced:forced?{...forced}:null, quake, curses:clone(curses), winner:0,
-    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, steel:clone(steel), rust:clone(rust), ev:[]};
+    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, steel:clone(steel), rust:clone(rust), rockPick:rockPick?{...rockPick}:null, ev:[]};
 }
 const protS = S => protOf(S.guards, S.kings, S.hush, S.steel||[], S.rust||[]);
 const legalS = (S,p) => legal(S.board,p,S.burns,protS(S),S.hush);
@@ -2263,7 +2368,7 @@ function endTurnS(S,ended){
   S.burns.forEach(b=>{ if (b.kind==='blaze'){ if (b.fresh) b.fresh=false; else b.left--; } else if (b.owner!==ended) b.left--; }); S.burns=S.burns.filter(b=>b.left>0);
   S.hidden=(S.hidden||[]).filter(h=>h.owner===ended);
   // rust holds through its owner's next turn
-  S.rust=(S.rust||[]).filter(r=>{ if (r.owner!==ended) return true; if (r.fresh){ r.fresh=false; return true; } return false; });
+  S.rust=(S.rust||[]).filter(r=>{ if (r.owner!==ended) return true; if (r.fresh){ r.fresh=false; return true; } if (r.n>1){ r.n--; return true; } return false; });
   S.guards.forEach(g=>{ if (g.owner!==ended) g.left--; }); S.guards=S.guards.filter(g=>g.left>0);
   S.curses.forEach(c=>{ if (c.owner!==ended) c.left--; }); S.curses=S.curses.filter(c=>c.left>0);
   if (S.blind===ended) S.blind=0;
@@ -2367,7 +2472,7 @@ function placeS(S,idx,p){
     S.predict=null;
   }
   // 逆鱗: losing five or more stones at once enrages the dragon
-  if (cfg.el[3-p]==='dragon' && f.length>=5 && !hushedS(S,3-p) && !S.pas[3-p].rage){ S.pas[3-p].rage=true; S.ev.push('rage:'+(3-p)); }
+  if (cfg.el[3-p]==='dragon' && f.length>=(counts(S.board)[2]>LATE ? 4 : 5) && !hushedS(S,3-p) && !S.pas[3-p].rage){ S.pas[3-p].rage=true; S.ev.push('rage:'+(3-p)); }
   if (el==='dragon' && ps.rage && !quiet){
     const pr=protS(S), extra=[];
     for (const k of f){ const [r,c]=RC[k]; for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; const n=rr*8+cc; if (S.board[n]===3-p && !pr.some(g=>g.idx===n && g.owner===3-p) && !extra.includes(n)) extra.push(n); } }
@@ -2393,7 +2498,7 @@ function placeS(S,idx,p){
   }
   ps.flips+=f.length; ps.turns++;
   if (!quiet){
-    if (el==='light' && !ps.seraph && ps.flips>=20){ ps.seraph=true; S.ev.push('seraph:'+p); }
+    if (el==='light' && !ps.seraph && ps.flips>=SERAPH_N){ ps.seraph=true; S.ev.push('seraph:'+p); }
     if (el==='fire'){ S.guards.push({idx,owner:p,left:2}); S.ev.push('guard:'+idx); }
     if (el==='dark' && f.length>=4){ S.blind=3-p; S.ev.push('ghost:'+(3-p)); }
     if (el==='thunder') ps.jin=(ps.jin||0)+f.length;
@@ -2434,6 +2539,9 @@ async function commit(S){
   kings=S.kings ? {1:S.kings[1]??-1, 2:S.kings[2]??-1} : {1:-1,2:-1};
   hidden=clone(S.hidden||[]); lastPlace=S.lastPlace?clone(S.lastPlace):null; predict=S.predict?{...S.predict}:null;
   steel=clone(S.steel||[]); rust=clone(S.rust||[]);
+  { const had=!!rockPick; rockPick=S.rockPick && (S.rockPick.p===1||S.rockPick.p===2) ? {p:S.rockPick.p} : null;
+    if (had && !rockPick && phase==='play'){ const rocks=[]; for (let i=64;i<N;i++) if (S.board[i]===0) rocks.push(i); if (rocks.length){ rocks.forEach(i=>cells[i].style.opacity='0'); setTimeout(()=>fxMotherEarth(rocks),300); } }
+    syncRockPick(); }
   hush=S.hush ? {...S.hush} : null; royal=S.royal||0; decree=S.decree ? clone(S.decree) : null; forced=S.forced ? {...S.forced} : null; quake=S.quake||0;
   winOverride=S.winner||0; winReason=S.winReason||'';
   prot=protOf(guards,kings,hush,steel,rust);
@@ -2596,7 +2704,7 @@ function finishDraft(){
   cfg.el={1:picks[1],2:picks[2]};
   phase='play'; coinInfo=null;
   const S=freshState();
-  if (cfg.el[1]==='rock' || cfg.el[2]==='rock') addRocks(S);
+  if (cfg.el[1]==='rock' || cfg.el[2]==='rock') S.rockPick={p:cfg.el[1]==='rock'?1:2};
   if (online() && net.kind){ net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'play', el:{...cfg.el}, coin:null, updated:Date.now()}); }
   resetLocal(S);
   revealFx();
@@ -2613,7 +2721,33 @@ function revealFx(){
 }
 
 /* ---------- moves ---------- */
+// 母なる大地 at the start: whoever plays rock on this device picks one rock square
+const rockPicker = () => rockPick && phase==='play' && !over && (online() ? net.side===rockPick.p && net.opp : cpuSide()!==rockPick.p);
+let rockLeft=0;
+function syncRockPick(){
+  clearInterval(rockT);
+  if (!rockPick || over) return;
+  if (!online() && cpuSide()===rockPick.p){ const g=gen; setTimeout(()=>{ if (g===gen && rockPick) rockChoose(pick([64,71,92,99].filter(i=>i<N))); },900); return; }
+  if (!rockPicker()) return;
+  rockLeft=5; render();
+  rockT=setInterval(()=>{
+    rockLeft--; if (cfg.sound) tone('square',880,880,.05,.05);
+    if (rockLeft<=0){ clearInterval(rockT); const ring=[]; for (let i=64;i<N;i++) ring.push(i); rockChoose(pick(ring)); toast('時間切れ。岩の場所はランダムで決まりました'); }
+    else render();
+  },1000);
+}
+function rockChoose(i){
+  if (!rockPick || !(i>=64 && i<N)) return;
+  clearInterval(rockT);
+  const S=curState(); S.board[i]=0;
+  const ring=[]; for (let k=64;k<N;k++) if (k!==i) ring.push(k);
+  for (const k of shuffle(ring).slice(0,2)) S.board[k]=0;
+  S.rockPick=null; S.ev=[];
+  sendState(S,['rocks',rockPick.p,i]);
+  commit(S);
+}
 function cellClick(i){
+  if (rockPick){ if (rockPicker() && i>=64) rockChoose(i); return; }
   if (decree){
     if (!busy && localSide(decree.by) && decree.opts.includes(i)) decreeChoose(i);
     return;
@@ -2622,6 +2756,7 @@ function cellClick(i){
     if (busy||over||!isLocalTurn(turn)||!aimOk(i)) return;
     const p=aim, k=aimSel.kind;
     if (k==='fire'||k==='oni'){ aim=0; aimSel=null; castCard(p,i); return; }
+    if (k==='dragon' && aimSel.mode==='sq'){ aim=0; aimSel=null; castCard(p,[-1,...sqCells(i)]); return; }
     if (k==='steel'){
       const ps=aimSel.picks, j=ps.indexOf(i);
       if (j>=0) ps.splice(j,1); else ps.push(i);
@@ -2748,7 +2883,13 @@ async function castCard(p, target, remoteS, remoteTargets){
       const {os,n}=skillTargets(S.board,p,pr,el);
       targets=shuffle(os).slice(0,n);
       targets.forEach(i=>S.board[i] = el==='light' ? 0 : p);
-      if (el==='dark') targets.forEach(i=>S.curses.push({idx:i,owner:p,left:1}));
+      if (el==='dark'){
+        targets.forEach(i=>S.curses.push({idx:i,owner:p,left:1}));
+        const pool=[]; for (let i=0;i<64;i++) if (S.board[i]===3-p && !pr.some(g=>g.idx===i && g.owner===3-p)) pool.push(i);
+        const hex=shuffle(pool).slice(0,2);
+        S.rust=S.rust||[]; hex.forEach(i=>{ S.rust=S.rust.filter(x=>x.idx!==i); S.rust.push({idx:i,owner:3-p,n:2,hex:true}); });
+        if (hex.length) targets=[...targets,-1,...hex];
+      }
     }
     else if (el==='fire'){ targets=[target]; S.burns.push({idx:target,owner:p,left:3}); S.pas[p].fireAt=S.pas[p].turns; }
     else if (el==='star'){
@@ -2767,8 +2908,10 @@ async function castCard(p, target, remoteS, remoteTargets){
     else if (el==='rock'){ targets=[]; S.quake=1; }
     else if (el==='ninja'){ const [a,b]=target; targets=[a,b]; S.board[a]=3-p; S.board[b]=p; }
     else if (el==='dragon'){
-      const pr=protS(S); targets=target.slice();
+      const pr=protS(S), sq=target[0]===-1; targets=target.slice();
+      const ps=S.pas[p]; if (sq) ps.dSq=true; else ps.dLine=true; ps.dAt=ps.turns;
       for (const i of targets){
+        if (!(i>=0 && i<64)) continue;
         if (S.board[i]>0 && !pr.some(g=>g.idx===i && g.owner===S.board[i])) S.board[i]=0;
         if (S.board[i]===0){ S.burns=S.burns.filter(b=>b.idx!==i); S.burns.push({idx:i,owner:0,left:2,kind:'blaze',fresh:true}); }
       }
@@ -2834,6 +2977,8 @@ async function playCard(el,p,targets,myGen){
     await wait(700);
     undim(900);
   } else if (el==='dark'){
+    const sep=targets.indexOf(-1), hexed = sep>=0 ? targets.slice(sep+1).filter(i=>i>=0&&i<64) : [];
+    if (sep>=0) targets=targets.slice(0,sep);
     dim('radial-gradient(circle at 50% 50%, rgba(25,0,50,.75), rgba(0,0,0,.95))',350);
     HOLES.push({x:bx,y:by,r:0,tr:r.width*.1,life:3+targets.length*.4,t:0});
     CIRCLES.push({x:bx,y:by,r:0,tr:r.width*.42,rot:0,life:3.4+targets.length*.4,t:0,color:E.c1,k:E.k});
@@ -2851,6 +2996,19 @@ async function playCard(el,p,targets,myGen){
       flipDisc(i,p,1.9,k); flash(E.c1,.25,220); shake(16);
       await wait(380); if (!alive()) return;
     }
+    // the seal: wraiths coil round two of the opponent's stones
+    for (let k=0;k<hexed.length;k++){
+      const i=hexed[k], [x,y]=center(i), cw=cells[i].getBoundingClientRect().width;
+      bolt(bx,by,x,y,'#a259ff',.5,1.6,2);
+      part({x:x-cw,y,vx:cw*2.2,vy:0,drag:.97,life:1.2,size:cw*.5,color:'#cfc2ff',mode:'ghost',wob:2,alpha:.5});
+      for (let j=0;j<3;j++) ring(x,y,{r:cw*.9-j*8,vr:-cw*.5,life:.9,w:3,color:j%2?'#ffffff':'#a259ff'});
+      for (let j=0;j<18*FXQ;j++){ const a=rnd(0,TAU); part({x:x+Math.cos(a)*cw*.7,y:y+Math.sin(a)*cw*.7,vx:-Math.sin(a)*120,vy:Math.cos(a)*120,attract:{x,y,s:5},drag:.94,life:rnd(.5,.9),size:rnd(1.5,3),color:pick(['#a259ff','#e0c8ff'])}); }
+      popText(x,y-cw*.6,'封',E.c1,28,1100);
+      tone('sawtooth',220,90,.5,.06); nz('bandpass',600,200,.4,.2,0,4);
+      discs[i].animate([{filter:'none'},{filter:'saturate(.2) brightness(2) drop-shadow(0 0 10px #a259ff)',offset:.4},{filter:'saturate(.35) brightness(.7)'}],{duration:700});
+      await wait(420); if (!alive()) return;
+    }
+    if (hexed.length) toast(`${CARDS.dark.name}：封印された石は、相手の次の2ターン挟むための石として使えない`);
     await wait(600);
     undim(900);
   } else if (el==='fire'){
@@ -2947,6 +3105,31 @@ async function playCard(el,p,targets,myGen){
     [[ax,ay],[bx2,by2]].forEach(([x,y])=>burst('ninja',x,y,1));
     await wait(500);
     undim(800);
+  } else if (el==='dragon' && targets[0]===-1){
+    // 正方形: the wyvern dives and a blue fireball blasts the 3x3 block
+    const block=targets.slice(1).filter(i=>i>=0&&i<64); if (!block.length) return;
+    dim('radial-gradient(circle at 50% 50%, rgba(10,30,80,.55), rgba(0,4,16,.93))',300);
+    block.forEach(i=>{ cells[i].style.setProperty('--mk',E.c1); cells[i].classList.add('marked'); });
+    await dragonRoar(); if (!alive()) return;
+    const xs=block.map(i=>center(i)), tx=xs.reduce((t,v)=>t+v[0],0)/xs.length, ty=xs.reduce((t,v)=>t+v[1],0)/xs.length;
+    flyDragon(tx-W*.8, ty-H*.6, tx+W*.8, ty+H*.1, 1100, Math.min(W,H)*.55);
+    // the fireball falls from where the dragon passes
+    const fx0=tx-W*.2, fy0=ty-H*.45;
+    emit(.55,(dt,t)=>{ const k=Math.min(1,t/.55), mx=fx0+(tx-fx0)*k*k, my=fy0+(ty-fy0)*k*k; for (let j=0;j<16*FXQ;j++) part({x:mx+rnd(-10,10),y:my+rnd(-10,10),vx:rnd(-60,60),vy:rnd(-60,60),drag:.93,life:rnd(.3,.6),size:rnd(6,14),mode:'bfire'}); part({x:mx,y:my,life:.1,size:26,color:'#e8f8ff'}); });
+    await wait(560); if (!alive()) return;
+    flash('#bff0ff',.6,350); shake(40); roar(.6); tone('sine',60,25,1,.9); nz('lowpass',2400,60,.8,.8);
+    for (let k=0;k<4;k++) ring(tx,ty,{vr:420+k*240,life:.8,w:9-k*2,color:k%2?E.c2:E.c1});
+    for (let j=0;j<160*FXQ;j++){ const a=rnd(0,TAU), sp=rnd(120,700); part({x:tx,y:ty,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-80,g:-80,drag:.92,life:rnd(.5,1.1),size:rnd(5,13),mode:'bfire'}); }
+    block.forEach((i,k)=>{
+      const [cx2,cy2]=center(i);
+      cells[i].classList.remove('marked');
+      if (board[i]>0 && !prot.some(g=>g.idx===i && g.owner===board[i])) vanish(i);
+      for (let j=0;j<20*FXQ;j++) part({x:cx2+rnd(-10,10),y:cy2+rnd(-6,6),vx:rnd(-80,80),vy:rnd(-300,-80),g:-150,drag:.95,life:rnd(.45,.9),size:rnd(5,12),mode:'bfire'});
+      flames[i].hidden=false; flames[i].classList.remove('chain','clock'); flames[i].classList.add('blaze'); flames[i].innerHTML=''; flames[i].textContent='2';
+      sfx('dragon','flip',k);
+    });
+    await wait(1100);
+    undim(900);
   } else if (el==='dragon'){
     const line=targets; if (!line.length) return;
     dim('radial-gradient(circle at 50% 50%, rgba(10,30,80,.55), rgba(0,4,16,.93))',300);
@@ -3920,7 +4103,13 @@ function cpuCardChoice(p){
       let sc=0; for (const k of line){ if (prot.some(g=>g.idx===k && g.owner===board[k])) continue; if (board[k]===3-p) sc+=1+(isCorner(k)?3:0); else if (board[k]===p) sc-=1+(isCorner(k)?3:0); }
       if (sc>bs){ bs=sc; best=line; }
     }
-    if (best && (bs>=4 || Math.random()<.4)) return {target:best};
+    const s=pas[p]||{}, lk=dragonLockLeft(p);
+    if (lk>0) return null;
+    let bq=null, qs=2;
+    if (!s.dSq) for (let i=0;i<64;i++){ let sc=0; for (const k of sqCells(i)){ if (prot.some(g=>g.idx===k && g.owner===board[k])) continue; if (board[k]===3-p) sc+=1+(isCorner(k)?3:0); else if (board[k]===p) sc-=1+(isCorner(k)?3:0); } if (sc>qs){ qs=sc; bq=i; } }
+    const useLine = !s.dLine && best && (!bq || bs>=qs);
+    if (useLine && (bs>=4 || Math.random()<.4)) return {target:best};
+    if (!useLine && bq!==null && (qs>=4 || Math.random()<.4)) return {target:[-1,...sqCells(bq)]};
   } else if (el==='oni'){
     const {best,n}=oniBest(board,p,prot);
     if (best>=0 && (n>=4 || e<=14 || Math.random()<.3)) return {target:best};
@@ -3935,7 +4124,7 @@ function cpuCardChoice(p){
   return null;
 }
 function maybeCPU(){
-  if (phase!=='play'||over||busy||aim) return;
+  if (phase!=='play'||over||busy||aim||rockPick) return;
   const cs=cpuSide(); if (!cs) return;
   const myGen=gen;
   if (decree){
@@ -3964,12 +4153,12 @@ async function gameOver(){
   const me = online() ? net.side : cfg.mode==='pvp' ? 0 : 3-cpuSide();
   const won = !!win && (me===0 || win===me);
   clearResume();
-  // only games against someone else count: CPU and online
-  if (me && EL_ORDER.includes(cfg.el[me])){
+  // only online games count
+  if (me && online() && EL_ORDER.includes(cfg.el[me])){
     const k=cfg.el[me];
     prof.plays[k]=(prof.plays[k]||0)+1;
     if (won) prof.wins[k]=(prof.wins[k]||0)+1;
-    saveProf(); paintProfile();
+    saveProf(); paintProfile(); publishProfileSoon();
   }
   const rt=$('resTitle');
   rt.textContent = !win ? 'DRAW' : me===0 ? 'WINNER' : won ? 'VICTORY' : 'DEFEAT';
@@ -3997,7 +4186,7 @@ async function gameOver(){
    the code becomes the host's peer id, and both sides mirror the same document shape.
    The host (先手) settles the element draft and the coin toss. */
 const online = () => cfg.mode==='online';
-function isLocalTurn(p){ if (phase!=='play' || decree) return false; return online() ? (!!net.kind && net.opp && p===net.side) : p!==cpuSide(); }
+function isLocalTurn(p){ if (phase!=='play' || decree || rockPick) return false; return online() ? (!!net.kind && net.opp && p===net.side) : p!==cpuSide(); }
 const inClaude = () => !!(window.claude && typeof window.claude.use==='function');
 const PEER_PREFIX='zokusei-othello-v1-';
 const STALE_MS = 30*60*1000;
@@ -4021,7 +4210,7 @@ function showVs(){
   setTimeout(()=>el.remove(),2500);
   if (cfg.sound){ bell(784,.8,.06); bell(1174.7,.9,.05,.12); }
 }
-function announceName(){ if (net.kind && net.side) netWrite({names:{[net.side]:myName()}, updated:Date.now()}); }
+function announceName(){ if (net.kind && net.side) netWrite({names:{[net.side]:myName()}, cards:{[net.side]:myCard()}, updated:Date.now()}); }
 const netMsgEl=$('netMsg');
 function netMsg(html){ netMsgEl.innerHTML=html; }
 const esc = t => String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -4030,6 +4219,7 @@ function defaultNetMsg(){
 }
 function paintOnline(){
   const on=online(); $('online').hidden=!on;
+  if (typeof paintFriendBtns==='function') try { paintFriendBtns(); } catch(e){}
   const inRoom=!!net.kind || !!net.peer;
   $('code').disabled=inRoom; $('host').hidden=inRoom; $('join').hidden=inRoom; $('leave').hidden=!inRoom;
   if (on && !inRoom && !net.readOnly) defaultNetMsg();
@@ -4065,7 +4255,7 @@ function stateFields(S){
     pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice(),
     kings:{1:(S.kings&&S.kings[1])??-1, 2:(S.kings&&S.kings[2])??-1}, hush:S.hush?{...S.hush}:null, royal:S.royal||0,
     decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0, winReason:S.winReason||'',
-    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null, steel:clone(S.steel||[]), rust:clone(S.rust||[])};
+    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null, steel:clone(S.steel||[]), rust:clone(S.rust||[]), rockPick:S.rockPick?{...S.rockPick}:null};
 }
 function sendState(S,act){
   if (!online() || !net.kind) return;
@@ -4093,6 +4283,7 @@ function onNet(d){
   const hadOpp=net.opp;
   net.opp=!!(seats[1] && seats[2]);
   net.names = d.names && typeof d.names==='object' ? d.names : {};
+  onFriendNet(d);
   const inGame = d.phase==='play' || phase==='play';
   if (net.opp && !hadOpp){
     if (inGame) toast(`${san(oppName())}が対戦に戻ってきました`);
@@ -4137,7 +4328,7 @@ function paintNetStatus(){
       ? `部屋 <strong>${net.code}</strong>：相手の復帰を待っています…（相手が同じ端末でページを開き直し、「続きから」を押すと戻れます）`
       : `部屋 <strong>${net.code}</strong> を作りました。相手が同じ数字で「部屋に入る」を押すのを待っています…`);
 }
-function roomDoc(S,seats){ return {...stateFields(S), act:null, seq:net.seq, seats, names:{1:myName(),2:''}, el:{1:cfg.el[1],2:cfg.el[2]}, phase:'draft', picks:{1:'',2:''}, coin:null, updated:Date.now()}; }
+function roomDoc(S,seats){ return {...stateFields(S), act:null, seq:net.seq, seats, names:{1:myName(),2:''}, cards:{1:myCard(),2:null}, freq:null, el:{1:cfg.el[1],2:cfg.el[2]}, phase:'draft', picks:{1:'',2:''}, coin:null, updated:Date.now()}; }
 function enterHostDraft(){ clearDraftTimers(); phase='draft'; picks={1:'',2:''}; coinInfo=null; }
 
 /* db transport (inside Claude) */
@@ -4156,6 +4347,7 @@ async function prepareDb(){
 }
 async function hostDb(code){
   const db=await prepareDb(); if(!db) return;
+  await fidReady();
   netMsg('部屋を準備しています…');
   try {
     const ref=db.doc('games/'+code);
@@ -4189,7 +4381,8 @@ async function joinDb(code, pref){
     else if (seats[1]===ME) side=1;
     else if (seats[2]===ME || !seats[2] || !fresh) side=2;
     else { netMsg('この部屋はもう2人そろっています。'); return; }
-    await ref.update({seats:{[side]:ME}, names:{[side]:myName()}, updated:Date.now()});
+    await fidReady();
+    await ref.update({seats:{[side]:ME}, names:{[side]:myName()}, cards:{[side]:myCard()}, updated:Date.now()});
     Object.assign(net,{kind:'db',ref,code,side,opp:false,queue:[],seq:d.seq||0});
     d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
     phase=''; syncPhase(d); resetLocal(d); attachDb();
@@ -4250,7 +4443,7 @@ async function hostP2P(code, restore, tries=0){
         if ((other && who!==net.shared.guest) || (net.shared.phase==='play' && net.shared.guest && net.shared.guest!==who)){ conn.send({t:'full'}); setTimeout(()=>conn.close(),500); return; }
         if (other){ const old=net.conn; net.conn=conn; try { old.close(); } catch(e){} }
         net.conn=conn;
-        deepMerge(net.shared,{seats:{2:who}, guest:who, names:{2:cleanName(msg.name)}, updated:Date.now()});
+        deepMerge(net.shared,{seats:{2:who}, guest:who, names:{2:cleanName(msg.name)}, cards:{2:cleanCard(msg.card)}, updated:Date.now()});
         conn.send({t:'state', d:net.shared});
         onNet(net.shared);
       } else if (msg.t==='patch' && net.conn===conn && msg.p && typeof msg.p==='object'){
@@ -4287,7 +4480,7 @@ function guestConnect(){
   const conn=peer.connect(PEER_PREFIX+pd.code,{reliable:true}); net.conn=conn;
   clearTimeout(net.joinT);
   net.joinT=setTimeout(()=>{ if (net.conn===conn && !conn.open) retryGuest('timeout'); },10000);
-  conn.on('open',()=>{ clearTimeout(net.joinT); net.tries=0; const mine=net.shared||pd.saved; conn.send({t:'hello',me:ME,name:myName(),seq:(mine&&mine.seq)||0}); });
+  conn.on('open',()=>{ clearTimeout(net.joinT); net.tries=0; const mine=net.shared||pd.saved; conn.send({t:'hello',me:ME,name:myName(),card:myCard(),seq:(mine&&mine.seq)||0}); });
   conn.on('data',msg=>{
     if (!msg || typeof msg!=='object' || net.conn!==conn) return;
     if (msg.t==='full'){ net.pending=null; netMsg('この部屋はもう2人そろっています。'); cleanupPeer(); return; }
@@ -4329,7 +4522,8 @@ function leaveRoom(keepMsg){
     if (net.ref && net.side) net.ref.update({seats:{[net.side]:''}, updated:Date.now()}).catch(()=>{});
   }
   cleanupPeer();
-  Object.assign(net,{kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],shared:null,names:{},pending:null,tries:0});
+  Object.assign(net,{kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],shared:null,names:{},cards:{},pending:null,tries:0});
+  paintFriendBtns();
   if (!keepMsg) paintOnline(); else { $('code').disabled=false; $('host').hidden=false; $('join').hidden=false; $('leave').hidden=true; }
 }
 $('host').addEventListener('click',()=>{ ac(); const c=readCode(); if(!c) return; inClaude() ? hostDb(c) : hostP2P(c); });
@@ -4338,12 +4532,226 @@ $('leave').addEventListener('click',()=>{ clearResume(); leaveRoom(); newGame();
 $('code').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/g,'').slice(0,4); });
 addEventListener('pagehide',()=>{ if (net.kind==='db' && net.ref && net.side) net.ref.update({seats:{[net.side]:''}, updated:Date.now()}).catch(()=>{}); try { net.peer && net.peer.destroy(); } catch(e){} });
 
+/* ---------- friends ----------
+   Inside Claude a friend is a Claude account: profiles live in db docs profiles/<id> and
+   invitations in invites/<id>. On a normal website a friend is a device: each open page
+   listens on its own PeerJS id (zokusei-othello-v1-u-<id>) for invitations and profile requests. */
+let myFid = (()=>{ try { return sessionStorage.getItem('eo-fid') || prof.id; } catch(e){ return prof.id; } })();
+let fidP=null;
+function fidReady(){
+  if (!fidP) fidP=(async()=>{
+    if (inClaude()){ const u=await getUser(); try { const id=u && typeof u.id==='function' ? await u.id() : null; if (id) myFid=String(id); } catch(e){} }
+    return myFid;
+  })();
+  return fidP;
+}
+function cleanCard(c){
+  if (!c || typeof c!=='object') return null;
+  const id=String(c.id||''); if (!/^[A-Za-z0-9_-]{4,64}$/.test(id)) return null;
+  const num=o=>{ const r={}; if (o && typeof o==='object') for (const k of EL_ORDER){ const v=Math.floor(+o[k]||0); if (v>0) r[k]=Math.min(v,99999); } return r; };
+  return {id, name:cleanName(c.name), fav:EL_ORDER.includes(c.fav)?c.fav:'', wins:num(c.wins), plays:num(c.plays)};
+}
+const myCard = () => ({id:myFid, name:myName(), fav:prof.fav, wins:{...prof.wins}, plays:{...prof.plays}});
+const isFriend = id => prof.friends.some(f=>f.id===id);
+const friendById = id => prof.friends.find(f=>f.id===id);
+const totalWins = c => EL_ORDER.reduce((t,k)=>t+((c.wins||{})[k]||0),0);
+const oppCard = () => net.kind && net.side ? cleanCard((net.cards||{})[3-net.side]) : null;
+function addFriend(c){
+  const f=friendById(c.id);
+  if (f) Object.assign(f,c); else { prof.friends.unshift({...c, at:Date.now()}); prof.friends=prof.friends.slice(0,100); }
+  saveProf(); paintFriendBtns();
+  if (!$('friends').hidden) paintFriends();
+}
+// a friend's snapshot is refreshed whenever we meet them
+function refreshFriend(c){ const f=c && friendById(c.id); if (f){ Object.assign(f,c); saveProf(); } }
+
+// one question at a time (friend requests, invitations)
+const askQ=[]; let askBusy=false;
+function askUser(title,text,yes='承認',no='断る',cancel=false){
+  return new Promise(res=>{ askQ.push({title,text,yes,no,cancel,res}); pumpAsk(); });
+}
+function pumpAsk(){
+  if (askBusy || !askQ.length) return;
+  askBusy=true; const q=askQ.shift();
+  $('askTitle').textContent=q.title; $('askText').textContent=q.text; $('askYes').textContent=q.yes; $('askNo').textContent=q.no;
+  $('askCancel').hidden=!q.cancel;
+  const done=v=>{ $('askYes').onclick=$('askNo').onclick=$('askCancel').onclick=null; closeModal('ask'); askBusy=false; q.res(v); setTimeout(pumpAsk,200); };
+  $('askYes').onclick=()=>done(true); $('askNo').onclick=()=>done(false); $('askCancel').onclick=()=>done(null);
+  openModal('ask'); if (cfg.sound){ bell(988,.6,.06); bell(1318.5,.7,.05,.1); }
+}
+
+// friend requests travel inside the room document
+function paintFriendBtns(){
+  const c=net.kind && net.opp ? oppCard() : null;
+  const fr=$('friendReq');
+  fr.hidden = !c || c.id===myFid || isFriend(c.id);
+  if (fr.hidden){ fr.disabled=false; fr.textContent='フレンド申請'; }
+  $('inviteBtn').hidden = !(net.kind && net.side===1 && !net.opp && prof.friends.length);
+}
+function onFriendNet(d){
+  net.cards = d.cards && typeof d.cards==='object' ? d.cards : {};
+  const c=oppCard(); if (c) refreshFriend(c);
+  const fq=d.freq;
+  if (fq && typeof fq==='object' && fq.at && fq.at!==net.freqSeen && Math.abs(Date.now()-fq.at)<120000){
+    net.freqSeen=fq.at;
+    if (fq.st==='ask' && fq.to===net.side && c){
+      askUser('フレンド申請', `${san(c.name)}からフレンド申請が届きました。`).then(ok=>{
+        if (ok){ addFriend(c); toast(`${san(c.name)}とフレンドになりました`); }
+        netWrite({freq:{from:fq.from, to:fq.to, st:ok?'ok':'no', at:Date.now()}});
+      });
+    } else if (fq.st==='ok' && fq.from===net.side && c){ addFriend(c); toast(`${san(c.name)}とフレンドになりました`); }
+    else if (fq.st==='no' && fq.from===net.side){ const fr=$('friendReq'); fr.disabled=false; fr.textContent='フレンド申請'; }
+  }
+  paintFriendBtns();
+}
+$('friendReq').addEventListener('click',()=>{
+  const c=oppCard(); if (!c || !net.kind) return;
+  netWrite({freq:{from:net.side, to:3-net.side, st:'ask', at:Date.now()}});
+  const fr=$('friendReq'); fr.disabled=true; fr.textContent='申請中…';
+  toast(`${san(c.name)}にフレンド申請を送りました`);
+});
+
+/* per-device inbox (normal websites) and the talk helper that reaches a friend's inbox */
+let inbox=null;
+function peerTalk(fid,msg,wantReply,ms=6000){
+  return new Promise(async res=>{
+    if (!await loadPeer()) return res(null);
+    let tmp=null, c=null, done=false;
+    const pr = inbox && !inbox.destroyed && inbox.open ? inbox : (tmp=new Peer());
+    const fin=v=>{ if (done) return; done=true; clearTimeout(to); setTimeout(()=>{ try { c && c.close(); } catch(e){} try { tmp && tmp.destroy(); } catch(e){} },400); res(v); };
+    const to=setTimeout(()=>fin(null),ms);
+    const go=()=>{
+      c=pr.connect(PEER_PREFIX+'u-'+fid,{reliable:true});
+      c.on('open',()=>{ c.send(msg); if (!wantReply) setTimeout(()=>fin(true),600); });
+      c.on('data',d=>{ if (wantReply && d && d.t==='prof') fin(d.p); });
+    };
+    pr.on('error',e=>{ if (e.type==='peer-unavailable' && !done) fin(null); });
+    if (pr.open) go(); else pr.on('open',go);
+  });
+}
+let lastInviteAt=0;
+async function onInvite(d, consume){
+  const from=d && cleanCard(d.from), code=String((d&&d.code)||'');
+  if (!from || !/^\d{4}$/.test(code) || !isFriend(from.id) || (d.at||0)<=lastInviteAt || Math.abs(Date.now()-(d.at||0))>10*60*1000){ consume(); return; }
+  lastInviteAt=d.at; refreshFriend(from);
+  const ok=await askUser('対戦の招待', `${san(from.name)}から対戦の招待が届きました。部屋に入りますか？`);
+  consume();
+  if (ok) acceptInvite(code);
+}
+function acceptInvite(code){
+  closeModals();
+  const go=()=>{ $('title').hidden=true; setMode('online'); $('code').value=code; inClaude() ? joinDb(code) : joinP2P(code); };
+  if (!$('title').hidden) wipe(go); else go();
+}
+async function startInbox(){
+  await fidReady();
+  if (inClaude()){
+    const db=await getDb(); if (!db) return;
+    const ref=db.doc('invites/'+myFid);
+    ref.onSnapshot(s=>{ if (s && s.exists) onInvite(s.data(), ()=>ref.delete().catch(()=>{})); }, ()=>{});
+    publishProfile();
+    return;
+  }
+  if (!await loadPeer()) return;
+  const pr=new Peer(PEER_PREFIX+'u-'+myFid); inbox=pr;
+  pr.on('connection',conn=>{
+    conn.on('data',msg=>{
+      if (!msg || typeof msg!=='object') return;
+      if (msg.t==='invite') onInvite({from:msg.from, code:msg.code, at:Date.now()}, ()=>{});
+      else if (msg.t==='prof?') conn.send({t:'prof', p:myCard()});
+    });
+  });
+  pr.on('disconnected',()=>{ try { if (!pr.destroyed) pr.reconnect(); } catch(e){} });
+  // another tab of this browser is already listening
+  pr.on('error',e=>{ if (e.type==='unavailable-id'){ try { pr.destroy(); } catch(_){} if (inbox===pr) inbox=null; } });
+}
+let pubT=0;
+async function publishProfile(){
+  if (!inClaude()) return;
+  const db=await getDb(); if (!db) return; await fidReady();
+  try { await db.doc('profiles/'+myFid).set({...myCard(), updated:Date.now()}); } catch(e){}
+}
+function publishProfileSoon(){ clearTimeout(pubT); pubT=setTimeout(publishProfile,1500); }
+async function fetchProfile(id){
+  if (inClaude()){
+    const db=await getDb(); if (!db) return null;
+    try { const s=await db.doc('profiles/'+id).get(); return s && s.exists ? cleanCard(s.data()) : null; } catch(e){ return null; }
+  }
+  const p=await peerTalk(id,{t:'prof?'},true,5000);
+  return p ? cleanCard(p) : null;
+}
+
+/* friend list, a friend's profile, inviting */
+let frMode='list';
+function openFriends(mode){ frMode=mode||'list'; paintFriends(); openModal('friends'); }
+function paintFriends(){
+  $('frTitle').textContent = frMode==='invite' ? 'INVITE' : 'FRIENDS';
+  $('frNote').textContent = !prof.friends.length ? 'まだフレンドがいません。ネット対戦で同じ部屋に入った相手に「フレンド申請」できます。'
+    : frMode==='invite' ? `部屋 ${net.code||''} に招待するフレンドを選んでください。` : 'タップするとプロフィールを見られます。';
+  const list=$('frList'); list.innerHTML='';
+  prof.friends.forEach(f=>{
+    const E=EL_ORDER.includes(f.fav) ? ELS[f.fav] : null;
+    const row=document.createElement('div'); row.className='fr-item'; row.style.setProperty('--ec', E ? E.c1 : '#cbb8ff');
+    row.innerHTML=`<button class="fr-main" type="button"><b class="fr-k"></b><span class="fr-name"></span><small class="fr-sub"></small></button>`;
+    row.querySelector('.fr-k').textContent=E ? E.k : '？';
+    row.querySelector('.fr-name').textContent=f.name||'名前なし';
+    row.querySelector('.fr-sub').textContent=`通算 ${totalWins(f)}勝`;
+    row.querySelector('.fr-main').addEventListener('click',()=>openFriendProf(f.id));
+    if (frMode==='invite'){
+      const b=document.createElement('button'); b.className='gbtn fr-inv'; b.type='button'; b.textContent='招待';
+      b.addEventListener('click',()=>sendInvite(f,b)); row.appendChild(b);
+    }
+    list.appendChild(row);
+  });
+}
+async function sendInvite(f,btn){
+  if (!(net.kind && net.side===1 && !net.opp)){ toast('部屋を作って相手を待っているときに招待できます'); return; }
+  btn.disabled=true; btn.textContent='送信中…';
+  let ok=false;
+  if (inClaude()){
+    const db=await getDb();
+    if (db){ try { await fidReady(); await db.doc('invites/'+f.id).set({from:myCard(), code:net.code, at:Date.now()}); ok=true; } catch(e){} }
+  } else ok=!!(await peerTalk(f.id,{t:'invite', code:net.code, from:myCard()},false));
+  btn.textContent = ok ? '招待しました' : inClaude() ? '送れませんでした' : 'オフライン';
+  if (!ok) setTimeout(()=>{ btn.disabled=false; btn.textContent='招待'; },2500);
+}
+let fpCur='';
+function paintFP(f){
+  const E=EL_ORDER.includes(f.fav) ? ELS[f.fav] : null;
+  $('fpName').textContent=f.name||'名前なし';
+  const fv=$('fpFav'); fv.style.setProperty('--ec', E ? E.c1 : '#cbb8ff');
+  fv.innerHTML = E ? `好きな属性：<b></b>` : '好きな属性：未設定'; if (E) fv.querySelector('b').textContent=E.name;
+  $('fpWins').innerHTML=winTiles(f.wins||{}, f.plays||{}, '');
+  $('fpTotal').textContent=`通算 ${totalWins(f)}勝 / ${EL_ORDER.reduce((t,k)=>t+((f.plays||{})[k]||0),0)}戦（ネット対戦）`;
+}
+async function openFriendProf(id){
+  const f=friendById(id); if (!f) return;
+  fpCur=id; paintFP(f);
+  const rm=$('fpRemove'); rm.textContent='フレンドから外す'; rm.dataset.armed='';
+  $('fpStatus').textContent='最新のプロフィールを確認しています…';
+  openModal('friendProf');
+  const fresh=await fetchProfile(id);
+  if (fpCur!==id) return;
+  if (fresh && fresh.id===id){ refreshFriend(fresh); paintFP(friendById(id)||fresh); $('fpStatus').textContent=''; }
+  else $('fpStatus').textContent = inClaude() ? '最新の情報を取れなかったため、最後に会ったときのプロフィールです' : '相手がオフラインのため、最後に会ったときのプロフィールです';
+}
+$('fpRemove').addEventListener('click',()=>{
+  const rm=$('fpRemove');
+  if (!rm.dataset.armed){ rm.dataset.armed='1'; rm.textContent='もう一度押すと外します'; return; }
+  prof.friends=prof.friends.filter(f=>f.id!==fpCur); saveProf(); closeModal('friendProf'); paintFriends(); paintFriendBtns();
+});
+$('fpClose').addEventListener('click',()=>closeModal('friendProf'));
+$('frClose').addEventListener('click',()=>closeModal('friends'));
+$('inviteBtn').addEventListener('click',()=>openFriends('invite'));
+
 /* ---------- skill guide ---------- */
 function buildHelp(){
   const body=$('helpBody');
   body.innerHTML = `<ul class="h-rules">
     <li>対局の最初に、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
+    <li>岩属性は対局開始時に、外周のマスを1つ選んで岩を置きます（5秒以内。さらに2マスはランダム）。</li>
+    <li>竜の<strong>暴虐</strong>は「直線」と「正方形（3×3）」を1回ずつ使えます。片方を使うと、もう片方は5ターン使えません。</li>
     <li>星と岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。<strong>王は序盤・中盤・終盤にそれぞれ1回ずつ</strong>使えます（空きマス41以上が序盤、21〜40が中盤、20以下が終盤）。</li>
     <li>カードが使えるようになると、カードが光って知らせます。カードの「解禁まで ○ターン」「残り ○ターン」の<strong>ターンは自分の番の回数</strong>です。</li>
     <li><strong>忍は自分の手番が3回終わってから前半のあいだだけ</strong>、<strong>竜は空きマス残り${DRAGON_OPEN}以下の中盤</strong>から使えます。</li>
@@ -4383,7 +4791,16 @@ for (const p of [1,2]){
     if (!canCard(p)) return;
     ac();
     const el=cfg.el[p];
-    if (el==='fire'||el==='ninja'||el==='dragon'||el==='oni'||el==='steel'){
+    if (el==='dragon'){
+      // pick the shape: ask only when both are open
+      const s=pas[p]||{};
+      const start=mode=>{ if (!mode || !canCard(p)) return; aim=p; aimSel={kind:'dragon', stage:1, first:-1, picks:[], mode}; render();
+        toast(mode==='sq' ? '焼き払う正方形の中心マスを選んでください' : '蒼炎の起点となるマスを選んでください'); };
+      if (s.dLine) start('sq'); else if (s.dSq) start('line');
+      else askUser('暴虐', 'どちらの暴虐を使いますか？（使うと、もう片方は5ターン使えません）', '直線', '正方形', true).then(v=>start(v===true ? 'line' : v===false ? 'sq' : null));
+      return;
+    }
+    if (el==='fire'||el==='ninja'||el==='oni'||el==='steel'){
       aim=p; aimSel={kind:el, stage:1, first:-1, picks:[]}; render();
       toast(el==='fire' ? '燃やすマスを選んでください' : el==='ninja' ? '入れ替える自分の石を選んでください' : el==='oni' ? '金棒を振り下ろすマスを選んでください' : el==='steel' ? `鋼で覆う相手の石を${steelNeed(p)}つ選んでください` : '蒼炎の起点となるマスを選んでください');
       return;
@@ -4410,19 +4827,6 @@ sndBtn.addEventListener('click',()=>{ cfg.sound=!cfg.sound; saveCfg(); paintSnd(
 paintSnd();
 $('newgame').addEventListener('click',()=>newGame());
 $('again').addEventListener('click',()=>newGame());
-let demoIdx=0;
-$('demo').addEventListener('click',async()=>{
-  if (busy) return; ac();
-  const el=EL_ORDER[demoIdx++%4]; const corner=[0,7,56,63][(Math.random()*4)|0];
-  const [x,y]=center(corner); busy=true; aim=0; render();
-  const myGen=gen;
-  await ultimate(el,x,y,'CORNER BREAK · DEMO');
-  for(let k=0;k<6;k++) setTimeout(()=>{ if(myGen===gen){ const [cx2,cy2]=center(corner+(corner%8?-k-1:k+1)); burst(el,cx2,cy2,1.7,k); sfx(el,'flip',k);} }, k*120);
-  await wait(1000);
-  if (myGen!==gen) return;
-  busy=false; render(); maybeCPU(); drainNet();
-});
-
 /* ---------- game UI: title, menus, HUD flourishes, UI sound and music ---------- */
 function uiSfx(kind){
   if (!cfg.sound) return;
@@ -4534,7 +4938,7 @@ function resumeGame(t){
   else joinP2P(t.code, t.shared);
 }
 $('tResume').addEventListener('click',()=>{ const t=loadResume(); if (!t){ paintResume(); return; } bgmStart(); wipe(()=>{ $('title').hidden=true; resumeGame(t); }); });
-EL_ORDER.forEach((k,i)=>{ const s=document.createElement('span'); s.className='t-emb'; s.textContent=ELS[k].k; s.style.setProperty('--ec',ELS[k].c1); s.style.setProperty('--i',i); $('tEmblems').appendChild(s); });
+['fire','thunder','rock','light','dark','star','steel','dragon','ninja','oni','king'].forEach((k,i)=>{ const s=document.createElement('span'); s.className='t-emb'; s.textContent=ELS[k].k; s.style.setProperty('--ec',ELS[k].c1); s.style.setProperty('--i',i); $('tEmblems').appendChild(s); });
 $('tCpu').addEventListener('click',()=>{ const o=$('tCpuOpts'); o.hidden=!o.hidden; paintTitle(); });
 $('tSide1').addEventListener('click',()=>{ tSide=1; paintTitle(); });
 $('tSide2').addEventListener('click',()=>{ tSide=2; paintTitle(); });
@@ -4548,7 +4952,7 @@ paintTitle();
 
 function openModal(id){ $(id).hidden=false; uiSfx('open'); const f=$(id).querySelector('.gbtn'); if (f) f.focus(); }
 function closeModal(id){ if (!$(id).hidden){ $(id).hidden=true; uiSfx('close'); } }
-function closeModals(){ ['menu','settings','skillInfo'].forEach(closeModal); }
+function closeModals(){ ['menu','settings','skillInfo','profile','favPick','friends','friendProf'].forEach(closeModal); }
 function showSkillInfo(p, kind){
   if (phase!=='play') return;
   const el=cfg.el[p], E=ELS[el], C = kind==='card' ? CARDS[el] : PASSIVES[el];
@@ -4585,33 +4989,43 @@ $('toTitle').addEventListener('click',openTitle);
 $('setClose').addEventListener('click',()=>closeModal('settings'));
 // wins earn a frame: bronze at 10, silver at 20, gold at 30
 const winTier = w => w>=30 ? 3 : w>=20 ? 2 : w>=10 ? 1 : 0;
+function winTiles(wins, plays){
+  return EL_ORDER.map(k=>{
+    const w=wins[k]||0, n=plays[k]||0, tr=winTier(w);
+    return `<div class="p-win${tr?' t'+tr:''}" style="--ec:${ELS[k].c1}">${tr?`<span class="medal">${['','銅','銀','金'][tr]}</span>`:''}<b>${ELS[k].k}</b><strong>${w}勝</strong><span>${n}戦</span></div>`;
+  }).join('');
+}
 function paintProfile(){
   const nm=$('pName'); if (document.activeElement!==nm) nm.value=myName();
   const favE=EL_ORDER.includes(prof.fav) ? ELS[prof.fav] : null;
-  const sig=$('pSig'); sig.textContent=favE ? favE.k : '？'; sig.style.setProperty('--ec', favE ? favE.c1 : '#cbb8ff');
   const fv=$('pFavName'); fv.style.setProperty('--ec', favE ? favE.c1 : '#cbb8ff');
-  fv.innerHTML = favE ? `好きな属性：<b>${favE.name}</b>` : '好きな属性：未設定（下の一覧からタップ）';
-  let tw=0, tp=0;
-  $('pWins').innerHTML=EL_ORDER.map(k=>{
-    const w=prof.wins[k]||0, n=prof.plays[k]||0, tr=winTier(w); tw+=w; tp+=n;
-    return `<button type="button" class="p-win${tr?' t'+tr:''}${prof.fav===k?' fav':''}" data-el="${k}" style="--ec:${ELS[k].c1}" aria-pressed="${prof.fav===k}" aria-label="${ELS[k].name} ${w}勝 ${n}戦">${tr?`<span class="medal">${['','銅','銀','金'][tr]}</span>`:''}<b>${ELS[k].k}</b><strong>${w}勝</strong><span>${n}戦</span></button>`;
-  }).join('');
-  $('pTotal').textContent=`通算 ${tw}勝 / ${tp}戦（CPU戦とネット対戦を自動で記録）`;
-  const fav=EL_ORDER.includes(prof.fav) ? ELS[prof.fav] : null;
-  $('tPlayer').textContent = myName() ? `${myName()}${fav ? `　・　好きな属性 ${fav.k}` : ''}` : '設定でプレイヤー名を決められます';
+  fv.innerHTML = favE ? `<b>${favE.k}</b> ${favE.name}` : '未設定';
+  $('pWins').innerHTML=winTiles(prof.wins, prof.plays);
+  const tw=EL_ORDER.reduce((t,k)=>t+(prof.wins[k]||0),0), tp=EL_ORDER.reduce((t,k)=>t+(prof.plays[k]||0),0);
+  $('pTotal').textContent=`通算 ${tw}勝 / ${tp}戦（ネット対戦のみ記録）`;
+  $('tPlayer').textContent = myName() ? `${myName()}${favE ? `　・　好きな属性 ${favE.k}` : ''}` : '';
   document.querySelectorAll('#dGrid .d-el').forEach(b=>b.classList.toggle('fav', b.dataset.el===prof.fav));
 }
-$('pName').addEventListener('input',e=>{ prof.name=cleanName(e.target.value); saveProf(); paintProfile(); render(); });
-$('pName').addEventListener('change',()=>{ announceName(); });
-$('pWins').addEventListener('click',e=>{
-  const b=e.target.closest('.p-win'); if (!b) return;
-  const k=b.dataset.el; prof.fav = prof.fav===k ? '' : (EL_ORDER.includes(k) ? k : '');
-  saveProf(); paintProfile(); uiSfx('click');
-  const nb=$('pWins').querySelector(`[data-el="${k}"]`); if (nb) nb.focus();
+function paintFavGrid(){
+  $('favGrid').innerHTML=EL_ORDER.map(k=>`<button type="button" class="fav-tile${prof.fav===k?' on':''}" data-el="${k}" style="--ec:${ELS[k].c1}" aria-pressed="${prof.fav===k}"><b>${ELS[k].k}</b><span>${ELS[k].name}</span></button>`).join('');
+}
+$('favGrid').addEventListener('click',e=>{
+  const b=e.target.closest('.fav-tile'); if (!b || !EL_ORDER.includes(b.dataset.el)) return;
+  prof.fav=b.dataset.el; saveProf(); paintProfile(); publishProfileSoon(); uiSfx('click'); closeModal('favPick');
 });
+$('pName').addEventListener('input',e=>{ prof.name=cleanName(e.target.value); saveProf(); paintProfile(); render(); publishProfileSoon(); });
+$('pName').addEventListener('change',()=>{ announceName(); });
+
 paintProfile();
-$('demo').addEventListener('click',()=>closeModal('settings'));
-['menu','settings'].forEach(id=>$(id).addEventListener('click',e=>{ if (e.target.id===id) closeModal(id); }));
+['menu','settings','profile','favPick','friends','friendProf'].forEach(id=>$(id).addEventListener('click',e=>{ if (e.target.id===id) closeModal(id); }));
+$('tProf').addEventListener('click',()=>{ paintProfile(); openModal('profile'); });
+$('mProf').addEventListener('click',()=>{ closeModal('menu'); paintProfile(); openModal('profile'); });
+$('tFriends').addEventListener('click',()=>openFriends('list'));
+$('mFriends').addEventListener('click',()=>{ closeModal('menu'); openFriends('list'); });
+$('profClose').addEventListener('click',()=>closeModal('profile'));
+$('pFavBtn').addEventListener('click',()=>{ paintFavGrid(); openModal('favPick'); });
+$('favClose').addEventListener('click',()=>closeModal('favPick'));
+$('favNone').addEventListener('click',()=>{ prof.fav=''; saveProf(); paintProfile(); publishProfileSoon(); closeModal('favPick'); });
 addEventListener('keydown',e=>{ if (e.key==='Escape') closeModals(); });
 const bgmBtn=$('bgm');
 function paintBgm(){ bgmBtn.textContent=cfg.bgm?'ON':'OFF'; bgmBtn.setAttribute('aria-pressed',!!cfg.bgm); }
@@ -4705,6 +5119,7 @@ function start(data){
 window.claude?.hot?.snapshot?.(()=>({...curState(), phase, el:{...cfg.el}}));
 const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
+startInbox();
 })();
 </script>
 
