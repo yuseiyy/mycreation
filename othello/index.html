@@ -690,6 +690,18 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .d-order{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,360px)}
 .d-order .gbtn{padding:14px 8px;font-size:16px}
 
+/* online lobby and waiting room */
+body.lobby .arena,body.lobby #status{display:none}
+body.lobby #online{margin-top:clamp(16px,6vh,60px);padding:22px 16px}
+.on-title{font-family:"Cinzel Decorative",var(--f-display);font-size:22px;letter-spacing:.12em;color:#f3e2b0}
+body:not(.lobby) .on-title{display:none}
+.wait-code{display:block;margin:6px 0 2px;font-size:14px;color:var(--muted)}
+.wait-code b{display:block;font-family:var(--f-latin);font-size:clamp(40px,10vw,64px);letter-spacing:.18em;line-height:1.1;color:#fff;text-shadow:0 0 18px #cbb8ff,0 4px 0 #000}
+.wait-dots{display:flex;justify-content:center;gap:8px;margin:8px 0 10px}
+.wait-dots i{width:10px;height:10px;border-radius:50%;background:#cbb8ff;box-shadow:0 0 8px #cbb8ff;animation:waitDot 1.2s ease-in-out infinite}
+.wait-dots i:nth-child(2){animation-delay:.2s}.wait-dots i:nth-child(3){animation-delay:.4s}
+@keyframes waitDot{0%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-6px)}}
+
 /* profile */
 #settings .m-panel{max-height:calc(100vh - 32px);overflow:auto}
 .prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
@@ -840,9 +852,7 @@ html.lite .disc{filter:none!important}
     <div class="t-emblems" id="tEmblems"></div>
     <h1 class="t-logo">属性オセロ</h1>
     <div class="t-sub">ELEMENTAL REVERSI</div>
-    <div class="t-player" id="tPlayer"></div>
     <div class="t-menu">
-      <button class="gbtn primary" id="tResume" type="button" hidden>続きから<small id="tResumeInfo"></small></button>
       <button class="gbtn primary" id="tCpu" type="button">CPUと対戦</button>
       <div class="t-opts" id="tCpuOpts" hidden>
         <div class="t-label">CPUの強さ</div>
@@ -851,10 +861,11 @@ html.lite .disc{filter:none!important}
       </div>
       <button class="gbtn" id="tPvp" type="button">ふたりで対戦<small>この画面で交代しながら</small></button>
       <button class="gbtn" id="tNet" type="button">ネット対戦<small>4桁の合言葉で友だちと</small></button>
+      <button class="gbtn primary" id="tResume" type="button" hidden>続きから<small id="tResumeInfo"></small></button>
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.23</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.24</div>
   </div>
 </div>
 
@@ -1007,6 +1018,7 @@ html.lite .disc{filter:none!important}
   <div class="status" id="status"></div>
 
   <section class="online" id="online" hidden>
+    <div class="on-title">ネット対戦</div>
     <div class="online-row">
       <label class="sel" for="code"><span>4桁の合言葉</span>
         <input id="code" type="text" inputmode="numeric" maxlength="4" placeholder="0000" autocomplete="off">
@@ -2109,6 +2121,7 @@ function viewerSide(){ if (online()) return net.side||1; if (cfg.mode==='pvp') r
 const blindView = () => phase==='play' && !over && !!blind && turn===blind && viewerSide()===blind;
 function render(){
   const play = phase==='play';
+  document.body.classList.toggle('lobby', !play && online() && !net.kind);
   const bv = blindView();
   const human = play && !over && !busy && isLocalTurn(turn);
   const lm = human && !aim ? (viewerSide()===turn && !(forced && forced.p===turn) ? [...new Set([...movesFor(turn),...illusionMoves(turn)])] : movesFor(turn)) : [];
@@ -2684,7 +2697,12 @@ function renderDraft(){
   $('dOrder').hidden = !(phase==='order' && orderInfo && orderInfo.stage==='choose' && !orderInfo.choice && isMyParty(orderInfo.winner));
   if (phase==='order'){
     const o=orderInfo;
-    if (!o){ title='先手・後手を決めよう'; sub = online() && !net.opp ? '対戦相手が来たらコインで決めます…' : '準備中…'; }
+    if (!o && online() && net.kind && !net.opp){
+      title='入室待ち';
+      sub = `<span class="wait-code">部屋 <b>${esc(net.code||'')}</b></span><span class="wait-dots"><i></i><i></i><i></i></span>`
+        + (net.host ? `相手が「部屋に入る」でこの4桁を入れると始まります${prof.friends.length ? '<br><small>下の「フレンドを招待」からも呼べます</small>' : ''}` : '部屋を作った人を待っています…');
+    }
+    else if (!o){ title='先手・後手を決めよう'; sub='準備中…'; }
     else if (o.stage==='spin'){ title='先手・後手を決めよう'; sub=`${esc(partyName(orderParties()[0]))} と ${esc(partyName(orderParties()[1]))} でコイントス…`; }
     else if (o.choice){ title='決定！'; const f=o.choice==='first'?o.winner:otherParty(o.winner); sub=`<strong>${esc(partyName(f))}</strong>が先手です`; }
     else if (isMyParty(o.winner)){ title=`${esc(partyName(o.winner))}の勝ち！`; sub=!online() && cfg.mode==='pvp' ? `<strong>${esc(partyName(o.winner))}</strong>は先手か後手を選んでください` : '先手か後手を選んでください'; }
@@ -2703,6 +2721,7 @@ function renderDraft(){
     }
   }
   $('dTitle').textContent=title; $('dSub').innerHTML=sub;
+  dr.querySelector('.d-eyebrow').textContent = phase==='order' ? 'MATCH' : 'ELEMENT DRAFT';
   $('coin').hidden = !(phase==='coin' || (phase==='order' && orderInfo));
   const grid=$('dGrid'); grid.hidden=!ch;
   grid.querySelectorAll('button').forEach(b=>{ b.disabled = b.dataset.el===excl; });
@@ -4316,6 +4335,7 @@ function defaultNetMsg(){
 }
 function paintOnline(){
   const on=online(); $('online').hidden=!on;
+  document.body.classList.toggle('lobby', phase!=='play' && on && !net.kind);
   if (typeof paintFriendBtns==='function') try { paintFriendBtns(); } catch(e){}
   const inRoom=!!net.kind || !!net.peer;
   $('code').disabled=inRoom; $('host').hidden=inRoom; $('join').hidden=inRoom; $('leave').hidden=!inRoom;
@@ -5116,7 +5136,6 @@ function paintProfile(){
   $('pWins').innerHTML=winTiles(prof.wins, prof.plays);
   const tw=EL_ORDER.reduce((t,k)=>t+(prof.wins[k]||0),0), tp=EL_ORDER.reduce((t,k)=>t+(prof.plays[k]||0),0);
   $('pTotal').textContent=`通算 ${tw}勝 / ${tp}戦（ネット対戦のみ記録）`;
-  $('tPlayer').textContent = myName() ? `${myName()}${favE ? `　・　好きな属性 ${favE.k}` : ''}` : '';
   document.querySelectorAll('#dGrid .d-el').forEach(b=>b.classList.toggle('fav', b.dataset.el===prof.fav));
 }
 function paintFavGrid(){
