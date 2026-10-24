@@ -679,11 +679,50 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
 .prof input,.prof select{width:150px;padding:8px 10px;border-radius:8px;border:1px solid #8a744499;background:#0f0b1a;color:var(--ink);font:inherit;font-size:14px}
 .prof input:focus,.prof select:focus{outline:2px solid #cbb8ff;outline-offset:1px}
-.p-wins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-.p-win{--ec:#fff;display:grid;justify-items:center;gap:1px;padding:6px 2px;border-radius:8px;background:#0f0b1acc;border:1px solid #ffffff14;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.p-win b{font-family:var(--f-display);font-size:20px;line-height:1.1;font-weight:400;color:var(--ec);text-shadow:0 0 8px color-mix(in srgb,var(--ec) 60%,transparent)}
+.p-head{display:flex;align-items:center;gap:14px}
+.p-sig{--ec:#cbb8ff;flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--ec);
+  box-shadow:0 0 18px -2px var(--ec),inset 0 0 18px -6px var(--ec);font-family:var(--f-display);font-size:32px;color:var(--ec);text-shadow:0 0 12px var(--ec);background:radial-gradient(circle,#ffffff08,transparent 70%)}
+.p-id{display:grid;gap:6px;min-width:0;flex:1}
+.p-namebox{display:grid;gap:3px}
+.p-namebox small{font-size:10px;color:var(--muted)}
+.prof .p-namebox input{width:100%;box-sizing:border-box}
+.p-fav{font-size:12px;color:var(--muted)}
+.p-fav b{font-family:var(--f-display);font-weight:400;color:var(--ec);text-shadow:0 0 8px color-mix(in srgb,var(--ec) 60%,transparent)}
+.p-lab{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.p-lab small{font-size:10px;color:var(--muted)}
+.p-wins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.p-win{--ec:#fff;--fr:#ffffff1f;position:relative;display:grid;justify-items:center;gap:1px;padding:8px 2px 6px;border-radius:10px;cursor:pointer;font:inherit;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;
+  border:2px solid transparent;background:linear-gradient(180deg,#241e36,#141020) padding-box,var(--fr) border-box;box-shadow:inset 0 1px 0 #ffffff12,0 4px 10px #0006;transition:transform .15s}
+.p-win:hover{transform:translateY(-2px)}
+.p-win:focus-visible{outline:2px solid #cbb8ff;outline-offset:2px}
+.p-win b{font-family:var(--f-display);font-size:22px;line-height:1.1;font-weight:400;color:var(--ec);text-shadow:0 0 8px color-mix(in srgb,var(--ec) 60%,transparent)}
 .p-win strong{color:var(--ink);font-size:13px}
-.p-win.fav{border-color:#ffd34d;box-shadow:0 0 10px #ffd34d55}
+.p-win.t1{--fr:linear-gradient(135deg,#ffd0a0,#a0582a 35%,#e8a060 60%,#5a2a0a)}
+.p-win.t2{--fr:linear-gradient(135deg,#ffffff,#8a96a6 35%,#e2e8f0 60%,#4a5868)}
+.p-win.t3{--fr:linear-gradient(135deg,#fff8d8,#b8860b 35%,#ffd34d 60%,#7a5410);box-shadow:inset 0 1px 0 #ffffff12,0 0 14px #ffd34d55}
+.p-win .medal{position:absolute;top:-7px;right:-5px;padding:1px 5px;border-radius:999px;font-size:9px;font-weight:700;color:#1a1208;background:var(--fr);box-shadow:0 1px 3px #000a}
+.p-win.fav{background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--ec) 30%,transparent),transparent 70%) padding-box,linear-gradient(180deg,#2c2440,#141020) padding-box,var(--fr) border-box;
+  box-shadow:0 0 0 2px var(--ec),0 0 18px -2px var(--ec)}
+.p-win.fav::before{content:"★";position:absolute;top:-8px;left:-4px;font-size:14px;color:var(--ec);text-shadow:0 0 6px var(--ec),0 1px 2px #000}
+.p-legend{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.p-legend i{width:14px;height:10px;border-radius:3px;margin-left:6px}
+.p-legend .lb{background:linear-gradient(135deg,#ffd0a0,#a0582a,#5a2a0a)}
+.p-legend .ls{background:linear-gradient(135deg,#ffffff,#8a96a6,#4a5868)}
+.p-legend .lg{background:linear-gradient(135deg,#fff8d8,#b8860b,#7a5410)}
+/* card timing gauge */
+.card .c-gaugebox{display:grid;gap:2px;margin-top:2px}
+.c-gauge{position:relative;display:block;height:8px;border-radius:4px;background:#ffffff10;box-shadow:inset 0 0 0 1px #ffffff1a}
+.c-gauge i{position:absolute;top:0;bottom:0}
+.c-gauge .g-win{border-radius:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--ec) 65%,#fff),var(--ec));box-shadow:0 0 8px color-mix(in srgb,var(--ec) 60%,transparent)}
+.c-gauge .g-win.used{background:repeating-linear-gradient(45deg,#ffffff30 0 3px,transparent 3px 6px);box-shadow:none}
+.c-gauge .g-tick{width:1px;top:-2px;bottom:-2px;background:#ffffff55}
+.c-gauge .g-now{position:absolute;top:-4px;width:3px;height:16px;margin-left:-1.5px;border-radius:2px;background:#fff;box-shadow:0 0 6px #fff,0 0 0 1px #000a}
+.c-phase{display:grid;grid-template-columns:repeat(3,1fr);font-size:9px;letter-spacing:.12em;color:var(--muted);text-align:center}
+.c-pips{display:flex;gap:4px}
+.c-pips i{flex:1;height:8px;border-radius:3px;background:#ffffff12;box-shadow:inset 0 0 0 1px #ffffff1a}
+.c-pips i.on{background:var(--ec);box-shadow:0 0 6px var(--ec)}
+.card .c-when{font-size:11px;font-weight:700;line-height:1.45;color:#ffd08a;text-align:left}
+.card .c-when.ok{color:#9ff0b4}
 .p-total{font-size:12px;color:var(--muted)}
 .t-player{font-size:13px;color:#e8dcff;min-height:1.3em;margin-top:-4px}
 #tResume small{display:block;font-size:11px;opacity:.85}
@@ -778,7 +817,7 @@ html.lite .disc{filter:none!important}
       <button class="gbtn" id="tNet" type="button">ネット対戦<small>4桁の合言葉で友だちと</small></button>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.18</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.19</div>
   </div>
 </div>
 
@@ -806,11 +845,17 @@ html.lite .disc{filter:none!important}
     <div class="m-title" id="setTitle">SETTINGS</div>
     <div class="prof">
       <div class="t-label">PROFILE</div>
-      <label class="m-row"><span>プレイヤー名<small>ネット対戦の相手にも表示されます</small></span><input id="pName" maxlength="12" placeholder="名前を入力" autocomplete="nickname"></label>
-      <label class="m-row"><span>好きな属性</span><select id="pFav"></select></label>
-      <div class="t-label">属性ごとの勝利数</div>
+      <div class="p-head">
+        <div class="p-sig" id="pSig">？</div>
+        <div class="p-id">
+          <label class="p-namebox"><small>プレイヤー名（ネット対戦の相手にも表示）</small><input id="pName" maxlength="12" placeholder="名前を入力" autocomplete="nickname"></label>
+          <div class="p-fav" id="pFavName"></div>
+        </div>
+      </div>
+      <div class="p-lab"><span class="t-label">属性ごとの勝利数</span><small>タップで好きな属性に</small></div>
       <div class="p-wins" id="pWins"></div>
       <div class="p-total" id="pTotal"></div>
+      <div class="p-legend"><i class="lb"></i>10勝 銅<i class="ls"></i>20勝 銀<i class="lg"></i>30勝 金</div>
     </div>
     <div class="m-row"><span>効果音</span><button class="gbtn" id="snd" type="button">ON</button></div>
     <div class="m-row"><span>BGM</span><button class="gbtn" id="bgm" type="button">ON</button></div>
@@ -844,6 +889,8 @@ html.lite .disc{filter:none!important}
       <div class="pas" id="pas1"><span class="p-top"><span>パッシブ</span><span class="p-state"></span></span><span class="p-name"></span><span class="p-desc"></span></div>
       <button class="card" id="card1" type="button">
         <span class="c-top"><span>必殺技カード</span><span class="c-uses"></span></span>
+        <span class="c-gaugebox"></span>
+        <span class="c-when"></span>
         <span class="c-name"></span>
         <span class="c-desc"></span>
         <span class="c-note"></span>
@@ -880,6 +927,8 @@ html.lite .disc{filter:none!important}
       <div class="pas" id="pas2"><span class="p-top"><span>パッシブ</span><span class="p-state"></span></span><span class="p-name"></span><span class="p-desc"></span></div>
       <button class="card" id="card2" type="button">
         <span class="c-top"><span>必殺技カード</span><span class="c-uses"></span></span>
+        <span class="c-gaugebox"></span>
+        <span class="c-when"></span>
         <span class="c-name"></span>
         <span class="c-desc"></span>
         <span class="c-note"></span>
@@ -1768,26 +1817,30 @@ const steelPick = p => steelPool(board,p,prot).filter(i=>!concealed(i));
 const steelNeed = p => Math.min(STEEL_N, steelPick(p).length);
 // 豪傑 is roused while the oni holds under a third of the stones, unless it is resting after 鉄血粉砕
 function oniFierce(b,p){ let own=0, all=0; for (let i=0;i<b.length;i++){ if (b[i]===p) own++; if (b[i]>0) all++; } return own*3<all; }
-function cardBlock(p){
-  const el=cfg.el[p];
-  if (isHushed(p)) return `星座に封じられている（あと${hush.left}ターン）`;
+// limits that come from when in the game it is
+function cardTimeBlock(p){
+  const el=cfg.el[p], s=pas[p]||{}, t=s.turns||0, e=emptyCount();
   if (el==='fire'){
-    const t=(pas[p]&&pas[p].turns)||0, r=fireReadyIn(p);
-    if (t<FIRE_OPEN) return `炎の手番があと${FIRE_OPEN-t}回で使用可能`;
-    if (r>0) return `再使用まであと${r}ターン`;
+    const r=fireReadyIn(p);
+    if (t<FIRE_OPEN) return `解禁まで あなたの番 あと${FIRE_OPEN-t}回`;
+    if (r>0) return `再使用まで あなたの番 あと${r}回`;
   } else if (el==='ninja'){
-    const t=(pas[p]&&pas[p].turns)||0;
     if (cardLeft(p)<=0) return '使い切りました';
-    if (t<NINJA_OPEN) return `忍の手番があと${NINJA_OPEN-t}回で使用可能`;
-    if (emptyCount()<=LATE) return '前半のみ使用可能（後半に入りました）';
+    if (e<=LATE) return '前半（空きマス31以上）だけのカード。もう使えません';
+    if (t<NINJA_OPEN) return `解禁まで あなたの番 あと${NINJA_OPEN-t}回`;
   } else if (el==='king'){
-    const ph=phaseOf(emptyCount());
-    if (royalDone(p).includes(ph)) return ph<2 ? `${PHASES[ph]}は使用済み。${PHASES[ph+1]}で復活（空きマスあと${emptyCount()-(ph===0?40:20)}）` : `${PHASES[ph]}ではもう使いました`;
+    const ph=phaseOf(e);
+    if (royalDone(p).includes(ph)) return ph<2 ? `${PHASES[ph]}は使用済み。${PHASES[ph+1]}まで あと${e-(ph===0?40:20)}手` : '終盤も使用済み';
   } else {
     if (cardLeft(p)<=0) return '使い切りました';
-    const e=emptyCount(), at=cardOpenAt(el);
-    if (e>at) return `空きマスがあと${e-at}減ると使用可能`;
+    const at=cardOpenAt(el);
+    if (e>at) return `解禁まで あと${e-at}手`;
   }
+  return '';
+}
+// limits that come from the board
+function cardOtherBlock(p){
+  const el=cfg.el[p];
   if (el==='time' && !(lastPlace && lastPlace.p===3-p)) return '巻き戻せる相手の一手がない';
   if (el==='ninja' && !board.some((v,i)=>i<64 && v===3-p && !prot.some(g=>g.idx===i && g.owner===3-p))) return '入れ替えられる相手の石がない';
   if ((el==='light'||el==='dark') && skillTargets(board,p,prot,el).n<3) return '狙える相手の石が3枚未満';
@@ -1796,6 +1849,50 @@ function cardBlock(p){
   if (el==='fire' && !board.some((v,i)=>i<64 && v===0 && !burns.some(b=>b.idx===i))) return '燃やせるマスがありません';
   if (el==='star' && !board.some((v,i)=>i<64 && v===0)) return '空きマスがありません';
   return '';
+}
+function cardBlock(p){
+  if (isHushed(p)) return `星座に封じられている（あと${hush.left}ターン）`;
+  return cardTimeBlock(p) || cardOtherBlock(p);
+}
+// "手" is one stone placed by either player, so a player's own turns come round about every two
+const turnsOf = n => Math.max(1, Math.ceil(n/2));
+const START_E = 60;   // empty squares when a game starts
+// the card's usable window, said plainly
+function cardWhen(p){
+  const el=cfg.el[p], e=emptyCount(), s=pas[p]||{}, t=s.turns||0;
+  if (el==='fire'){
+    const r=fireReadyIn(p);
+    if (t<FIRE_OPEN) return `解禁まで あなたの番 あと${FIRE_OPEN-t}回`;
+    return r>0 ? `再使用まで あなたの番 あと${r}回` : '今使える（使うと次はあなたの番5回後）';
+  }
+  if (el==='king'){
+    const ph=phaseOf(e), end=ph===0?40:ph===1?20:0, left=e-end;
+    if (!royalDone(p).includes(ph)) return ph<2 ? `${PHASES[ph]}のうちに1回 ― ${PHASES[ph]}は残り${left}手（あなたの番 約${turnsOf(left)}回）` : '終盤のうちに1回（最後まで使える）';
+    return ph<2 ? `${PHASES[ph]}は使用済み ― ${PHASES[ph+1]}まで あと${left}手（あなたの番 約${turnsOf(left)}回）` : '終盤も使用済み';
+  }
+  if (cardLeft(p)<=0) return '使い切りました';
+  if (el==='ninja'){
+    if (e<=LATE) return '前半（空きマス31以上）だけのカード。もう使えません';
+    if (t<NINJA_OPEN) return `解禁まで あなたの番 あと${NINJA_OPEN-t}回 ― 使えるのは前半（あと${e-LATE}手）まで`;
+    return `使えるのは あと${e-LATE}手まで（あなたの番 約${turnsOf(e-LATE)}回）`;
+  }
+  const at=cardOpenAt(el);
+  if (e>at) return `解禁まで あと${e-at}手（あなたの番 約${turnsOf(e-at)}回）― 空きマス${at}以下で使える`;
+  return '使用可能（終局まで使える）';
+}
+// a timeline of the whole game with the card's window lit and a marker for now
+function cardGauge(p){
+  const el=cfg.el[p], e=emptyCount(), s=pas[p]||{}, t=s.turns||0;
+  if (el==='fire'){
+    const n = t<FIRE_OPEN ? FIRE_OPEN : FIRE_CD, on = t<FIRE_OPEN ? t : Math.min(FIRE_CD, t-(s.fireAt??-99));
+    return `<span class="c-pips">${Array.from({length:n},(_,k)=>`<i class="${k<on?'on':''}"></i>`).join('')}</span>`;
+  }
+  const pos = x => (START_E-Math.max(0,Math.min(START_E,x)))/START_E*100;
+  const spent = el!=='king' && cardLeft(p)<=0;
+  const wins = el==='king' ? [[60,41,royalDone(p).includes(0)],[40,21,royalDone(p).includes(1)],[20,0,royalDone(p).includes(2)]]
+    : el==='ninja' ? [[START_E-2*NINJA_OPEN, LATE+1, spent]]
+    : [[cardOpenAt(el), 0, spent]];
+  return `<span class="c-gauge">${wins.map(([a,b,used])=>`<i class="g-win${used?' used':''}" style="left:${pos(a).toFixed(1)}%;width:${(pos(b)-pos(a)).toFixed(1)}%"></i>`).join('')}<i class="g-tick" style="left:33.3%"></i><i class="g-tick" style="left:66.7%"></i><b class="g-now" style="left:${pos(e).toFixed(1)}%"></b></span><span class="c-phase"><span>序盤</span><span>中盤</span><span>終盤</span></span>`;
 }
 function cardAllowed(p){
   if (phase!=='play'||busy||over||turn!==p||cardThisTurn||decree) return false;
@@ -1981,7 +2078,9 @@ function render(){
     prevBlock[p]=blk;
     cb.querySelector('.c-desc').textContent=C.desc;
     cb.querySelector('.c-uses').textContent = usesLabel(p);
-    cb.querySelector('.c-note').textContent=cardBlock(p);
+    cb.querySelector('.c-gaugebox').innerHTML=cardGauge(p);
+    { const w=cb.querySelector('.c-when'); w.textContent=cardWhen(p); w.classList.toggle('ok', !cardTimeBlock(p)); }
+    cb.querySelector('.c-note').textContent = isHushed(p) ? cardBlock(p) : (cardTimeBlock(p) ? '' : cardOtherBlock(p));
     cb.disabled = !ok && aim!==p;
     cb.classList.toggle('ready', ok && aim!==p);
     cb.classList.toggle('armed', aim===p || (!over && turn===p && (extra>0 || quake>0 || royal===p)));
@@ -4474,7 +4573,7 @@ function showSkillInfo(p, kind){
   const nm=$('siName'); nm.textContent=C.name; nm.style.fontFamily=E.font||''; nm.style.color=tint(p);
   $('siDesc').textContent=C.desc;
   const blk=kind==='card' ? cardBlock(p) : '';
-  $('siState').textContent = kind==='card' ? `${usesLabel(p)}　${blk || '使用可能'}` : pasState(p);
+  $('siState').textContent = kind==='card' ? `${usesLabel(p)}　${cardWhen(p)}${blk && !cardTimeBlock(p) ? `　${blk}` : ''}` : pasState(p);
   $('skillInfo').querySelector('.m-panel').style.setProperty('--ec', tint(p));
   openModal('skillInfo');
 }
@@ -4501,17 +4600,18 @@ $('mSettings').addEventListener('click',()=>{ closeModal('menu'); openModal('set
 $('mTitle').addEventListener('click',openTitle);
 $('toTitle').addEventListener('click',openTitle);
 $('setClose').addEventListener('click',()=>closeModal('settings'));
-{
-  const sel=$('pFav');
-  sel.innerHTML='<option value="">未設定</option>'+EL_ORDER.map(k=>`<option value="${k}">${ELS[k].k}　${ELS[k].name}</option>`).join('');
-}
+// wins earn a frame: bronze at 10, silver at 20, gold at 30
+const winTier = w => w>=30 ? 3 : w>=20 ? 2 : w>=10 ? 1 : 0;
 function paintProfile(){
   const nm=$('pName'); if (document.activeElement!==nm) nm.value=myName();
-  $('pFav').value=EL_ORDER.includes(prof.fav) ? prof.fav : '';
+  const favE=EL_ORDER.includes(prof.fav) ? ELS[prof.fav] : null;
+  const sig=$('pSig'); sig.textContent=favE ? favE.k : '？'; sig.style.setProperty('--ec', favE ? favE.c1 : '#cbb8ff');
+  const fv=$('pFavName'); fv.style.setProperty('--ec', favE ? favE.c1 : '#cbb8ff');
+  fv.innerHTML = favE ? `好きな属性：<b>${favE.name}</b>` : '好きな属性：未設定（下の一覧からタップ）';
   let tw=0, tp=0;
   $('pWins').innerHTML=EL_ORDER.map(k=>{
-    const w=prof.wins[k]||0, n=prof.plays[k]||0; tw+=w; tp+=n;
-    return `<div class="p-win${prof.fav===k?' fav':''}" style="--ec:${ELS[k].c1}"><b>${ELS[k].k}</b><strong>${w}勝</strong><span>${n}戦</span></div>`;
+    const w=prof.wins[k]||0, n=prof.plays[k]||0, tr=winTier(w); tw+=w; tp+=n;
+    return `<button type="button" class="p-win${tr?' t'+tr:''}${prof.fav===k?' fav':''}" data-el="${k}" style="--ec:${ELS[k].c1}" aria-pressed="${prof.fav===k}" aria-label="${ELS[k].name} ${w}勝 ${n}戦">${tr?`<span class="medal">${['','銅','銀','金'][tr]}</span>`:''}<b>${ELS[k].k}</b><strong>${w}勝</strong><span>${n}戦</span></button>`;
   }).join('');
   $('pTotal').textContent=`通算 ${tw}勝 / ${tp}戦（CPU戦とネット対戦を自動で記録）`;
   const fav=EL_ORDER.includes(prof.fav) ? ELS[prof.fav] : null;
@@ -4520,7 +4620,12 @@ function paintProfile(){
 }
 $('pName').addEventListener('input',e=>{ prof.name=cleanName(e.target.value); saveProf(); paintProfile(); render(); });
 $('pName').addEventListener('change',()=>{ announceName(); });
-$('pFav').addEventListener('change',e=>{ prof.fav=EL_ORDER.includes(e.target.value) ? e.target.value : ''; saveProf(); paintProfile(); });
+$('pWins').addEventListener('click',e=>{
+  const b=e.target.closest('.p-win'); if (!b) return;
+  const k=b.dataset.el; prof.fav = prof.fav===k ? '' : (EL_ORDER.includes(k) ? k : '');
+  saveProf(); paintProfile(); uiSfx('click');
+  const nb=$('pWins').querySelector(`[data-el="${k}"]`); if (nb) nb.focus();
+});
 paintProfile();
 $('demo').addEventListener('click',()=>closeModal('settings'));
 ['menu','settings'].forEach(id=>$(id).addEventListener('click',e=>{ if (e.target.id===id) closeModal(id); }));
