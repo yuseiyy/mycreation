@@ -1680,7 +1680,9 @@ const PASSIVES = {
   steel:   { name:'鋼の忠誠',         sub:'IRON LOYALTY',      desc:'相手が鋼の石の隣に石を置くと、その石は錆びつく。相手の次のターンのあいだ、錆びた石は挟むための石として使えない。' },
   time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。' },
 };
-const freshPas = () => ({1:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0},2:{flips:0,turns:0,seraph:false,fireAt:-99,jin:0}});
+// every key is listed so an online state merge overwrites last game's values instead of keeping them
+const freshSide = () => ({flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0});
+const freshPas = () => ({1:freshSide(),2:freshSide()});
 const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
 const clone = o => JSON.parse(JSON.stringify(o));
 const cardOf = p => CARDS[cfg.el[p]];
