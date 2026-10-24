@@ -687,6 +687,9 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .cell.hexed .disc{filter:saturate(.35) brightness(.7);box-shadow:inset 0 0 0 3px #6a1fd0,0 0 14px #a259ff!important}
 .cell.hexed::before{content:"封";position:absolute;right:1px;top:-2px;z-index:5;pointer-events:none;font-family:var(--f-display);font-size:clamp(9px,1.8vw,14px);color:#f0dcff;text-shadow:0 0 6px #a259ff,0 0 10px #a259ff,0 0 2px #000}
 
+.d-order{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,360px)}
+.d-order .gbtn{padding:14px 8px;font-size:16px}
+
 /* profile */
 #settings .m-panel{max-height:calc(100vh - 32px);overflow:auto}
 .prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
@@ -842,8 +845,6 @@ html.lite .disc{filter:none!important}
       <button class="gbtn primary" id="tResume" type="button" hidden>続きから<small id="tResumeInfo"></small></button>
       <button class="gbtn primary" id="tCpu" type="button">CPUと対戦</button>
       <div class="t-opts" id="tCpuOpts" hidden>
-        <div class="t-label">手番</div>
-        <div class="seg" style="--n:2"><button class="gbtn" id="tSide1" type="button">先手で戦う</button><button class="gbtn" id="tSide2" type="button">後手で戦う</button></div>
         <div class="t-label">CPUの強さ</div>
         <div class="seg" style="--n:3"><button class="gbtn" data-lv="1" type="button">見習い</button><button class="gbtn" data-lv="2" type="button">魔導士</button><button class="gbtn" data-lv="3" type="button">大魔王</button></div>
         <button class="gbtn primary" id="tStart" type="button">対戦開始</button>
@@ -853,7 +854,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.22</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.23</div>
   </div>
 </div>
 
@@ -972,6 +973,7 @@ html.lite .disc{filter:none!important}
           <div class="d-title" id="dTitle">属性を選べ</div>
           <div class="d-sub" id="dSub"></div>
           <div class="coin" id="coin" hidden><div class="coin-face front">先手</div><div class="coin-face back">後手</div></div>
+          <div class="d-order" id="dOrder" hidden><button class="gbtn primary" id="oFirst" type="button">先手をとる</button><button class="gbtn" id="oSecond" type="button">後手をとる</button></div>
           <div class="d-timer" id="dTimer"></div>
           <div id="dGrid"></div>
         </div>
@@ -1009,8 +1011,8 @@ html.lite .disc{filter:none!important}
       <label class="sel" for="code"><span>4桁の合言葉</span>
         <input id="code" type="text" inputmode="numeric" maxlength="4" placeholder="0000" autocomplete="off">
       </label>
-      <button class="gbtn primary" id="host" type="button">部屋を作る（先手）</button>
-      <button class="gbtn" id="join" type="button">部屋に入る（後手）</button>
+      <button class="gbtn primary" id="host" type="button">部屋を作る</button>
+      <button class="gbtn" id="join" type="button">部屋に入る</button>
       <button class="gbtn" id="leave" type="button" hidden>退出</button>
     </div>
     <p class="net-msg" id="netMsg"></p>
@@ -2563,7 +2565,7 @@ function saveResume(){
   if (phase!=='play' || over) return;
   try {
     if (!online()) localStorage.setItem(RESUME_KEY, JSON.stringify({kind:'local', mode:cfg.mode, lv:cfg.lv, at:Date.now(), el:{...cfg.el}, d:{...curState(), phase:'play', el:{...cfg.el}}}));
-    else if (net.kind && net.side) localStorage.setItem(RESUME_KEY, JSON.stringify({kind:net.kind, code:net.code, side:net.side, me:ME, at:Date.now(), el:{...cfg.el}, shared:net.kind==='p2p' ? net.shared : null}));
+    else if (net.kind && net.side) localStorage.setItem(RESUME_KEY, JSON.stringify({kind:net.kind, code:net.code, side:net.side, host:!!net.host, me:ME, at:Date.now(), el:{...cfg.el}, shared:net.kind==='p2p' ? net.shared : null}));
   } catch(e){}
 }
 function clearResume(){ try { localStorage.removeItem(RESUME_KEY); } catch(e){} }
@@ -2588,8 +2590,80 @@ function resetLocal(S){
 
 /* ---------- element draft (with coin toss on a clash) ---------- */
 let draftTimers=[], countdownT=null;
-function clearDraftTimers(){ draftTimers.forEach(clearTimeout); draftTimers=[]; clearInterval(countdownT); $('dTimer').textContent=''; }
-const isResolver = () => !online() || net.side===1;
+function clearDraftTimers(){ draftTimers.forEach(clearTimeout); draftTimers=[]; clearInterval(countdownT); if (typeof orderT!=='undefined') clearInterval(orderT); $('dTimer').textContent=''; }
+const isResolver = () => !online() || !!net.host;
+/* who plays first: a coin is tossed between the two players and the winner chooses.
+   The two "parties" are the human and the CPU, players A and B on one screen, or the room's host and guest. */
+let orderInfo=null, orderT=null;
+const orderParties = () => online() ? ['host','guest'] : cfg.mode==='pvp' ? ['A','B'] : ['human','cpu'];
+const otherParty = x => { const [a,b]=orderParties(); return x===a ? b : a; };
+const isMyParty = x => online() ? (x==='host')===!!net.host : x!=='cpu';
+function partyName(x){
+  if (x==='human') return myName()||'あなた';
+  if (x==='cpu') return 'CPU';
+  if (x==='A'||x==='B') return `プレイヤー${x}`;
+  return isMyParty(x) ? (myName()||'あなた') : (oppName()||'相手');
+}
+function startOrder(){
+  clearDraftTimers(); clearInterval(orderT);
+  phase='order'; picks={1:'',2:''}; coinInfo=null;
+  const [a,b]=orderParties();
+  orderInfo={winner: Math.random()<.5 ? a : b, stage:'spin', at:Date.now()};
+  const S=freshState();
+  resetLocal(S);
+  if (online() && net.kind){ net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'order', order:{winner:orderInfo.winner, choice:'', at:orderInfo.at}, picks:{1:'',2:''}, coin:null, updated:Date.now()}); }
+  playOrder();
+}
+function playOrder(){
+  const o=orderInfo; if (!o) return;
+  const [a,b]=orderParties();
+  const coin=$('coin'); coin.querySelector('.front').textContent=partyName(a).slice(0,5); coin.querySelector('.back').textContent=partyName(b).slice(0,5);
+  render();
+  for (let k=0;k<10;k++) tone('triangle',1400+k*60,1400+k*60,.05,.05,k*.18);
+  coin.animate([{transform:'translateY(0) rotateY(0deg)'},{transform:'translateY(-80px) rotateY(1080deg)',offset:.45},{transform:`translateY(0) rotateY(${2160+(o.winner===a?0:180)}deg)`}],{duration:2200,easing:'cubic-bezier(.25,.6,.3,1)',fill:'forwards'});
+  draftTimers.push(setTimeout(()=>{
+    if (phase!=='order' || orderInfo!==o) return;
+    o.stage='choose'; flash('#ffd34d',.25,300); shake(6);
+    toast(`${partyName(o.winner)}の勝ち！ 先手か後手を選びます`);
+    render();
+    if (o.choice){ if (isResolver()) applyOrder(o.choice); return; }
+    if (isMyParty(o.winner)) startOrderCountdown(o);
+    else if (!online() && o.winner==='cpu') draftTimers.push(setTimeout(()=>chooseOrder(Math.random()<.6?'first':'second'),900));
+  },2300));
+}
+function startOrderCountdown(o){
+  let left=10; const t=$('dTimer'); t.textContent=`あと ${left} 秒`;
+  clearInterval(orderT);
+  orderT=setInterval(()=>{
+    if (phase!=='order' || orderInfo!==o || o.choice){ clearInterval(orderT); t.textContent=''; return; }
+    left--;
+    if (left<=0){ clearInterval(orderT); t.textContent=''; chooseOrder(Math.random()<.5?'first':'second'); toast('時間切れ。ランダムで決まりました'); }
+    else t.textContent=`あと ${left} 秒`;
+  },1000);
+}
+function chooseOrder(choice){
+  const o=orderInfo; if (!o || o.stage!=='choose' || o.choice) return;
+  o.choice=choice; clearInterval(orderT); $('dTimer').textContent='';
+  if (online() && net.kind) netWrite({order:{winner:o.winner, choice, at:o.at}, updated:Date.now()});
+  if (isResolver()) applyOrder(choice); else render();
+}
+// seat the players and move on to the element draft
+function applyOrder(choice){
+  const o=orderInfo; if (!o || o.applied) return; o.applied=true;
+  const first = choice==='first' ? o.winner : otherParty(o.winner);
+  toast(`${partyName(first)}が先手、${partyName(otherParty(first))}が後手`);
+  if (online() && net.kind){
+    const hs = first==='host' ? 1 : 2, gs=3-hs, old=3-net.side;
+    const gME=(net.seats||{})[old]||'', gName=(net.names||{})[old]||'', gCard=(net.cards||{})[old]||null;
+    net.side=hs;
+    netWrite({hostSide:hs, seats:{[hs]:ME,[gs]:gME}, names:{[hs]:myName(),[gs]:gName}, cards:{[hs]:myCard(),[gs]:gCard}, updated:Date.now()});
+  } else if (cfg.mode==='pvp') cfg.pvpFirst = first;
+  else { cfg.mode = first==='human' ? 'cpu2' : 'cpu1'; }
+  saveCfg();
+  // let everyone see the result for a moment
+  render();
+  draftTimers.push(setTimeout(()=>{ if (phase==='order' && orderInfo===o) beginDraft(); },1500));
+}
 const localSide = p => online() ? (!!net.kind && p===net.side) : cfg.mode==='pvp' ? true : p!==cpuSide();
 function draftChooser(){
   if (over) return 0;
@@ -2603,11 +2677,19 @@ function draftChooser(){
 }
 function renderDraft(){
   const dr=$('draft');
-  if (phase==='play' || over || (online() && !net.kind)){ dr.hidden=true; return; }
+  if (phase==='play' || over || (online() && !net.kind)){ dr.hidden=true; $('dOrder').hidden=true; return; }
   dr.hidden=false;
   const ch=draftChooser();
   let title='', sub='', excl='';
-  if (phase==='draft'){
+  $('dOrder').hidden = !(phase==='order' && orderInfo && orderInfo.stage==='choose' && !orderInfo.choice && isMyParty(orderInfo.winner));
+  if (phase==='order'){
+    const o=orderInfo;
+    if (!o){ title='先手・後手を決めよう'; sub = online() && !net.opp ? '対戦相手が来たらコインで決めます…' : '準備中…'; }
+    else if (o.stage==='spin'){ title='先手・後手を決めよう'; sub=`${esc(partyName(orderParties()[0]))} と ${esc(partyName(orderParties()[1]))} でコイントス…`; }
+    else if (o.choice){ title='決定！'; const f=o.choice==='first'?o.winner:otherParty(o.winner); sub=`<strong>${esc(partyName(f))}</strong>が先手です`; }
+    else if (isMyParty(o.winner)){ title=`${esc(partyName(o.winner))}の勝ち！`; sub=!online() && cfg.mode==='pvp' ? `<strong>${esc(partyName(o.winner))}</strong>は先手か後手を選んでください` : '先手か後手を選んでください'; }
+    else { title=`${esc(partyName(o.winner))}の勝ち`; sub=`${esc(partyName(o.winner))}が先手・後手を選んでいます…`; }
+  } else if (phase==='draft'){
     title='属性を選べ';
     const st=p=>`${roleOf(p)}：${picks[p]?'決定済み':'選択中…'}`;
     sub = ch ? (!online() && cfg.mode==='pvp' ? `<strong>${roleOf(ch)}</strong>の人が選んでください（相手には見えません）` : `<strong>${roleOf(ch)}</strong>のあなたが選んでください`) : '相手の選択を待っています…';
@@ -2621,10 +2703,12 @@ function renderDraft(){
     }
   }
   $('dTitle').textContent=title; $('dSub').innerHTML=sub;
-  $('coin').hidden = phase!=='coin';
+  $('coin').hidden = !(phase==='coin' || (phase==='order' && orderInfo));
   const grid=$('dGrid'); grid.hidden=!ch;
   grid.querySelectorAll('button').forEach(b=>{ b.disabled = b.dataset.el===excl; });
 }
+$('oFirst').addEventListener('click',()=>{ ac(); chooseOrder('first'); });
+$('oSecond').addEventListener('click',()=>{ ac(); chooseOrder('second'); });
 EL_ORDER.forEach(k=>{
   const E=ELS[k], b=document.createElement('button');
   b.type='button'; b.className='d-el'; b.dataset.el=k; b.style.setProperty('--ec',E.c1);
@@ -2636,7 +2720,19 @@ function startDraft(){
   clearDraftTimers();
   // a new game from the menus replaces the saved one (the title screen at boot keeps it for 続きから)
   if ($('title').hidden) clearResume();
-  phase='draft'; picks={1:'',2:''}; coinInfo=null;
+  if (online()){
+    if (!net.kind){ phase='order'; orderInfo=null; resetLocal(freshState()); return; }
+    // only the host tosses the coin; a guest asks for a new game by resetting the room
+    if (isResolver() && net.opp){ startOrder(); return; }
+    phase='order'; orderInfo=null; const S=freshState(); resetLocal(S);
+    net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'order', order:null, picks:{1:'',2:''}, coin:null, updated:Date.now()});
+    return;
+  }
+  startOrder();
+}
+function beginDraft(){
+  clearDraftTimers();
+  phase='draft'; picks={1:'',2:''}; coinInfo=null; orderInfo=null;
   const S=freshState();
   resetLocal(S);
   if (online() && net.kind){ net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'draft', picks:{1:'',2:''}, coin:null, updated:Date.now()}); }
@@ -2670,6 +2766,7 @@ function startCoin(){
 }
 function playCoin(){
   const c=coinInfo; render();
+  $('coin').querySelector('.front').textContent='先手'; $('coin').querySelector('.back').textContent='後手';
   for (let k=0;k<10;k++) tone('triangle',1400+k*60,1400+k*60,.05,.05,k*.18);
   $('coin').animate([
     {transform:'translateY(0) rotateY(0deg)'},
@@ -4197,7 +4294,7 @@ const net={kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:
 const oppName = () => cleanName((net.names||{})[3-net.side]);
 function nameOf(p){
   if (online()) return !net.side ? '' : net.side===p ? (myName()||'あなた') : (oppName()||'相手');
-  return cpuSide()===p ? 'CPU' : cfg.mode==='pvp' ? `プレイヤー${p}` : (myName()||'あなた');
+  return cpuSide()===p ? 'CPU' : cfg.mode==='pvp' ? `プレイヤー${(p===1)===((cfg.pvpFirst||'A')==='A') ? 'A' : 'B'}` : (myName()||'あなた');
 }
 const san = n => n ? `${n}さん` : '相手';
 function showVs(){
@@ -4265,8 +4362,22 @@ function sendState(S,act){
 function validDoc(d){ return d && Array.isArray(d.board) && (d.board.length===64||d.board.length===N) && d.board.every(v=>v===-1||v===0||v===1||v===2) && (d.turn===1||d.turn===2); }
 function syncPhase(d){
   if (d.picks && typeof d.picks==='object') picks={1:EL_ORDER.includes(d.picks[1])?d.picks[1]:'', 2:EL_ORDER.includes(d.picks[2])?d.picks[2]:''};
-  const ph = ['draft','coin','play'].includes(d.phase) ? d.phase : 'play';
-  if (ph==='draft' && phase!=='draft'){ clearDraftTimers(); phase='draft'; coinInfo=null; }
+  const ph = ['order','draft','coin','play'].includes(d.phase) ? d.phase : 'play';
+  if (ph==='order'){
+    const od=d.order && typeof d.order==='object' && ['host','guest'].includes(d.order.winner) ? d.order : null;
+    if (!od){
+      if (phase!=='order' || orderInfo){ clearDraftTimers(); phase='order'; orderInfo=null; }
+      if (isResolver() && net.opp) setTimeout(()=>{ if (phase==='order' && !orderInfo && net.opp) startOrder(); },300);
+    } else if (!orderInfo || orderInfo.at!==od.at){
+      clearDraftTimers(); phase='order'; coinInfo=null;
+      orderInfo={winner:od.winner, stage:'spin', at:od.at, choice:['first','second'].includes(od.choice)?od.choice:''};
+      playOrder();
+    } else if (od.choice && !orderInfo.choice && ['first','second'].includes(od.choice)){
+      orderInfo.choice=od.choice; clearInterval(orderT); $('dTimer').textContent='';
+      if (isResolver() && orderInfo.stage==='choose') applyOrder(od.choice);
+    }
+  }
+  else if (ph==='draft' && phase!=='draft'){ clearDraftTimers(); phase='draft'; coinInfo=null; orderInfo=null; }
   else if (ph==='coin' && phase!=='coin' && d.coin && EL_ORDER.includes(d.coin.el)){
     phase='coin'; coinInfo={winner:d.coin.winner===2?2:1, loser:d.coin.winner===2?1:2, el:d.coin.el, stage:'spin'}; playCoin();
   }
@@ -4278,7 +4389,10 @@ function syncPhase(d){
 }
 function onNet(d){
   if (!net.kind || !d) return;
+  // the coin may have put the host second: sides follow hostSide
+  if (d.hostSide===1 || d.hostSide===2) net.side = net.host ? d.hostSide : 3-d.hostSide;
   const seats=d.seats||{};
+  net.seats=seats;
   if (seats[net.side] && seats[net.side]!==ME){ netMsg('この席にほかの人が入りました。別の数字で部屋を作ってください。'); leaveRoom(true); return; }
   const hadOpp=net.opp;
   net.opp=!!(seats[1] && seats[2]);
@@ -4287,7 +4401,7 @@ function onNet(d){
   const inGame = d.phase==='play' || phase==='play';
   if (net.opp && !hadOpp){
     if (inGame) toast(`${san(oppName())}が対戦に戻ってきました`);
-    else { toast(net.side===1 ? `${san(oppName())}が入室しました。属性を選んでください` : `${oppName() ? san(oppName())+'の' : ''}部屋に入りました。属性を選んでください`); showVs(); }
+    else { toast(net.host ? `${san(oppName())}が入室しました。コインで先手・後手を決めます` : `${oppName() ? san(oppName())+'の' : ''}部屋に入りました。コインで先手・後手を決めます`); showVs(); }
   }
   if (!net.opp && hadOpp) toast(inGame ? '相手との接続が切れました。戻ってくるのを待っています' : '相手が退出しました');
   syncPhase(d);
@@ -4328,8 +4442,8 @@ function paintNetStatus(){
       ? `部屋 <strong>${net.code}</strong>：相手の復帰を待っています…（相手が同じ端末でページを開き直し、「続きから」を押すと戻れます）`
       : `部屋 <strong>${net.code}</strong> を作りました。相手が同じ数字で「部屋に入る」を押すのを待っています…`);
 }
-function roomDoc(S,seats){ return {...stateFields(S), act:null, seq:net.seq, seats, names:{1:myName(),2:''}, cards:{1:myCard(),2:null}, freq:null, el:{1:cfg.el[1],2:cfg.el[2]}, phase:'draft', picks:{1:'',2:''}, coin:null, updated:Date.now()}; }
-function enterHostDraft(){ clearDraftTimers(); phase='draft'; picks={1:'',2:''}; coinInfo=null; }
+function roomDoc(S,seats){ return {...stateFields(S), act:null, seq:net.seq, seats, hostSide:1, names:{1:myName(),2:''}, cards:{1:myCard(),2:null}, freq:null, el:{1:cfg.el[1],2:cfg.el[2]}, phase:'order', order:null, picks:{1:'',2:''}, coin:null, updated:Date.now()}; }
+function enterHostDraft(){ clearDraftTimers(); phase='order'; orderInfo=null; picks={1:'',2:''}; coinInfo=null; }
 
 /* db transport (inside Claude) */
 let dbP=null, userP=null;
@@ -4360,11 +4474,11 @@ async function hostDb(code){
     const S=freshState();
     net.seq=(d && d.seq || 0)+1;
     await ref.set(roomDoc(S,{1:ME,2:''}));
-    Object.assign(net,{kind:'db',ref,code,side:1,opp:false,queue:[]});
+    Object.assign(net,{kind:'db',ref,code,side:1,host:true,opp:false,queue:[]});
     enterHostDraft(); resetLocal(S); attachDb();
   } catch(e){ netMsg('部屋を作れませんでした。少し待ってからもう一度試してください。'); }
 }
-async function joinDb(code, pref){
+async function joinDb(code, pref, asHost){
   const db=await prepareDb(); if(!db) return;
   netMsg('部屋を探しています…');
   try {
@@ -4383,7 +4497,7 @@ async function joinDb(code, pref){
     else { netMsg('この部屋はもう2人そろっています。'); return; }
     await fidReady();
     await ref.update({seats:{[side]:ME}, names:{[side]:myName()}, cards:{[side]:myCard()}, updated:Date.now()});
-    Object.assign(net,{kind:'db',ref,code,side,opp:false,queue:[],seq:d.seq||0});
+    Object.assign(net,{kind:'db',ref,code,side,host:!!asHost,opp:false,queue:[],seq:d.seq||0});
     d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
     phase=''; syncPhase(d); resetLocal(d); attachDb();
   } catch(e){ netMsg('部屋に入れませんでした。少し待ってからもう一度試してください。'); }
@@ -4422,15 +4536,16 @@ async function hostP2P(code, restore, tries=0){
   peer.on('open',()=>{
     if (restore && validDoc(restore)){
       const d=clone(restore); d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
-      net.shared=clone(d); net.shared.seats={1:ME,2:''}; net.shared.names={...(d.names||{}),1:myName()};
-      Object.assign(net,{kind:'p2p',code,side:1,opp:false,queue:[],seq:d.seq||0});
+      const hs=d.hostSide===2 ? 2 : 1;
+      net.shared=clone(d); net.shared.seats={[hs]:ME,[3-hs]:''}; net.shared.names={...(d.names||{}),[hs]:myName()};
+      Object.assign(net,{kind:'p2p',code,side:hs,host:true,opp:false,queue:[],seq:d.seq||0});
       phase=''; syncPhase(d); resetLocal(d); onNet(net.shared); paintOnline(); paintNetStatus(); render();
       return;
     }
     const S=freshState();
     net.seq=1;
     net.shared=roomDoc(S,{1:ME,2:''});
-    Object.assign(net,{kind:'p2p',code,side:1,opp:false,queue:[]});
+    Object.assign(net,{kind:'p2p',code,side:1,host:true,opp:false,queue:[]});
     enterHostDraft(); resetLocal(S); paintOnline(); paintNetStatus(); render();
   });
   peer.on('connection',conn=>{
@@ -4443,14 +4558,15 @@ async function hostP2P(code, restore, tries=0){
         if ((other && who!==net.shared.guest) || (net.shared.phase==='play' && net.shared.guest && net.shared.guest!==who)){ conn.send({t:'full'}); setTimeout(()=>conn.close(),500); return; }
         if (other){ const old=net.conn; net.conn=conn; try { old.close(); } catch(e){} }
         net.conn=conn;
-        deepMerge(net.shared,{seats:{2:who}, guest:who, names:{2:cleanName(msg.name)}, cards:{2:cleanCard(msg.card)}, updated:Date.now()});
+        const gs=net.shared.hostSide===2 ? 1 : 2;
+        deepMerge(net.shared,{seats:{[gs]:who}, guest:who, names:{[gs]:cleanName(msg.name)}, cards:{[gs]:cleanCard(msg.card)}, updated:Date.now()});
         conn.send({t:'state', d:net.shared});
         onNet(net.shared);
       } else if (msg.t==='patch' && net.conn===conn && msg.p && typeof msg.p==='object'){
         deepMerge(net.shared,msg.p); onNet(net.shared);
       }
     });
-    conn.on('close',()=>{ if (net.conn===conn){ net.conn=null; if (net.shared){ net.shared.seats[2]=''; onNet(net.shared); } } });
+    conn.on('close',()=>{ if (net.conn===conn){ net.conn=null; if (net.shared){ net.shared.seats[net.shared.hostSide===2?1:2]=''; onNet(net.shared); } } });
   });
   peer.on('disconnected',()=>{ try { if (!peer.destroyed) peer.reconnect(); } catch(e){} });
   peer.on('error',e=>{
@@ -4491,7 +4607,7 @@ function guestConnect(){
       if (mine && validDoc(mine) && (mine.seq||0)>(d.seq||0) && mine.phase==='play'){ d={...clone(mine), seats:d.seats, guest:d.guest, names:d.names}; conn.send({t:'patch',p:clone(d)}); }
       d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
       net.shared=clone(d);
-      Object.assign(net,{kind:'p2p',code:pd.code,side:2,opp:false,queue:[],seq:d.seq||0});
+      Object.assign(net,{kind:'p2p',code:pd.code,side:d.hostSide===2?1:2,host:false,opp:false,queue:[],seq:d.seq||0});
       phase=''; syncPhase(d); resetLocal(d); onNet(net.shared); paintOnline(); paintNetStatus();
       return;
     }
@@ -4522,7 +4638,7 @@ function leaveRoom(keepMsg){
     if (net.ref && net.side) net.ref.update({seats:{[net.side]:''}, updated:Date.now()}).catch(()=>{});
   }
   cleanupPeer();
-  Object.assign(net,{kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],shared:null,names:{},cards:{},pending:null,tries:0});
+  Object.assign(net,{kind:null,ref:null,code:null,side:0,host:false,seq:0,opp:false,unsub:null,queue:[],shared:null,names:{},cards:{},seats:{},pending:null,tries:0});
   paintFriendBtns();
   if (!keepMsg) paintOnline(); else { $('code').disabled=false; $('host').hidden=false; $('join').hidden=false; $('leave').hidden=true; }
 }
@@ -4586,7 +4702,7 @@ function paintFriendBtns(){
   const fr=$('friendReq');
   fr.hidden = !c || c.id===myFid || isFriend(c.id);
   if (fr.hidden){ fr.disabled=false; fr.textContent='フレンド申請'; }
-  $('inviteBtn').hidden = !(net.kind && net.side===1 && !net.opp && prof.friends.length);
+  $('inviteBtn').hidden = !(net.kind && net.host && !net.opp && prof.friends.length);
 }
 function onFriendNet(d){
   net.cards = d.cards && typeof d.cards==='object' ? d.cards : {};
@@ -4705,7 +4821,7 @@ function paintFriends(){
   });
 }
 async function sendInvite(f,btn){
-  if (!(net.kind && net.side===1 && !net.opp)){ toast('部屋を作って相手を待っているときに招待できます'); return; }
+  if (!(net.kind && net.host && !net.opp)){ toast('部屋を作って相手を待っているときに招待できます'); return; }
   btn.disabled=true; btn.textContent='送信中…';
   let ok=false;
   if (inClaude()){
@@ -4748,7 +4864,8 @@ $('inviteBtn').addEventListener('click',()=>openFriends('invite'));
 function buildHelp(){
   const body=$('helpBody');
   body.innerHTML = `<ul class="h-rules">
-    <li>対局の最初に、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
+    <li>対局の最初に<strong>コイントス</strong>をして、勝った人が<strong>先手か後手かを選びます</strong>。</li>
+    <li>そのあと、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
     <li>岩属性は対局開始時に、外周のマスを1つ選んで岩を置きます（5秒以内。さらに2マスはランダム）。</li>
     <li>竜の<strong>暴虐</strong>は「直線」と「正方形（3×3）」を1回ずつ使えます。片方を使うと、もう片方は5ターン使えません。</li>
@@ -4769,7 +4886,6 @@ function buildHelp(){
       <dl>
         <dt>カード</dt><dd>${C.name}<br><small>${C.desc}${k==='fire'?'':`（${C.uses}回）`}</small></dd>
         <dt>パッシブ</dt><dd>${PS.name}<br><small>${PS.desc}</small></dd>
-        <dt>角を取ると</dt><dd>${E.ult}<br><small>属性ごとの必殺演出</small></dd>
       </dl>
     </section>`;
   }).join('');
@@ -4907,9 +5023,7 @@ function wipe(mid){
   // the screen swap runs on a timer, so a stalled animation can never block the game
   setTimeout(()=>{ if (mid) mid(); w.animate([{transform:'translateX(0) skewX(-14deg)'},{transform:'translateX(130%) skewX(-14deg)'}],{duration:380,delay:90,easing:'cubic-bezier(.6,0,.4,1)',fill:'forwards'}); }, 350);
 }
-let tSide = cfg.mode==='cpu1' ? 2 : 1;
 function paintTitle(){
-  $('tSide1').setAttribute('aria-pressed', tSide===1); $('tSide2').setAttribute('aria-pressed', tSide===2);
   document.querySelectorAll('#tCpuOpts [data-lv]').forEach(b=>b.setAttribute('aria-pressed', +b.dataset.lv===+cfg.lv));
 }
 function setMode(m){ if (net.kind || net.peer) leaveRoom(); cfg.mode=m; saveCfg(); paintOnline(); newGame(); }
@@ -4933,17 +5047,16 @@ function resumeGame(t){
   // take back the identity this device held in that room
   ME=t.me||ME; try { sessionStorage.setItem('eo-me',ME); } catch(e){}
   $('code').value=t.code; paintOnline();
-  if (t.kind==='db') joinDb(t.code, t.side);
-  else if (t.side===1) hostP2P(t.code, t.shared);
+  const wasHost = t.host!==undefined ? !!t.host : t.side===1;
+  if (t.kind==='db') joinDb(t.code, t.side, wasHost);
+  else if (wasHost) hostP2P(t.code, t.shared);
   else joinP2P(t.code, t.shared);
 }
 $('tResume').addEventListener('click',()=>{ const t=loadResume(); if (!t){ paintResume(); return; } bgmStart(); wipe(()=>{ $('title').hidden=true; resumeGame(t); }); });
 ['fire','thunder','rock','light','dark','star','steel','dragon','ninja','oni','king'].forEach((k,i)=>{ const s=document.createElement('span'); s.className='t-emb'; s.textContent=ELS[k].k; s.style.setProperty('--ec',ELS[k].c1); s.style.setProperty('--i',i); $('tEmblems').appendChild(s); });
 $('tCpu').addEventListener('click',()=>{ const o=$('tCpuOpts'); o.hidden=!o.hidden; paintTitle(); });
-$('tSide1').addEventListener('click',()=>{ tSide=1; paintTitle(); });
-$('tSide2').addEventListener('click',()=>{ tSide=2; paintTitle(); });
 document.querySelectorAll('#tCpuOpts [data-lv]').forEach(b=>b.addEventListener('click',()=>{ cfg.lv=+b.dataset.lv; saveCfg(); paintTitle(); }));
-$('tStart').addEventListener('click',()=>closeTitle(tSide===1?'cpu2':'cpu1'));
+$('tStart').addEventListener('click',()=>closeTitle('cpu2'));
 $('tPvp').addEventListener('click',()=>closeTitle('pvp'));
 $('tNet').addEventListener('click',()=>closeTitle('online'));
 $('tGuide').addEventListener('click',openHelp);
