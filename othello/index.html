@@ -709,20 +709,16 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .p-legend .lb{background:linear-gradient(135deg,#ffd0a0,#a0582a,#5a2a0a)}
 .p-legend .ls{background:linear-gradient(135deg,#ffffff,#8a96a6,#4a5868)}
 .p-legend .lg{background:linear-gradient(135deg,#fff8d8,#b8860b,#7a5410)}
-/* card timing gauge */
-.card .c-gaugebox{display:grid;gap:2px;margin-top:2px}
-.c-gauge{position:relative;display:block;height:8px;border-radius:4px;background:#ffffff10;box-shadow:inset 0 0 0 1px #ffffff1a}
-.c-gauge i{position:absolute;top:0;bottom:0}
-.c-gauge .g-win{border-radius:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--ec) 65%,#fff),var(--ec));box-shadow:0 0 8px color-mix(in srgb,var(--ec) 60%,transparent)}
-.c-gauge .g-win.used{background:repeating-linear-gradient(45deg,#ffffff30 0 3px,transparent 3px 6px);box-shadow:none}
-.c-gauge .g-tick{width:1px;top:-2px;bottom:-2px;background:#ffffff55}
-.c-gauge .g-now{position:absolute;top:-4px;width:3px;height:16px;margin-left:-1.5px;border-radius:2px;background:#fff;box-shadow:0 0 6px #fff,0 0 0 1px #000a}
-.c-phase{display:grid;grid-template-columns:repeat(3,1fr);font-size:9px;letter-spacing:.12em;color:var(--muted);text-align:center}
-.c-pips{display:flex;gap:4px}
-.c-pips i{flex:1;height:8px;border-radius:3px;background:#ffffff12;box-shadow:inset 0 0 0 1px #ffffff1a}
-.c-pips i.on{background:var(--ec);box-shadow:0 0 6px var(--ec)}
-.card .c-when{font-size:11px;font-weight:700;line-height:1.45;color:#ffd08a;text-align:left}
-.card .c-when.ok{color:#9ff0b4}
+/* card timing: a label and one big number */
+.card .c-when{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 5px;padding:4px 8px;border-radius:8px;background:#ffb04a14;border:1px solid #ffb04a44;
+  font-size:11px;font-weight:700;line-height:1.3;color:#ffd08a;text-align:left}
+.card .c-when b{font-family:var(--f-latin);font-size:22px;line-height:1;font-weight:700;color:#ffcf6a;text-shadow:0 0 10px #ffb04a99;font-variant-numeric:tabular-nums}
+.card .c-when .w-unit{font-size:11px}
+.card .c-when.ok{background:color-mix(in srgb,var(--ec) 14%,transparent);border-color:color-mix(in srgb,var(--ec) 55%,transparent);color:#d8ffe2}
+.card .c-when.ok b{color:#fff;text-shadow:0 0 10px var(--ec)}
+.card .c-when.soon b{animation:whenPulse 1s ease-in-out infinite}
+@keyframes whenPulse{50%{transform:scale(1.15)}}
+.card .c-when b{display:inline-block}
 .p-total{font-size:12px;color:var(--muted)}
 .t-player{font-size:13px;color:#e8dcff;min-height:1.3em;margin-top:-4px}
 #tResume small{display:block;font-size:11px;opacity:.85}
@@ -817,7 +813,7 @@ html.lite .disc{filter:none!important}
       <button class="gbtn" id="tNet" type="button">ネット対戦<small>4桁の合言葉で友だちと</small></button>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.19</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.20</div>
   </div>
 </div>
 
@@ -889,7 +885,6 @@ html.lite .disc{filter:none!important}
       <div class="pas" id="pas1"><span class="p-top"><span>パッシブ</span><span class="p-state"></span></span><span class="p-name"></span><span class="p-desc"></span></div>
       <button class="card" id="card1" type="button">
         <span class="c-top"><span>必殺技カード</span><span class="c-uses"></span></span>
-        <span class="c-gaugebox"></span>
         <span class="c-when"></span>
         <span class="c-name"></span>
         <span class="c-desc"></span>
@@ -927,7 +922,6 @@ html.lite .disc{filter:none!important}
       <div class="pas" id="pas2"><span class="p-top"><span>パッシブ</span><span class="p-state"></span></span><span class="p-name"></span><span class="p-desc"></span></div>
       <button class="card" id="card2" type="button">
         <span class="c-top"><span>必殺技カード</span><span class="c-uses"></span></span>
-        <span class="c-gaugebox"></span>
         <span class="c-when"></span>
         <span class="c-name"></span>
         <span class="c-desc"></span>
@@ -1857,43 +1851,31 @@ function cardBlock(p){
 // "手" is one stone placed by either player, so a player's own turns come round about every two
 const turnsOf = n => Math.max(1, Math.ceil(n/2));
 const START_E = 60;   // empty squares when a game starts
-// the card's usable window, said plainly
+// the card's usable window as a label and a count of the player's own turns
 function cardWhen(p){
   const el=cfg.el[p], e=emptyCount(), s=pas[p]||{}, t=s.turns||0;
+  const W=(pre,n,ok)=>({pre,n,ok});
   if (el==='fire'){
     const r=fireReadyIn(p);
-    if (t<FIRE_OPEN) return `解禁まで あなたの番 あと${FIRE_OPEN-t}回`;
-    return r>0 ? `再使用まで あなたの番 あと${r}回` : '今使える（使うと次はあなたの番5回後）';
+    if (t<FIRE_OPEN) return W('解禁まで',FIRE_OPEN-t,false);
+    return r>0 ? W('再使用まで',r,false) : W('使用可能',null,true);
   }
   if (el==='king'){
-    const ph=phaseOf(e), end=ph===0?40:ph===1?20:0, left=e-end;
-    if (!royalDone(p).includes(ph)) return ph<2 ? `${PHASES[ph]}のうちに1回 ― ${PHASES[ph]}は残り${left}手（あなたの番 約${turnsOf(left)}回）` : '終盤のうちに1回（最後まで使える）';
-    return ph<2 ? `${PHASES[ph]}は使用済み ― ${PHASES[ph+1]}まで あと${left}手（あなたの番 約${turnsOf(left)}回）` : '終盤も使用済み';
+    const ph=phaseOf(e), left=e-(ph===0?40:ph===1?20:0);
+    if (!royalDone(p).includes(ph)) return ph<2 ? W(`使用可能・${PHASES[ph]}の残り`,turnsOf(left),true) : W('使用可能',null,true);
+    return ph<2 ? W(`${PHASES[ph+1]}で復活まで`,turnsOf(left),false) : W('使い切りました',null,false);
   }
-  if (cardLeft(p)<=0) return '使い切りました';
+  if (cardLeft(p)<=0) return W('使い切りました',null,false);
   if (el==='ninja'){
-    if (e<=LATE) return '前半（空きマス31以上）だけのカード。もう使えません';
-    if (t<NINJA_OPEN) return `解禁まで あなたの番 あと${NINJA_OPEN-t}回 ― 使えるのは前半（あと${e-LATE}手）まで`;
-    return `使えるのは あと${e-LATE}手まで（あなたの番 約${turnsOf(e-LATE)}回）`;
+    if (e<=LATE) return W('前半のみ・使用期間終了',null,false);
+    if (t<NINJA_OPEN) return W('解禁まで',NINJA_OPEN-t,false);
+    return W('使用可能・残り',turnsOf(e-LATE),true);
   }
   const at=cardOpenAt(el);
-  if (e>at) return `解禁まで あと${e-at}手（あなたの番 約${turnsOf(e-at)}回）― 空きマス${at}以下で使える`;
-  return '使用可能（終局まで使える）';
+  if (e>at) return W('解禁まで',turnsOf(e-at),false);
+  return W('使用可能',null,true);
 }
-// a timeline of the whole game with the card's window lit and a marker for now
-function cardGauge(p){
-  const el=cfg.el[p], e=emptyCount(), s=pas[p]||{}, t=s.turns||0;
-  if (el==='fire'){
-    const n = t<FIRE_OPEN ? FIRE_OPEN : FIRE_CD, on = t<FIRE_OPEN ? t : Math.min(FIRE_CD, t-(s.fireAt??-99));
-    return `<span class="c-pips">${Array.from({length:n},(_,k)=>`<i class="${k<on?'on':''}"></i>`).join('')}</span>`;
-  }
-  const pos = x => (START_E-Math.max(0,Math.min(START_E,x)))/START_E*100;
-  const spent = el!=='king' && cardLeft(p)<=0;
-  const wins = el==='king' ? [[60,41,royalDone(p).includes(0)],[40,21,royalDone(p).includes(1)],[20,0,royalDone(p).includes(2)]]
-    : el==='ninja' ? [[START_E-2*NINJA_OPEN, LATE+1, spent]]
-    : [[cardOpenAt(el), 0, spent]];
-  return `<span class="c-gauge">${wins.map(([a,b,used])=>`<i class="g-win${used?' used':''}" style="left:${pos(a).toFixed(1)}%;width:${(pos(b)-pos(a)).toFixed(1)}%"></i>`).join('')}<i class="g-tick" style="left:33.3%"></i><i class="g-tick" style="left:66.7%"></i><b class="g-now" style="left:${pos(e).toFixed(1)}%"></b></span><span class="c-phase"><span>序盤</span><span>中盤</span><span>終盤</span></span>`;
-}
+const cardWhenText = p => { const w=cardWhen(p); return w.n==null ? w.pre : `${w.pre} ${w.n}ターン`; };
 function cardAllowed(p){
   if (phase!=='play'||busy||over||turn!==p||cardThisTurn||decree) return false;
   return !cardBlock(p);
@@ -2078,8 +2060,9 @@ function render(){
     prevBlock[p]=blk;
     cb.querySelector('.c-desc').textContent=C.desc;
     cb.querySelector('.c-uses').textContent = usesLabel(p);
-    cb.querySelector('.c-gaugebox').innerHTML=cardGauge(p);
-    { const w=cb.querySelector('.c-when'); w.textContent=cardWhen(p); w.classList.toggle('ok', !cardTimeBlock(p)); }
+    { const w=cardWhen(p), el2=cb.querySelector('.c-when');
+      el2.innerHTML = w.n==null ? `<span class="w-pre">${w.pre}</span>` : `<span class="w-pre">${w.pre}</span><b>${w.n}</b><span class="w-unit">ターン</span>`;
+      el2.classList.toggle('ok', !!w.ok); el2.classList.toggle('soon', w.n!=null && w.n<=2); }
     cb.querySelector('.c-note').textContent = isHushed(p) ? cardBlock(p) : (cardTimeBlock(p) ? '' : cardOtherBlock(p));
     cb.disabled = !ok && aim!==p;
     cb.classList.toggle('ready', ok && aim!==p);
@@ -4362,7 +4345,7 @@ function buildHelp(){
     <li>対局の最初に、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
     <li>星と岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。<strong>王は序盤・中盤・終盤にそれぞれ1回ずつ</strong>使えます（空きマス41以上が序盤、21〜40が中盤、20以下が終盤）。</li>
-    <li>カードが使えるようになると、カードが光って知らせます。</li>
+    <li>カードが使えるようになると、カードが光って知らせます。カードの「解禁まで ○ターン」「残り ○ターン」の<strong>ターンは自分の番の回数</strong>です。</li>
     <li><strong>忍は自分の手番が3回終わってから前半のあいだだけ</strong>、<strong>竜は空きマス残り${DRAGON_OPEN}以下の中盤</strong>から使えます。</li>
     <li><strong>鬼と鋼</strong>のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。鋼の石は二度と裏返りません。</li>
     <li>スマホでは、カードやパッシブを長押しすると詳しい説明が開きます。</li>
@@ -4573,7 +4556,7 @@ function showSkillInfo(p, kind){
   const nm=$('siName'); nm.textContent=C.name; nm.style.fontFamily=E.font||''; nm.style.color=tint(p);
   $('siDesc').textContent=C.desc;
   const blk=kind==='card' ? cardBlock(p) : '';
-  $('siState').textContent = kind==='card' ? `${usesLabel(p)}　${cardWhen(p)}${blk && !cardTimeBlock(p) ? `　${blk}` : ''}` : pasState(p);
+  $('siState').textContent = kind==='card' ? `${usesLabel(p)}　${cardWhenText(p)}${blk && !cardTimeBlock(p) ? `　${blk}` : ''}` : pasState(p);
   $('skillInfo').querySelector('.m-panel').style.setProperty('--ec', tint(p));
   openModal('skillInfo');
 }
