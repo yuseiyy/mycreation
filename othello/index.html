@@ -666,6 +666,21 @@ button:disabled,select:disabled{opacity:.45;cursor:not-allowed}
 .scene.shutter .bot{bottom:0;transform:translateY(102%);border-top:12px solid #ffc400;border-image:repeating-linear-gradient(45deg,#ffc400 0 16px,#141414 16px 32px) 12}
 .scene.shutter .sh-k{position:absolute;left:50%;top:50%;opacity:0;font-family:"Train One","Dela Gothic One",sans-serif;font-size:min(42vw,42vh);line-height:1;color:#e8eef5;-webkit-text-stroke:3px #2a3038;text-shadow:0 0 30px #8fd0ff,0 8px 0 #1a1e24}
 
+/* profile */
+#settings .m-panel{max-height:calc(100vh - 32px);overflow:auto}
+.prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
+.prof input,.prof select{width:150px;padding:8px 10px;border-radius:8px;border:1px solid #8a744499;background:#0f0b1a;color:var(--ink);font:inherit;font-size:14px}
+.prof input:focus,.prof select:focus{outline:2px solid #cbb8ff;outline-offset:1px}
+.p-wins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.p-win{--ec:#fff;display:grid;justify-items:center;gap:1px;padding:6px 2px;border-radius:8px;background:#0f0b1acc;border:1px solid #ffffff14;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.p-win b{font-family:var(--f-display);font-size:20px;line-height:1.1;font-weight:400;color:var(--ec);text-shadow:0 0 8px color-mix(in srgb,var(--ec) 60%,transparent)}
+.p-win strong{color:var(--ink);font-size:13px}
+.p-win.fav{border-color:#ffd34d;box-shadow:0 0 10px #ffd34d55}
+.p-total{font-size:12px;color:var(--muted)}
+.t-player{font-size:13px;color:#e8dcff;min-height:1.3em;margin-top:-4px}
+#tResume small{display:block;font-size:11px;opacity:.85}
+.d-el.fav::after{content:"★";position:absolute;top:3px;right:6px;z-index:2;color:#ffd34d;font-size:13px;text-shadow:0 0 6px #ffd34d}
+
 /* 省ドパモード: keep the game, drop the spectacle */
 html.lite .aura,html.lite #aura{display:none!important}
 html.lite .flame:not(.chain)::before,html.lite .flame:not(.chain)::after{animation:none!important}
@@ -740,7 +755,9 @@ html.lite .disc{filter:none!important}
     <div class="t-emblems" id="tEmblems"></div>
     <h1 class="t-logo">属性オセロ</h1>
     <div class="t-sub">ELEMENTAL REVERSI</div>
+    <div class="t-player" id="tPlayer"></div>
     <div class="t-menu">
+      <button class="gbtn primary" id="tResume" type="button" hidden>続きから<small id="tResumeInfo"></small></button>
       <button class="gbtn primary" id="tCpu" type="button">CPUと対戦</button>
       <div class="t-opts" id="tCpuOpts" hidden>
         <div class="t-label">手番</div>
@@ -779,6 +796,14 @@ html.lite .disc{filter:none!important}
 <div id="settings" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="setTitle">
   <div class="m-panel">
     <div class="m-title" id="setTitle">SETTINGS</div>
+    <div class="prof">
+      <div class="t-label">PROFILE</div>
+      <label class="m-row"><span>プレイヤー名<small>ネット対戦の相手にも表示されます</small></span><input id="pName" maxlength="12" placeholder="名前を入力" autocomplete="nickname"></label>
+      <label class="m-row"><span>好きな属性</span><select id="pFav"></select></label>
+      <div class="t-label">属性ごとの勝利数</div>
+      <div class="p-wins" id="pWins"></div>
+      <div class="p-total" id="pTotal"></div>
+    </div>
     <div class="m-row"><span>効果音</span><button class="gbtn" id="snd" type="button">ON</button></div>
     <div class="m-row"><span>BGM</span><button class="gbtn" id="bgm" type="button">ON</button></div>
     <div class="m-row"><span>省ドパモード<small>エフェクトを最小限にする</small></span><button class="gbtn" id="lite" type="button">OFF</button></div>
@@ -928,6 +953,13 @@ const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star
 let cfg = { el:{1:'dark',2:'light'}, mode:'cpu2', lv:2, sound:true };
 try { const s = JSON.parse(localStorage.getItem('elemental-othello-cfg')||'null'); if (s && s.el) cfg = Object.assign(cfg, s); } catch(e){}
 function saveCfg(){ try { localStorage.setItem('elemental-othello-cfg', JSON.stringify(cfg)); } catch(e){} }
+// the player on this device: a name, a favourite element and wins per element
+const PROF_KEY='elemental-othello-profile', RESUME_KEY='elemental-othello-resume';
+let prof={name:'', fav:'', wins:{}, plays:{}};
+try { const s=JSON.parse(localStorage.getItem(PROF_KEY)||'null'); if (s && typeof s==='object') prof={name:String(s.name||'').slice(0,12), fav:String(s.fav||''), wins:Object.assign({},s.wins||{}), plays:Object.assign({},s.plays||{})}; } catch(e){}
+function saveProf(){ try { localStorage.setItem(PROF_KEY, JSON.stringify(prof)); } catch(e){} }
+const cleanName = v => String(v||'').replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,12);
+const myName = () => cleanName(prof.name);
 
 let board, turn, busy = false, over = false, lastMove = -1, gen = 0;
 let burns = [], guards = [], used = {1:0,2:0}, extra = 0, cardThisTurn = false, aim = 0, blind = 0;
@@ -1917,7 +1949,7 @@ function render(){
   for (const p of [1,2]){
     const side=$('side'+p), cb=$('card'+p), pb=$('pas'+p);
     $('count'+p).textContent = p===1?a:w;
-    $('who'+p).textContent = online() ? (net.side ? (net.side===p ? 'あなた' : (net.opp ? '相手' : '待機中…')) : '') : cpuSide()===p ? 'CPU' : (cfg.mode==='pvp' ? `プレイヤー${p}` : 'あなた');
+    $('who'+p).textContent = online() ? (net.side ? (net.side===p ? (myName()||'あなた') : (net.opp ? (oppName()||'相手') : (phase==='play' ? '復帰待ち…' : '待機中…'))) : '') : cpuSide()===p ? 'CPU' : (cfg.mode==='pvp' ? `プレイヤー${p}` : (myName()||'あなた'));
     cb.hidden = pb.hidden = !play;
     side.classList.toggle('hushed', play && isHushed(p));
     if (!play){
@@ -2325,7 +2357,27 @@ async function commit(S){
   if (S.over){ if (!over) gameOver(); }
   else if (over){ over=false; $('result').hidden=true; }
   updateAmbience(); render();
+  saveResume();
   maybeCPU(); drainNet();
+}
+// a snapshot of the game in progress, so closing the page by mistake is not the end of it
+function saveResume(){
+  if (phase!=='play' || over) return;
+  try {
+    if (!online()) localStorage.setItem(RESUME_KEY, JSON.stringify({kind:'local', mode:cfg.mode, lv:cfg.lv, at:Date.now(), el:{...cfg.el}, d:{...curState(), phase:'play', el:{...cfg.el}}}));
+    else if (net.kind && net.side) localStorage.setItem(RESUME_KEY, JSON.stringify({kind:net.kind, code:net.code, side:net.side, me:ME, at:Date.now(), el:{...cfg.el}, shared:net.kind==='p2p' ? net.shared : null}));
+  } catch(e){}
+}
+function clearResume(){ try { localStorage.removeItem(RESUME_KEY); } catch(e){} }
+function loadResume(){
+  try {
+    const t=JSON.parse(localStorage.getItem(RESUME_KEY)||'null');
+    if (!t || typeof t!=='object') return null;
+    const age=Date.now()-(t.at||0);
+    if (t.kind==='local' ? (age>7*864e5 || !t.d || !validDoc(t.d)) : (age>STALE_MS || !/^\d{4}$/.test(t.code||'') || ![1,2].includes(t.side))) return null;
+    if (!t.el || !ALL_ELS.includes(t.el[1]) || !ALL_ELS.includes(t.el[2])) return null;
+    return t;
+  } catch(e){ return null; }
 }
 function resetLocal(S){
   gen++; busy=false; aim=0; aimSel=null; over=false; $('result').hidden=true; net.queue=[];
@@ -2384,6 +2436,8 @@ EL_ORDER.forEach(k=>{
 });
 function startDraft(){
   clearDraftTimers();
+  // a new game from the menus replaces the saved one (the title screen at boot keeps it for 続きから)
+  if ($('title').hidden) clearResume();
   phase='draft'; picks={1:'',2:''}; coinInfo=null;
   const S=freshState();
   resetLocal(S);
@@ -3819,6 +3873,14 @@ async function gameOver(){
   const r=boardEl.getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2;
   const me = online() ? net.side : cfg.mode==='pvp' ? 0 : 3-cpuSide();
   const won = !!win && (me===0 || win===me);
+  clearResume();
+  // only games against someone else count: CPU and online
+  if (me && EL_ORDER.includes(cfg.el[me])){
+    const k=cfg.el[me];
+    prof.plays[k]=(prof.plays[k]||0)+1;
+    if (won) prof.wins[k]=(prof.wins[k]||0)+1;
+    saveProf(); paintProfile();
+  }
   const rt=$('resTitle');
   rt.textContent = !win ? 'DRAW' : me===0 ? 'WINNER' : won ? 'VICTORY' : 'DEFEAT';
   rt.className = 'r-title '+(!win ? 'draw' : won ? 'win' : 'lose');
@@ -3852,7 +3914,9 @@ const STALE_MS = 30*60*1000;
 let ME='';
 try { ME=sessionStorage.getItem('eo-me')||''; } catch(e){}
 if (!ME){ ME='t'+Math.random().toString(36).slice(2,10)+Date.now().toString(36); try{ sessionStorage.setItem('eo-me',ME); }catch(e){} }
-const net={kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],peer:null,conn:null,shared:null,readOnly:false};
+const net={kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],peer:null,conn:null,shared:null,readOnly:false,names:{},pending:null,tries:0,retryT:0,joinT:0};
+const oppName = () => cleanName((net.names||{})[3-net.side]);
+function announceName(){ if (net.kind && net.side) netWrite({names:{[net.side]:myName()}, updated:Date.now()}); }
 const netMsgEl=$('netMsg');
 function netMsg(html){ netMsgEl.innerHTML=html; }
 function defaultNetMsg(){
@@ -3922,8 +3986,10 @@ function onNet(d){
   if (seats[net.side] && seats[net.side]!==ME){ netMsg('この席にほかの人が入りました。別の数字で部屋を作ってください。'); leaveRoom(true); return; }
   const hadOpp=net.opp;
   net.opp=!!(seats[1] && seats[2]);
-  if (net.opp && !hadOpp) toast('相手が入室しました。属性を選んでください');
-  if (!net.opp && hadOpp) toast('相手が退出しました');
+  net.names = d.names && typeof d.names==='object' ? d.names : {};
+  const inGame = d.phase==='play' || phase==='play';
+  if (net.opp && !hadOpp) toast(inGame ? `${oppName()||'相手'}が対戦に戻ってきました` : '相手が入室しました。属性を選んでください');
+  if (!net.opp && hadOpp) toast(inGame ? '相手との接続が切れました。戻ってくるのを待っています' : '相手が退出しました');
   syncPhase(d);
   if ((d.seq||0) > net.seq && validDoc(d)){ net.seq=d.seq; net.queue.push(clone(d)); drainNet(); }
   paintNetStatus();
@@ -3958,9 +4024,11 @@ function paintNetStatus(){
   const tail = phase==='play' ? `（<strong>${ELS[cfg.el[net.side]].k}</strong>）` : '';
   netMsg(net.opp
     ? `部屋 <strong>${net.code}</strong> で対戦中。あなたは${roleOf(net.side)}${tail}です。`
-    : `部屋 <strong>${net.code}</strong> を作りました。相手が同じ数字で「部屋に入る」を押すのを待っています…`);
+    : phase==='play'
+      ? `部屋 <strong>${net.code}</strong>：相手の復帰を待っています…（相手が同じ端末でページを開き直し、「続きから」を押すと戻れます）`
+      : `部屋 <strong>${net.code}</strong> を作りました。相手が同じ数字で「部屋に入る」を押すのを待っています…`);
 }
-function roomDoc(S,seats){ return {...stateFields(S), act:null, seq:net.seq, seats, el:{1:cfg.el[1],2:cfg.el[2]}, phase:'draft', picks:{1:'',2:''}, coin:null, updated:Date.now()}; }
+function roomDoc(S,seats){ return {...stateFields(S), act:null, seq:net.seq, seats, names:{1:myName(),2:''}, el:{1:cfg.el[1],2:cfg.el[2]}, phase:'draft', picks:{1:'',2:''}, coin:null, updated:Date.now()}; }
 function enterHostDraft(){ clearDraftTimers(); phase='draft'; picks={1:'',2:''}; coinInfo=null; }
 
 /* db transport (inside Claude) */
@@ -3995,7 +4063,7 @@ async function hostDb(code){
     enterHostDraft(); resetLocal(S); attachDb();
   } catch(e){ netMsg('部屋を作れませんでした。少し待ってからもう一度試してください。'); }
 }
-async function joinDb(code){
+async function joinDb(code, pref){
   const db=await prepareDb(); if(!db) return;
   netMsg('部屋を探しています…');
   try {
@@ -4008,17 +4076,18 @@ async function joinDb(code){
     if (!validDoc(d)){ netMsg('この部屋のデータが壊れています。相手に部屋を作り直してもらってください。'); return; }
     const seats=d.seats||{}, fresh=Date.now()-(d.updated||0) < STALE_MS;
     let side;
-    if (seats[1]===ME) side=1;
+    if (pref && (!seats[pref] || seats[pref]===ME || !fresh)) side=pref;
+    else if (seats[1]===ME) side=1;
     else if (seats[2]===ME || !seats[2] || !fresh) side=2;
     else { netMsg('この部屋はもう2人そろっています。'); return; }
-    await ref.update({seats:{[side]:ME}, updated:Date.now()});
+    await ref.update({seats:{[side]:ME}, names:{[side]:myName()}, updated:Date.now()});
     Object.assign(net,{kind:'db',ref,code,side,opp:false,queue:[],seq:d.seq||0});
     d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
     phase=''; syncPhase(d); resetLocal(d); attachDb();
   } catch(e){ netMsg('部屋に入れませんでした。少し待ってからもう一度試してください。'); }
 }
 function attachDb(){
-  paintOnline(); paintNetStatus(); render();
+  paintOnline(); paintNetStatus(); render(); announceName();
   net.unsub=net.ref.onSnapshot(s=>{
     if (!s.exists){ netMsg('部屋が見つからなくなりました。もう一度作り直してください。'); return; }
     onNet(s.data());
@@ -4038,16 +4107,24 @@ function loadPeer(){
   return peerLoad;
 }
 function cleanupPeer(){
+  clearTimeout(net.retryT); clearTimeout(net.joinT);
   try { net.conn && net.conn.close(); } catch(e){}
   try { net.peer && net.peer.destroy(); } catch(e){}
   net.conn=null; net.peer=null;
   paintOnline();
 }
-async function hostP2P(code){
-  netMsg('部屋を準備しています…');
+async function hostP2P(code, restore, tries=0){
+  netMsg(restore ? '対戦に戻っています…' : '部屋を準備しています…');
   if (!await loadPeer()){ netMsg('通信の準備ができませんでした。インターネット接続を確かめてください。'); return; }
   const peer=new Peer(PEER_PREFIX+code); net.peer=peer; paintOnline();
   peer.on('open',()=>{
+    if (restore && validDoc(restore)){
+      const d=clone(restore); d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
+      net.shared=clone(d); net.shared.seats={1:ME,2:''}; net.shared.names={...(d.names||{}),1:myName()};
+      Object.assign(net,{kind:'p2p',code,side:1,opp:false,queue:[],seq:d.seq||0});
+      phase=''; syncPhase(d); resetLocal(d); onNet(net.shared); paintOnline(); paintNetStatus(); render();
+      return;
+    }
     const S=freshState();
     net.seq=1;
     net.shared=roomDoc(S,{1:ME,2:''});
@@ -4055,15 +4132,19 @@ async function hostP2P(code){
     enterHostDraft(); resetLocal(S); paintOnline(); paintNetStatus(); render();
   });
   peer.on('connection',conn=>{
-    if (net.conn && net.conn.open){ conn.on('open',()=>{ conn.send({t:'full'}); setTimeout(()=>conn.close(),500); }); return; }
-    net.conn=conn;
     conn.on('data',msg=>{
       if (!msg || typeof msg!=='object' || !net.shared) return;
       if (msg.t==='hello'){
-        deepMerge(net.shared,{seats:{2:String(msg.me||'guest').slice(0,40)}, updated:Date.now()});
+        const who=String(msg.me||'guest').slice(0,40);
+        // a closed tab can look connected for a while: the same guest coming back replaces it, anyone else is turned away
+        const other = net.conn && net.conn!==conn && net.conn.open;
+        if ((other && who!==net.shared.guest) || (net.shared.phase==='play' && net.shared.guest && net.shared.guest!==who)){ conn.send({t:'full'}); setTimeout(()=>conn.close(),500); return; }
+        if (other){ const old=net.conn; net.conn=conn; try { old.close(); } catch(e){} }
+        net.conn=conn;
+        deepMerge(net.shared,{seats:{2:who}, guest:who, names:{2:cleanName(msg.name)}, updated:Date.now()});
         conn.send({t:'state', d:net.shared});
         onNet(net.shared);
-      } else if (msg.t==='patch' && msg.p && typeof msg.p==='object'){
+      } else if (msg.t==='patch' && net.conn===conn && msg.p && typeof msg.p==='object'){
         deepMerge(net.shared,msg.p); onNet(net.shared);
       }
     });
@@ -4071,38 +4152,66 @@ async function hostP2P(code){
   });
   peer.on('disconnected',()=>{ try { if (!peer.destroyed) peer.reconnect(); } catch(e){} });
   peer.on('error',e=>{
-    if (e.type==='unavailable-id'){ netMsg('その数字の部屋はいま使われています。別の4桁にしてください。'); cleanupPeer(); }
+    if (e.type==='unavailable-id' && restore && tries<12){
+      // the old connection takes a few seconds to be released
+      cleanupPeer(); netMsg(`前の接続が切れるのを待っています…（${tries+1}/12）`);
+      net.retryT=setTimeout(()=>hostP2P(code,restore,tries+1),3000);
+    }
+    else if (e.type==='unavailable-id'){ netMsg('その数字の部屋はいま使われています。別の4桁にしてください。'); cleanupPeer(); }
     else if (!net.kind){ netMsg(`接続できませんでした（${e.type}）。少し待ってからもう一度試してください。`); cleanupPeer(); }
   });
 }
-async function joinP2P(code){
-  netMsg('部屋を探しています…');
+async function joinP2P(code, saved){
+  netMsg(saved ? '対戦に戻っています…' : '部屋を探しています…');
   if (!await loadPeer()){ netMsg('通信の準備ができませんでした。インターネット接続を確かめてください。'); return; }
-  const peer=new Peer(); net.peer=peer; paintOnline();
-  let timer=null;
-  peer.on('open',()=>{
-    const conn=peer.connect(PEER_PREFIX+code,{reliable:true}); net.conn=conn;
-    timer=setTimeout(()=>{ if(!net.kind){ netMsg(`合言葉 <strong>${code}</strong> の部屋に入れませんでした。相手が「部屋を作る」を押したまま待っているか確かめてください。`); cleanupPeer(); } },12000);
-    conn.on('open',()=>conn.send({t:'hello',me:ME}));
-    conn.on('data',msg=>{
-      if (!msg || typeof msg!=='object') return;
-      if (msg.t==='full'){ clearTimeout(timer); netMsg('この部屋はもう2人そろっています。'); cleanupPeer(); return; }
-      if (msg.t==='state' && !net.kind && validDoc(msg.d)){
-        clearTimeout(timer);
-        const d=msg.d; d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
-        net.shared=clone(d);
-        Object.assign(net,{kind:'p2p',code,side:2,opp:false,queue:[],seq:d.seq||0});
-        phase=''; syncPhase(d); resetLocal(d); onNet(net.shared); paintOnline(); paintNetStatus();
-        return;
-      }
-      if (msg.t==='patch' && net.shared && msg.p && typeof msg.p==='object'){ deepMerge(net.shared,msg.p); onNet(net.shared); }
-    });
-    conn.on('close',()=>{ if (net.kind==='p2p'){ net.opp=false; toast('相手との接続が切れました'); netMsg('部屋を作った人との接続が切れました。「退出」してから入り直してください。'); render(); } });
-  });
+  const peer=new Peer(); net.peer=peer; net.pending={code, saved:saved||null}; net.tries=0; paintOnline();
+  peer.on('open',()=>guestConnect());
+  peer.on('disconnected',()=>{ try { if (!peer.destroyed) peer.reconnect(); } catch(e){} });
   peer.on('error',e=>{
-    if (e.type==='peer-unavailable'){ clearTimeout(timer); netMsg(`合言葉 <strong>${code}</strong> の部屋が見つかりません。相手が先に「部屋を作る」を押したか確かめてください。`); cleanupPeer(); }
-    else if (!net.kind){ clearTimeout(timer); netMsg(`接続できませんでした（${e.type}）。少し待ってからもう一度試してください。`); cleanupPeer(); }
+    if (net.peer!==peer) return;
+    if (e.type==='peer-unavailable' || net.kind || (net.pending && net.pending.saved)){ clearTimeout(net.joinT); retryGuest(e.type); }
+    else { clearTimeout(net.joinT); netMsg(`接続できませんでした（${e.type}）。少し待ってからもう一度試してください。`); cleanupPeer(); }
   });
+}
+function guestConnect(){
+  const pd=net.pending, peer=net.peer; if (!pd || !peer || peer.destroyed) return;
+  const conn=peer.connect(PEER_PREFIX+pd.code,{reliable:true}); net.conn=conn;
+  clearTimeout(net.joinT);
+  net.joinT=setTimeout(()=>{ if (net.conn===conn && !conn.open) retryGuest('timeout'); },10000);
+  conn.on('open',()=>{ clearTimeout(net.joinT); net.tries=0; const mine=net.shared||pd.saved; conn.send({t:'hello',me:ME,name:myName(),seq:(mine&&mine.seq)||0}); });
+  conn.on('data',msg=>{
+    if (!msg || typeof msg!=='object' || net.conn!==conn) return;
+    if (msg.t==='full'){ net.pending=null; netMsg('この部屋はもう2人そろっています。'); cleanupPeer(); return; }
+    if (msg.t==='state' && validDoc(msg.d)){
+      let d=clone(msg.d);
+      // if this side saw more of the game than the host kept, hand our copy back
+      const mine=net.shared||pd.saved;
+      if (mine && validDoc(mine) && (mine.seq||0)>(d.seq||0) && mine.phase==='play'){ d={...clone(mine), seats:d.seats, guest:d.guest, names:d.names}; conn.send({t:'patch',p:clone(d)}); }
+      d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
+      net.shared=clone(d);
+      Object.assign(net,{kind:'p2p',code:pd.code,side:2,opp:false,queue:[],seq:d.seq||0});
+      phase=''; syncPhase(d); resetLocal(d); onNet(net.shared); paintOnline(); paintNetStatus();
+      return;
+    }
+    if (msg.t==='patch' && net.shared && msg.p && typeof msg.p==='object'){ deepMerge(net.shared,msg.p); onNet(net.shared); }
+  });
+  conn.on('close',()=>{
+    if (net.conn!==conn) return;
+    net.conn=null;
+    if (net.kind==='p2p'){ net.opp=false; toast('相手との接続が切れました。戻ってくるのを待っています'); render(); retryGuest('close'); }
+  });
+}
+// keep knocking while the host is away (a first-time join gives up at once)
+function retryGuest(why){
+  const pd=net.pending; if (!pd || !net.peer) return;
+  if (!net.kind && !pd.saved){
+    netMsg(why==='peer-unavailable' ? `合言葉 <strong>${pd.code}</strong> の部屋が見つかりません。相手が先に「部屋を作る」を押したか確かめてください。` : `合言葉 <strong>${pd.code}</strong> の部屋に入れませんでした。相手が「部屋を作る」を押したまま待っているか確かめてください。`);
+    net.pending=null; cleanupPeer(); return;
+  }
+  net.tries++;
+  if (net.tries>40){ netMsg('相手が戻ってきませんでした。「退出」してから入り直してください。'); return; }
+  netMsg(`部屋 <strong>${pd.code}</strong>：部屋を作った人の復帰を待っています…`);
+  clearTimeout(net.retryT); net.retryT=setTimeout(guestConnect,4000);
 }
 
 function leaveRoom(keepMsg){
@@ -4111,12 +4220,12 @@ function leaveRoom(keepMsg){
     if (net.ref && net.side) net.ref.update({seats:{[net.side]:''}, updated:Date.now()}).catch(()=>{});
   }
   cleanupPeer();
-  Object.assign(net,{kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],shared:null});
+  Object.assign(net,{kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],shared:null,names:{},pending:null,tries:0});
   if (!keepMsg) paintOnline(); else { $('code').disabled=false; $('host').hidden=false; $('join').hidden=false; $('leave').hidden=true; }
 }
 $('host').addEventListener('click',()=>{ ac(); const c=readCode(); if(!c) return; inClaude() ? hostDb(c) : hostP2P(c); });
 $('join').addEventListener('click',()=>{ ac(); const c=readCode(); if(!c) return; inClaude() ? joinDb(c) : joinP2P(c); });
-$('leave').addEventListener('click',()=>{ leaveRoom(); newGame(); });
+$('leave').addEventListener('click',()=>{ clearResume(); leaveRoom(); newGame(); });
 $('code').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/g,'').slice(0,4); });
 addEventListener('pagehide',()=>{ if (net.kind==='db' && net.ref && net.side) net.ref.update({seats:{[net.side]:''}, updated:Date.now()}).catch(()=>{}); try { net.peer && net.peer.destroy(); } catch(e){} });
 
@@ -4292,7 +4401,30 @@ function paintTitle(){
 }
 function setMode(m){ if (net.kind || net.peer) leaveRoom(); cfg.mode=m; saveCfg(); paintOnline(); newGame(); }
 function closeTitle(m){ bgmStart(); wipe(()=>{ $('title').hidden=true; setMode(m); }); }
-function openTitle(){ closeModals(); wipe(()=>{ if (net.kind || net.peer) leaveRoom(); $('title').hidden=false; $('tCpuOpts').hidden=true; }); }
+function openTitle(){ closeModals(); wipe(()=>{ if (net.kind || net.peer) leaveRoom(); $('title').hidden=false; $('tCpuOpts').hidden=true; paintResume(); }); }
+function paintResume(){
+  const t=loadResume(), b=$('tResume');
+  b.hidden=!t; if (!t) return;
+  const vs=`${ELS[t.el[1]].k} 対 ${ELS[t.el[2]].k}`;
+  $('tResumeInfo').textContent = t.kind==='local' ? `${t.mode==='pvp' ? 'ふたりで対戦' : 'CPU戦'}・${vs}` : `ネット対戦・部屋 ${t.code}・${vs}`;
+}
+function resumeGame(t){
+  if (net.kind || net.peer) leaveRoom();
+  if (t.kind==='local'){
+    cfg.mode=t.mode; if (t.lv) cfg.lv=t.lv; saveCfg(); paintOnline();
+    restoreLocal(t.d);
+    return;
+  }
+  cfg.mode='online'; saveCfg();
+  clearDraftTimers(); phase='draft'; picks={1:'',2:''}; coinInfo=null; resetLocal(freshState());
+  // take back the identity this device held in that room
+  ME=t.me||ME; try { sessionStorage.setItem('eo-me',ME); } catch(e){}
+  $('code').value=t.code; paintOnline();
+  if (t.kind==='db') joinDb(t.code, t.side);
+  else if (t.side===1) hostP2P(t.code, t.shared);
+  else joinP2P(t.code, t.shared);
+}
+$('tResume').addEventListener('click',()=>{ const t=loadResume(); if (!t){ paintResume(); return; } bgmStart(); wipe(()=>{ $('title').hidden=true; resumeGame(t); }); });
 EL_ORDER.forEach((k,i)=>{ const s=document.createElement('span'); s.className='t-emb'; s.textContent=ELS[k].k; s.style.setProperty('--ec',ELS[k].c1); s.style.setProperty('--i',i); $('tEmblems').appendChild(s); });
 $('tCpu').addEventListener('click',()=>{ const o=$('tCpuOpts'); o.hidden=!o.hidden; paintTitle(); });
 $('tSide1').addEventListener('click',()=>{ tSide=1; paintTitle(); });
@@ -4342,6 +4474,27 @@ $('mSettings').addEventListener('click',()=>{ closeModal('menu'); openModal('set
 $('mTitle').addEventListener('click',openTitle);
 $('toTitle').addEventListener('click',openTitle);
 $('setClose').addEventListener('click',()=>closeModal('settings'));
+{
+  const sel=$('pFav');
+  sel.innerHTML='<option value="">未設定</option>'+EL_ORDER.map(k=>`<option value="${k}">${ELS[k].k}　${ELS[k].name}</option>`).join('');
+}
+function paintProfile(){
+  const nm=$('pName'); if (document.activeElement!==nm) nm.value=myName();
+  $('pFav').value=EL_ORDER.includes(prof.fav) ? prof.fav : '';
+  let tw=0, tp=0;
+  $('pWins').innerHTML=EL_ORDER.map(k=>{
+    const w=prof.wins[k]||0, n=prof.plays[k]||0; tw+=w; tp+=n;
+    return `<div class="p-win${prof.fav===k?' fav':''}" style="--ec:${ELS[k].c1}"><b>${ELS[k].k}</b><strong>${w}勝</strong><span>${n}戦</span></div>`;
+  }).join('');
+  $('pTotal').textContent=`通算 ${tw}勝 / ${tp}戦（CPU戦とネット対戦を自動で記録）`;
+  const fav=EL_ORDER.includes(prof.fav) ? ELS[prof.fav] : null;
+  $('tPlayer').textContent = myName() ? `${myName()}${fav ? `　・　好きな属性 ${fav.k}` : ''}` : '設定でプレイヤー名を決められます';
+  document.querySelectorAll('#dGrid .d-el').forEach(b=>b.classList.toggle('fav', b.dataset.el===prof.fav));
+}
+$('pName').addEventListener('input',e=>{ prof.name=cleanName(e.target.value); saveProf(); paintProfile(); render(); });
+$('pName').addEventListener('change',()=>{ announceName(); });
+$('pFav').addEventListener('change',e=>{ prof.fav=EL_ORDER.includes(e.target.value) ? e.target.value : ''; saveProf(); paintProfile(); });
+paintProfile();
 $('demo').addEventListener('click',()=>closeModal('settings'));
 ['menu','settings'].forEach(id=>$(id).addEventListener('click',e=>{ if (e.target.id===id) closeModal(id); }));
 addEventListener('keydown',e=>{ if (e.key==='Escape') closeModals(); });
@@ -4421,13 +4574,18 @@ addEventListener('pagehide',()=>{ pageAway=true; bgmStop(); if (AC) AC.suspend()
 addEventListener('pageshow',()=>{ pageAway=false; checkAway(); if (cfg.sound && AC) bgmStart(); });
 
 /* ---------- boot (keeps a local game alive across page updates) ---------- */
+function restoreLocal(data){
+  clearDraftTimers();
+  cfg.el={1:data.el[1],2:data.el[2]}; phase='play';
+  resetLocal({...freshState(), ...data, burns:data.burns||[], guards:data.guards||[], used:data.used||{1:0,2:0}, pas:data.pas||freshPas(), curses:data.curses||[], kings:data.kings||{1:-1,2:-1}, steel:data.steel||[], rust:data.rust||[], pass:0, ev:[]});
+}
 function start(data){
   paintOnline();
-  if (!online() && data && data.phase==='play' && validDoc(data) && data.el && EL_ORDER.includes(data.el[1]) && EL_ORDER.includes(data.el[2])){
-    cfg.el={1:data.el[1],2:data.el[2]}; phase='play';
-    resetLocal({...freshState(), ...data, burns:data.burns||[], guards:data.guards||[], used:data.used||{1:0,2:0}, pas:data.pas||freshPas(), curses:data.curses||[], kings:data.kings||{1:-1,2:-1}, pass:0, ev:[]});
+  if (!online() && data && data.phase==='play' && validDoc(data) && data.el && ALL_ELS.includes(data.el[1]) && ALL_ELS.includes(data.el[2])){
+    restoreLocal(data);
     $('title').hidden=true;
   } else newGame();
+  paintResume();
 }
 window.claude?.hot?.snapshot?.(()=>({...curState(), phase, el:{...cfg.el}}));
 const hot=window.claude?.hot;
