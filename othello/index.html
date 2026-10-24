@@ -1740,7 +1740,7 @@ function cardBlock(p){
     if (emptyCount()<=LATE) return '前半のみ使用可能（後半に入りました）';
   } else if (el==='king'){
     const ph=phaseOf(emptyCount());
-    if (royalDone(p).includes(ph)) return `${PHASES[ph]}ではもう使いました`;
+    if (royalDone(p).includes(ph)) return ph<2 ? `${PHASES[ph]}は使用済み。${PHASES[ph+1]}で復活（空きマスあと${emptyCount()-(ph===0?40:20)}）` : `${PHASES[ph]}ではもう使いました`;
   } else {
     if (cardLeft(p)<=0) return '使い切りました';
     const e=emptyCount(), at=cardOpenAt(el);
@@ -1967,7 +1967,7 @@ function render(){
   else if (extra>0) hot='雷帝：もう1手置ける';
   else if (quake>0) hot='岩石巨城：次に置いた石のまわりを押し出す';
   else if (royal===turn) hot='ロイヤルアーツ：置いたあと相手の手を指定';
-  st.innerHTML = `<span style="color:${tint(turn)};text-shadow:${E.glow}">${E.k}</span>のターン${who?`<small>${who}</small>`:''}${hot?`<small class="hot">${hot}</small>`:''}${e<=10?'<small>終盤戦</small>':''}`;
+  st.innerHTML = `<span style="color:${tint(turn)};text-shadow:${E.glow}">${E.k}</span>のターン${who?`<small>${who}</small>`:''}${hot?`<small class="hot">${hot}</small>`:''}${e<=10?'<small>終盤戦</small>':[1,2].some(q=>cfg.el[q]==='king')?`<small>${PHASES[phaseOf(e)]}（空きマス${e}）</small>`:''}`;
   st.className = 'status' + (e<=10 ? ' crit' : '');
 }
 const toastEl=$('toast'); let toastT;
@@ -3246,7 +3246,8 @@ function cardReadyFx(p){
   for (let j=0;j<3;j++) setTimeout(()=>ring(x,y,{vr:260+j*90,life:.6,w:3,color:tint(p),shape:el==='star'?'star':undefined}), j*130);
   elementMote(el,x,y,Math.round(34*FXQ),rr.width*.4);
   [0,1,2,3].forEach(k=>tone('sine',1046.5*Math.pow(1.26,k),1046.5*Math.pow(1.26,k),.35,.06,k*.07));
-  toast(`${roleOf(p)}の必殺技「${CARDS[el].name}」が使えるようになった！`);
+  if (el==='king' && royalDone(p).length){ const ph=phaseOf(emptyCount()); popText(x,y-rr.height*.6,`${PHASES[ph]}突入・復活！`,tint(p),26,1600); toast(`${PHASES[ph]}に突入！ ${roleOf(p)}の「${CARDS[el].name}」が復活した`); bell(1318.5,1,.08); bell(1568,1,.06,.12); }
+  else toast(`${roleOf(p)}の必殺技「${CARDS[el].name}」が使えるようになった！`);
 }
 // 岩石巨城: relocated stones arc over the board, the rest are flung off the screen
 async function fxQuake(idx, movesTxt){
