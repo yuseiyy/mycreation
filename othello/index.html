@@ -799,6 +799,10 @@ body:not(.lobby) .on-title{display:none}
 @keyframes kantanPulse{50%{box-shadow:0 0 0 4px #ff9ad5,0 0 34px #ff9ad5,0 0 60px #b48bff;transform:scale(1.06)}}
 .cell.kantan::after{font-size:clamp(11px,2.2vw,17px)!important;padding:0 4px;border-radius:6px;background:#ff9ad5cc;color:#fff!important}
 
+/* long-pressing for details must not start a text selection */
+.side,.status,#board,#skillInfo,#skillInfo *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{-webkit-user-select:text;user-select:text}
+
 /* profile */
 #settings .m-panel{max-height:calc(100vh - 32px);overflow:auto}
 .prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
@@ -962,7 +966,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.31</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.32</div>
   </div>
 </div>
 
@@ -5975,6 +5979,7 @@ function showSkillInfo(p, kind){
   const blk=kind==='card' ? cardBlock(p) : '';
   $('siState').textContent = kind==='card' ? `${usesLabel(p)}　${cardWhenText(p)}${blk && !cardTimeBlock(p) ? `　${blk}` : ''}` : pasState(p);
   $('skillInfo').querySelector('.m-panel').style.setProperty('--ec', tint(p));
+  try { window.getSelection().removeAllRanges(); } catch(e){}
   openModal('skillInfo');
 }
 // press and hold a card or passive to read it in full (narrow screens hide the text)
@@ -6133,7 +6138,7 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=31;
+const APP_VER=32;
 const CHANGES={
   30:[
     '月：今の月の形と次の月が、月属性のパネルに大きく出るように。月光がたまる置き場所は銀色の印に。玲瓏の段階を 0〜10／11〜20／21〜30／31〜 に。',
