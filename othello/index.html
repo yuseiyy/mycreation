@@ -702,6 +702,18 @@ body:not(.lobby) .on-title{display:none}
 .wait-dots i:nth-child(2){animation-delay:.2s}.wait-dots i:nth-child(3){animation-delay:.4s}
 @keyframes waitDot{0%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-6px)}}
 
+/* whole-game turn counter on the status line */
+.status .tn{display:inline-flex;align-items:baseline;gap:4px;margin-right:12px;padding:2px 10px;border-radius:999px;background:#ffffff10;border:1px solid #ffffff24;font-size:12px;color:var(--muted)}
+.status .tn b{font-family:var(--f-latin);font-size:18px;color:#fff;font-variant-numeric:tabular-nums}
+.status .tn small{font-size:10px;color:var(--muted);margin-left:2px}
+/* area preview for range cards */
+.cell.aoe{background:color-mix(in srgb,var(--aoe) 30%,transparent)!important;box-shadow:inset 0 0 0 3px var(--aoe),0 0 16px var(--aoe)!important}
+/* update notice */
+.news-list{margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:13px;line-height:1.6;color:var(--ink);max-height:55vh;overflow:auto}
+.news-ver{text-align:center;font-family:var(--f-latin);color:#ffd08a;font-size:13px;letter-spacing:.1em}
+.h-short{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;margin-left:auto;margin-right:10px}
+.h-short input{width:16px;height:16px;accent-color:#cbb8ff}
+
 /* profile */
 #settings .m-panel{max-height:calc(100vh - 32px);overflow:auto}
 .prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
@@ -865,7 +877,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.24</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.25</div>
   </div>
 </div>
 
@@ -944,10 +956,18 @@ html.lite .disc{filter:none!important}
     <button class="gbtn" id="askCancel" type="button" hidden>やめる</button>
   </div>
 </div>
+<div id="news" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="newsTitle">
+  <div class="m-panel">
+    <div class="m-title" id="newsTitle">UPDATE</div>
+    <div class="news-ver" id="newsVer"></div>
+    <ul class="news-list" id="newsList"></ul>
+    <button class="gbtn primary" id="newsClose" type="button">OK</button>
+  </div>
+</div>
 <div id="toast"></div>
 <div id="helpBox" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <div class="h-panel">
-    <div class="h-head"><h2 id="helpTitle">スキル説明</h2><button id="helpClose" type="button">閉じる</button></div>
+    <div class="h-head"><h2 id="helpTitle">スキル説明</h2><label class="h-short"><input type="checkbox" id="shortDesc">説明を簡潔にする</label><button id="helpClose" type="button">閉じる</button></div>
     <div class="h-body" id="helpBody"></div>
   </div>
 </div>
@@ -1066,7 +1086,8 @@ const ELS = {
              glow:'0 0 14px #c8d4e2, 0 0 50px #4a6a9a', fill:'linear-gradient(180deg,#ffffff 0%,#c8d4e2 30%,#6b7888 48%,#e8eef5 52%,#8a96a6 75%,#3a4450)' },
 };
 const EL_ORDER = ['dark','light','fire','thunder','star','king','rock','ninja','dragon','oni','steel'];
-const ALL_ELS = [...EL_ORDER,'time'];   // 時 is only ever chosen by the CPU
+const ALL_ELS = [...EL_ORDER,'time'];
+const TITLE_ORDER = ['fire','thunder','rock','light','dark','star','steel','dragon','ninja','oni','king'];   // 時 is only ever chosen by the CPU
 // banner lettering per element: font, sub-title font, and any extra shaping
 const LETTERING = {
   dark:    { font:'"Yuji Boku","Dela Gothic One",serif',             sfont:'"Creepster","Cinzel",serif', bf:'drop-shadow(0 5px 0 #1a0030) drop-shadow(0 0 16px #a259ff) drop-shadow(0 0 34px #000)', bt:'skewY(-2deg)' },
@@ -1089,7 +1110,8 @@ const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star
 
 /* ---------- state ---------- */
 let cfg = { el:{1:'dark',2:'light'}, mode:'cpu2', lv:2, sound:true };
-try { const s = JSON.parse(localStorage.getItem('elemental-othello-cfg')||'null'); if (s && s.el) cfg = Object.assign(cfg, s); } catch(e){}
+let returning=false;
+try { const s = JSON.parse(localStorage.getItem('elemental-othello-cfg')||'null'); if (s && s.el){ cfg = Object.assign(cfg, s); returning=true; } } catch(e){}
 function saveCfg(){ try { localStorage.setItem('elemental-othello-cfg', JSON.stringify(cfg)); } catch(e){} }
 // the player on this device: a name, a favourite element and wins per element
 const PROF_KEY='elemental-othello-profile', RESUME_KEY='elemental-othello-resume';
@@ -1116,7 +1138,7 @@ let pas = {1:{flips:0,turns:0,seraph:false},2:{flips:0,turns:0,seraph:false}}, p
 let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, quake = 0, curses = [], winOverride = 0, winReason = '', prot = [];
 let prevBlock = {1:null,2:null};
 let hidden = [], lastPlace = null, predict = null, aimSel = null, sneakyIdx = -1;
-let steel = [], rust = [], rockPick = null, rockT = 0;
+let steel = [], rust = [], rockPick = null, rockT = 0, tn = 0, rebel = {1:0,2:0}, rebelAt = {}, fake = null, rampage = 0;
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
@@ -1831,40 +1853,46 @@ const STAR_DIAG = 6;     // ...and this many on a diagonal
 const STEEL_N = 3;       // 堅牢の極意 takes this many stones
 const SERAPH_N = 25;     // 熾天使の契り wakes after this many flips
 const DRAGON_LOCK = 5;   // after one 暴虐, the other waits this many of the dragon's turns
-const GOUKETSU_N = 2;    // 豪傑 knocks down this many more
+const END_LOCK = 16;     // these cards stop working for the last 16 turns
+const LOCK_ELS = ['light','dark','star','dragon','oni','steel'];
+const NINJA_END = 26;    // 神出鬼没 works while more empty squares than this remain
+const ONI_MIN = 6;       // 鉄血粉砕 needs this many enemy stones in its 3x3
 const NINJA_OPEN = 3;     // 神出鬼没 unlocks after the ninja's third turn
 const DRAGON_OPEN = 44;  // 暴虐 unlocks in the midgame
 const TIME_OPEN = 36;    // 秒針自在 unlocks at the end of the midgame
+const LOCKTXT='最後の16ターン（空きマス16以下）は使えない。';
 const CARDS = {
-  light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。' },
-  dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:3, desc:'闇のいざないで、相手の石をランダムに3枚自分の色に変える。さらに相手の石2枚に封印をかけ、相手の次の2ターンのあいだ、挟むための石として使えなくする。' },
-  fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:0,      desc:'マスを1つ選んで燃やす。相手は3ターンのあいだそこに置けない。5ターンに1回使える。' },
-  thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。' },
-  star:    { name:'流星群',                 sub:'METEOR SHOWER',      uses:1,      desc:'空きマス3つに流れ星が落ちて自分の石になる（挟めば裏返す）。さらに相手の石1枚をランダムに自分の色に変える。' },
-  king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から旗で指定する。序盤・中盤・終盤にそれぞれ1回ずつ使える。角を指定できるのは1回だけ。' },
-  rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石のうち、半分を盤のどこかへ、残り半分を画面の外へ吹き飛ばす。' },
-  ninja:   { name:'神出鬼没',               sub:'NOW YOU SEE ME',     uses:2,      desc:'自分の石1つと相手の石1つを選び、位置を入れ替える。前半のみ使える。' },
-  dragon:  { name:'暴虐',                   sub:'TYRANNY',            uses:2,      desc:'荒ぶる蒼炎で石を焼き払って消し去り、そのマスには2ターンのあいだ誰も置けない。「直線」（選んだ直線すべて）と「正方形」（選んだマスとまわり8マス）を1回ずつ使える。片方を使うと、もう片方はそのあと5ターン使えない。' },
-  oni:     { name:'鉄血粉砕',               sub:'IRON-BLOOD CRUSH',   uses:1,      desc:'マスを1つ選んで金棒を振り下ろし、そのマスとまわり8マスにいる相手の石をすべて自分の色に変える。反動で豪傑はそのターンと続く2ターン休む。' },
-  steel:   { name:'堅牢の極意',             sub:'ART OF THE IRONCLAD', uses:1,     desc:'相手の石を3つ選んで鋼で覆い、自分の色に変える。鋼の石は二度と裏返らず、スキルでも動かない。' },
-  time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が1ターン選べなくなる。' },
+  light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。'+LOCKTXT, short:'相手の石をランダムに5枚消す。' },
+  dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:4, desc:'闇のいざないで、相手の石をランダムに4枚自分の色に変える。さらに相手の石2枚を封印し、4ターン（相手の番2回）のあいだ挟むための石として使えなくする。'+LOCKTXT, short:'相手の石をランダムに4枚奪う。さらに相手の石2枚を4ターン挟む石に使えなくする。' },
+  fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:0,      desc:'マスを1つ選んで燃やす。相手はそのマスに6ターン（相手の番3回）置けない。10ターン（自分の番5回）ごとに使える。', short:'選んだマスに相手は6ターン置けない。10ターンごとに使える。' },
+  thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。', short:'このターン2回置ける。' },
+  star:    { name:'流星群',                 sub:'METEOR SHOWER',      uses:1,      desc:'空きマス3つに流れ星が落ちて自分の石になる（挟めば裏返す）。さらに相手の石1枚をランダムに自分の色に変える。'+LOCKTXT, short:'空きマス3つに自分の石を置き、相手の石1枚を奪う。' },
+  king:    { name:'ロイヤルアーツ',         sub:'ROYAL ARTS',         uses:3,      desc:'石を置いたあと、相手が次に置くマスを、相手の置ける場所の中から旗で指定する。序盤・中盤・終盤にそれぞれ1回ずつ使える。角を指定できるのは1回だけ。', short:'相手の次の置き場所を指定する。序盤・中盤・終盤に1回ずつ（角は1回まで）。' },
+  rock:    { name:'岩石巨城',               sub:'STONE CITADEL',      uses:5,      desc:'このターン置いた石のまわり8マスの石のうち、半分を盤のどこかへ、残り半分を画面の外へ吹き飛ばす。', short:'置いた石のまわりの石を、半分は盤のどこかへ、半分は盤の外へ飛ばす。' },
+  ninja:   { name:'神出鬼没',               sub:'NOW YOU SEE ME',     uses:2,      desc:'自分の石1つと相手の石1つを選び、位置を入れ替える。空きマスが27以上あるあいだだけ使える。', short:'自分の石と相手の石を1つずつ入れ替える。空きマス27以上のあいだ。' },
+  dragon:  { name:'暴虐',                   sub:'TYRANNY',            uses:1,      desc:'荒ぶる蒼炎で石を焼き払って消し去り、そのマスには次の2ターン誰も置けない。「直線」（選んだ直線すべて）か「正方形」（選んだマスとまわり8マス）のどちらか一方を1回だけ使える。'+LOCKTXT, short:'直線か3×3の石を消し、次の2ターン誰も置けなくする。どちらか1回。' },
+  oni:     { name:'鉄血粉砕',               sub:'IRON-BLOOD CRUSH',   uses:1,      desc:'マスを1つ選んで金棒を振り下ろし、そのマスとまわり8マスにいる相手の石をすべて自分の色に変える。範囲に相手の石が6つ以上あるときだけ使える。'+LOCKTXT, short:'3×3の相手の石をすべて奪う（相手の石が6つ以上ある場所だけ）。' },
+  steel:   { name:'堅牢の極意',             sub:'ART OF THE IRONCLAD', uses:1,     desc:'相手の石を3つ選んで鋼で覆い、自分の色に変える。鋼の石は二度と裏返らず、スキルでも動かない。'+LOCKTXT, short:'相手の石を3つ奪い、二度と裏返らない石にする。' },
+  time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が次の番に選べなくなる。', short:'相手の直前の一手を取り消す。' },
 };
 const PASSIVES = {
-  light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計25枚に達すると覚醒。以後、相手の置ける場所が2つ以上あるターンは、置ける場所3つにつき1マス（最低1マス）を鎖で封じる。' },
-  dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の画面が1ターン真っ暗に。置ける場所だけは見える。' },
-  fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'毎ターン、置いた石は相手の2ターンのあいだ裏返らず、スキルも効かない。' },
-  thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分のターン開始時に、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前のターンに裏返した枚数×3%。' },
-  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦か横に7つ、または斜めに6つ並ぶと、相手のパッシブとカードを2ターン封じる。' },
-  king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王の上下左右4マスすべてと、斜め4マスのうち2マスが相手の石になると負け。まわり8マスすべてが味方になると勝ち。' },
-  rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'対局開始時に、盤の外周36マスから好きな1マスを選んで岩を置く（5秒以内）。さらに2マスにランダムで岩が現れる。岩には自分だけが石を置ける。' },
-  ninja:   { name:'隠密と罠',         sub:'SHADOW TRAP',       desc:'置いた石は相手の次のターンのあいだ相手から見えない。見えない石のマスに置こうとすると罠にかかり、そのターンを失う。' },
-  dragon:  { name:'逆鱗',             sub:"DRAGON'S WRATH",    desc:'自分の石を一度に、前半（空きマス31以上）は4枚以上・後半は5枚以上裏返されると怒り状態になる。次に置いたとき、裏返した石の上下左右にいる相手の石も裏返す。' },
-  oni:     { name:'豪傑',             sub:'MIGHTY BRUTE',      desc:'自分の石が盤上の石の3分の1未満のとき、置いた石のまわり8マスにいる相手の石を、さらに2枚までなぎ倒して自分の色に変える。' },
-  steel:   { name:'鋼の忠誠',         sub:'IRON LOYALTY',      desc:'相手が鋼の石の隣に石を置くと、その石は錆びつく。相手の次のターンのあいだ、錆びた石は挟むための石として使えない。' },
-  time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。' },
+  light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計25枚に達すると覚醒。以後、相手の置ける場所が2つ以上ある番は、置ける場所3つにつき1マス（最低1マス）を鎖で封じる。', short:'25枚返すと覚醒。以後、相手の置き場所を一部封じる。' },
+  dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の次の番は画面が真っ暗に（置ける場所だけ見える）。さらに本当は置けないマスが1つだけ置けるように見え、そこを選ぶと「スケア」で相手はその番を失う。', short:'4枚以上返すと、相手の次の番は盤が見えなくなり、偽の置き場所が1つ出る（選ぶと番を失う）。' },
+  fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'置いた石は4ターン（相手の番2回）のあいだ裏返らず、スキルも効かない。', short:'置いた石は4ターン裏返らない。' },
+  thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分の番の始めに、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前の番に裏返した枚数×3%。', short:'番の始めに、確率で雷帝が1回分よみがえる。' },
+  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦か横に7つ、または斜めに6つ並ぶたびに星が集まる。2回集めたあと、3回目から並ぶたびに相手のパッシブとカードを4ターン（相手の番2回）封じる。', short:'縦横7・斜め6に並べるたびに星が集まり、3回目から相手のスキルを4ターン封じる。' },
+  king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王の上下左右4マスすべてと斜め4マスのうち2マスが相手の石になると「反乱」の警告。次の自分の番のあとも反乱が続いているか、一度おさまったあと再び反乱になると負け。まわり8マスすべてが味方になると勝ち。', short:'最初の石が王。囲まれると反乱、次の番までに鎮めないか、2回目の反乱で負け。味方で囲むと勝ち。' },
+  rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'対局開始時に、盤の外周36マスから好きな1マスを選んで岩を置く（5秒以内）。さらに2マスにランダムで岩が現れる。岩には自分だけが石を置ける。', short:'開始時に外周へ岩を3つ（1つは自分で選ぶ）。岩には自分だけ置ける。' },
+  ninja:   { name:'隠密と罠',         sub:'SHADOW TRAP',       desc:'置いた石は相手の次の番のあいだ相手から見えない。見えない石のマスに置こうとすると罠にかかり、その番を失う。', short:'置いた石は相手の次の番に見えない。そこに置こうとすると番を失う。' },
+  dragon:  { name:'逆鱗',             sub:"DRAGON'S WRATH",    desc:'自分の石を一度に、前半（空きマス31以上）は4枚以上・後半は6枚以上裏返されると怒り状態になる。次に置いたとき、裏返した石の上下左右にいる相手の石も裏返す。', short:'一度に4枚（後半は6枚）以上返されると、次の一手で追加で返す。' },
+  oni:     { name:'豪傑',             sub:'MIGHTY BRUTE',      desc:'荒れ狂う鬼は力を制御できない。序盤・中盤・終盤にそれぞれ1回ずつ、ランダムな自分の番に、勝手にランダムな場所へ石を置いてしまう。', short:'序盤・中盤・終盤に1回ずつ、勝手にランダムな場所へ置いてしまう。' },
+  steel:   { name:'鋼の忠誠',         sub:'IRON LOYALTY',      desc:'相手が鋼の石の隣に石を置くと、その石は錆びつく。相手の次の番のあいだ、錆びた石は挟むための石として使えない。', short:'鋼の石の隣に置かれた石は、相手の次の番に挟む石に使えない。' },
+  time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。', short:'相手の手を予測し、的中すると秒針自在が回復。' },
 };
+// the simple-wording switch in the skill guide
+const descOf = X => cfg.shortDesc && X.short ? X.short : X.desc;
 // every key is listed so an online state merge overwrites last game's values instead of keeping them
-const freshSide = () => ({flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99});
+const freshSide = () => ({flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99,stars:0,ramp:[]});
 const freshPas = () => ({1:freshSide(),2:freshSide()});
 const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
 const clone = o => JSON.parse(JSON.stringify(o));
@@ -1882,14 +1910,12 @@ const royalDone = p => (pas[p] && pas[p].royal) || [];
 // 暴虐: which shapes are left, and how long the other one is still cooling down
 const dragonLockLeft = p => { const s=pas[p]||{}; return (s.dLine||s.dSq) && !(s.dLine&&s.dSq) ? Math.max(0, DRAGON_LOCK-((s.turns||0)-(s.dAt??-99))) : 0; };
 function sqCells(c){ const [r,cc]=RC[c], out=[]; for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++){ const rr=r+dr, c2=cc+dc; if (rr>=0&&rr<8&&c2>=0&&c2<8) out.push(rr*8+c2); } return out; }
-const cardLeft = p => cfg.el[p]==='dragon' ? (2-(+!!(pas[p]||{}).dLine)-(+!!(pas[p]||{}).dSq))
-  : cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0)
+const cardLeft = p => cfg.el[p]==='fire' ? (fireReadyIn(p)===0 ? 1 : 0)
   : cfg.el[p]==='king' ? (royalDone(p).includes(phaseOf(emptyCount())) ? 0 : 1)
   : Math.max(0, cardOf(p).uses - (used[p]||0));
 function usesLabel(p){
   const el=cfg.el[p];
-  if (el==='fire') return '5ターンに1回';
-  if (el==='dragon'){ const s=pas[p]||{}; return `直線${s.dLine?'×':'○'} 正方形${s.dSq?'×':'○'}`; }
+  if (el==='fire') return '10ターンに1回';
   if (el==='king'){ const d=royalDone(p), cur=phaseOf(emptyCount()); return PHASES.map((n,k)=>`${n[0]}${d.includes(k)?'×':k<cur?'－':'○'}`).join(' '); }
   return `残り ${cardLeft(p)} / ${cardOf(p).uses}`;
 }
@@ -1921,23 +1947,20 @@ function cardTimeBlock(p){
   const el=cfg.el[p], s=pas[p]||{}, t=s.turns||0, e=emptyCount();
   if (el==='fire'){
     const r=fireReadyIn(p);
-    if (t<FIRE_OPEN) return `解禁まで あなたの番 あと${FIRE_OPEN-t}回`;
-    if (r>0) return `再使用まで あなたの番 あと${r}回`;
+    if (t<FIRE_OPEN) return `解禁まで あと${untilOwn(p,FIRE_OPEN-t)}ターン`;
+    if (r>0) return `再使用まで あと${untilOwn(p,r)}ターン`;
   } else if (el==='ninja'){
     if (cardLeft(p)<=0) return '使い切りました';
-    if (e<=LATE) return '前半（空きマス31以上）だけのカード。もう使えません';
-    if (t<NINJA_OPEN) return `解禁まで あなたの番 あと${NINJA_OPEN-t}回`;
-  } else if (el==='dragon'){
-    if (cardLeft(p)<=0) return '使い切りました';
-    if (e>DRAGON_OPEN && !((pas[p]||{}).dLine||(pas[p]||{}).dSq)) return `解禁まで あと${e-DRAGON_OPEN}手`;
-    const lk=dragonLockLeft(p); if (lk>0) return `もう一方の暴虐まで あと${lk}ターン`;
+    if (e<=NINJA_END) return `空きマス${NINJA_END+1}以上のあいだだけのカード。もう使えません`;
+    if (t<NINJA_OPEN) return `解禁まで あと${untilOwn(p,NINJA_OPEN-t)}ターン`;
   } else if (el==='king'){
     const ph=phaseOf(e);
-    if (royalDone(p).includes(ph)) return ph<2 ? `${PHASES[ph]}は使用済み。${PHASES[ph+1]}まで あと${e-(ph===0?40:20)}手` : '終盤も使用済み';
+    if (royalDone(p).includes(ph)) return ph<2 ? `${PHASES[ph]}は使用済み。${PHASES[ph+1]}まで あと${e-(ph===0?40:20)}ターン` : '終盤も使用済み';
   } else {
     if (cardLeft(p)<=0) return '使い切りました';
     const at=cardOpenAt(el);
-    if (e>at) return `解禁まで あと${e-at}手`;
+    if (e>at) return `解禁まで あと${e-at}ターン`;
+    if (LOCK_ELS.includes(el) && e<=END_LOCK) return '最後の16ターンは使えません';
   }
   return '';
 }
@@ -1947,16 +1970,22 @@ function cardOtherBlock(p){
   if (el==='time' && !(lastPlace && lastPlace.p===3-p)) return '巻き戻せる相手の一手がない';
   if (el==='ninja' && !board.some((v,i)=>i<64 && v===3-p && !prot.some(g=>g.idx===i && g.owner===3-p))) return '入れ替えられる相手の石がない';
   if ((el==='light'||el==='dark') && skillTargets(board,p,prot,el).n<3) return '狙える相手の石が3枚未満';
-  if (el==='oni' && oniBest(board,p,prot).n<3) return '3枚以上まとめて砕ける場所がない';
+  if (el==='oni' && oniBest(board,p,prot).n<ONI_MIN) return `相手の石が${ONI_MIN}つ以上ある場所がない`;
   if (el==='steel' && steelPick(p).length<2) return '鋼で覆える相手の石が2枚未満';
   if (el==='fire' && !board.some((v,i)=>i<64 && v===0 && !burns.some(b=>b.idx===i))) return '燃やせるマスがありません';
   if (el==='star' && !board.some((v,i)=>i<64 && v===0)) return '空きマスがありません';
   return '';
 }
 function cardBlock(p){
-  if (isHushed(p)) return `星座に封じられている（あと${hush.left}ターン）`;
+  if (isHushed(p)) return `星座に封じられている（あと${turnsFor(hush.p,hush.left)}ターン）`;
   return cardTimeBlock(p) || cardOtherBlock(p);
 }
+// ターン: every turn of either player counts (one stone placed, or a pass).
+// An effect that lasts through player x's next k turns has this many turns left, counting the current one.
+const turnsFor = (x,k) => k<=0 ? 0 : (turn===x ? 2*k-1 : 2*k);
+// turns until player x has finished r more of their own turns (a countdown to their next chance)
+const untilOwn = (x,r) => r<=0 ? 0 : (turn===x ? 2*r : 2*r-1);
+const effLeft = b => b.kind==='blaze' ? b.left+(b.fresh?1:0) : turnsFor(3-b.owner, b.left);
 // "手" is one stone placed by either player, so a player's own turns come round about every two
 const turnsOf = n => Math.max(1, Math.ceil(n/2));
 const START_E = 60;   // empty squares when a game starts
@@ -1966,27 +1995,23 @@ function cardWhen(p){
   const W=(pre,n,ok)=>({pre,n,ok});
   if (el==='fire'){
     const r=fireReadyIn(p);
-    if (t<FIRE_OPEN) return W('解禁まで',FIRE_OPEN-t,false);
-    return r>0 ? W('再使用まで',r,false) : W('使用可能',null,true);
+    if (t<FIRE_OPEN) return W('解禁まで',untilOwn(p,FIRE_OPEN-t),false);
+    return r>0 ? W('再使用まで',untilOwn(p,r),false) : W('使用可能',null,true);
   }
   if (el==='king'){
     const ph=phaseOf(e), left=e-(ph===0?40:ph===1?20:0);
-    if (!royalDone(p).includes(ph)) return ph<2 ? W(`使用可能・${PHASES[ph]}の残り`,turnsOf(left),true) : W('使用可能',null,true);
-    return ph<2 ? W(`${PHASES[ph+1]}で復活まで`,turnsOf(left),false) : W('使い切りました',null,false);
+    if (!royalDone(p).includes(ph)) return ph<2 ? W(`使用可能・${PHASES[ph]}の残り`,left,true) : W('使用可能',null,true);
+    return ph<2 ? W(`${PHASES[ph+1]}で復活まで`,left,false) : W('使い切りました',null,false);
   }
   if (cardLeft(p)<=0) return W('使い切りました',null,false);
-  if (el==='dragon'){
-    if (e>DRAGON_OPEN && !(s.dLine||s.dSq)) return W('解禁まで',turnsOf(e-DRAGON_OPEN),false);
-    const lk=dragonLockLeft(p), left=!s.dLine ? '直線' : '正方形';
-    return lk>0 ? W(`${left}の解禁まで`,lk,false) : W(s.dLine||s.dSq ? `使用可能（${left}）` : '使用可能',null,true);
-  }
   if (el==='ninja'){
-    if (e<=LATE) return W('前半のみ・使用期間終了',null,false);
-    if (t<NINJA_OPEN) return W('解禁まで',NINJA_OPEN-t,false);
-    return W('使用可能・残り',turnsOf(e-LATE),true);
+    if (e<=NINJA_END) return W('使用期間終了',null,false);
+    if (t<NINJA_OPEN) return W('解禁まで',untilOwn(p,NINJA_OPEN-t),false);
+    return W('使用可能・残り',e-NINJA_END,true);
   }
   const at=cardOpenAt(el);
-  if (e>at) return W('解禁まで',turnsOf(e-at),false);
+  if (e>at) return W('解禁まで',e-at,false);
+  if (LOCK_ELS.includes(el)) return e<=END_LOCK ? W('使用期間終了',null,false) : W('使用可能・残り',e-END_LOCK,true);
   return W('使用可能',null,true);
 }
 const cardWhenText = p => { const w=cardWhen(p); return w.n==null ? w.pre : `${w.pre} ${w.n}ターン`; };
@@ -1997,17 +2022,17 @@ function cardAllowed(p){
 const canCard = p => cardAllowed(p) && isLocalTurn(p);
 function pasState(p){
   const el=cfg.el[p], s=pas[p]||{};
-  if (isHushed(p)) return `封印中（あと${hush.left}）`;
+  if (isHushed(p)) return `封印中（あと${turnsFor(hush.p,hush.left)}ターン）`;
   if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(SERAPH_N,s.flips||0)} / ${SERAPH_N}`;
   if (el==='fire') return '毎ターン発動';
   if (el==='thunder') return `次ターン ${Math.round(jinraiChance(s)*100)}%`;
-  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${hush.left}）` : `縦横${STAR_LINE}・斜め${STAR_DIAG}で発動`;
-  if (el==='king') return kings[p]>=0 ? '王 健在' : kings[p]===-2 ? '王冠を失った' : '最初の石が王に';
+  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${turnsFor(hush.p,hush.left)}ターン）` : (s.stars||0)<2 ? `星 ${s.stars||0} / 2` : '星座封印 発動可能';
+  if (el==='king') return kings[p]===-2 ? '王冠を失った' : kings[p]<0 ? '最初の石が王に' : rebel[p]===1 ? '反乱中！ 次の番で鎮めよ' : rebel[p]===2 ? '次の反乱で陥落' : '王 健在';
   if (el==='rock'){ let n=0; for (let i=64;i<N;i++) if (board[i]===0) n++; return `空いている岩 ${n}`; }
   if (el==='ninja') return hidden.some(h=>h.owner===p) ? '隠密中' : '置いた石を隠す';
-  if (el==='dragon') return s.rage ? '逆鱗 発動中' : `${emptyCount()>LATE ? 4 : 5}枚返されると発動`;
+  if (el==='dragon') return s.rage ? '逆鱗 発動中' : `${emptyCount()>LATE ? 4 : 6}枚返されると発動`;
   if (el==='time') return predict && predict.p===3-p ? '未来を見ている' : '相手の手を予測';
-  if (el==='oni') return s.rest>0 ? `反動で休止中（あと${s.rest}）` : oniFierce(board,p) ? '豪傑 発動中' : '石が3分の1未満で発動';
+  if (el==='oni') return PHASES.map((n,k)=>`${n[0]}${(s.ramp||[]).includes(k)?'×':'○'}`).join(' ');
   if (el==='steel'){ const n=steel.filter(x=>x.owner===p && board[x.idx]===p).length; return n ? `鋼の石 ${n}つ` : '鋼の石の隣で発動'; }
   return '4枚以上で発動';
 }
@@ -2016,7 +2041,7 @@ function aimOk(i){
   if (!aim || !aimSel || i>=64) return false;
   const p=aim, k=aimSel.kind;
   if (k==='fire') return board[i]===0 && !burns.some(b=>b.idx===i);
-  if (k==='oni') return oniBlock(board,i,p,prot).length>0;
+  if (k==='oni') return oniBlock(board,i,p,prot).length>=ONI_MIN;
   if (k==='steel') return aimSel.picks.includes(i) || (aimSel.picks.length<steelNeed(p) && steelPick(p).includes(i));
   if (k==='ninja') return aimSel.stage===1 ? board[i]===p : (board[i]===3-p && !prot.some(g=>g.idx===i && g.owner===3-p));
   if (k==='dragon'){
@@ -2037,15 +2062,18 @@ function dragonLine(f,s2){
 }
 // 隠密と罠: squares that only look playable because a ninja stone is hidden from this player
 function illusionMoves(p){
-  if (!hidden.some(h=>h.owner===3-p)) return [];
+  const ghost = fake && fake.p===p && board[fake.idx]===0 ? [fake.idx] : [];
+  if (!hidden.some(h=>h.owner===3-p)) return ghost;
   const b=board.slice(); hidden.forEach(h=>{ if (h.owner===3-p && b[h.idx]===h.owner) b[h.idx]=0; });
   const real=legal(board,p);
-  return legal(b,p).filter(i=>!real.includes(i));
+  return [...new Set([...legal(b,p).filter(i=>!real.includes(i)), ...ghost])];
 }
 const concealed = i => phase==='play' && !over && hidden.some(h=>h.idx===i && board[i]===h.owner && turn===3-h.owner) && viewerSide()===turn;
 function springTrap(idx){
   const p=turn, S=curState();
-  S.ev.push('trap:'+idx+':'+p); S.extra=0; advanceS(S,p);
+  const scare = fake && fake.p===p && fake.idx===idx;
+  S.fake=null;
+  S.ev.push((scare ? 'scare:' : 'trap:')+idx+':'+p); S.extra=0; advanceS(S,p);
   sendState(S,['trap',p,idx]);
   commit(S);
 }
@@ -2127,6 +2155,7 @@ function render(){
   const lm = human && !aim ? (viewerSide()===turn && !(forced && forced.p===turn) ? [...new Set([...movesFor(turn),...illusionMoves(turn)])] : movesFor(turn)) : [];
   const dOpts = play && decree && !busy && localSide(decree.by) ? decree.opts : [];
   boardEl.classList.toggle('blind', bv);
+  if (!aim && aoeOn.length) showAoe([]);
   boardEl.classList.toggle('ext', board.some((v,i)=>i>=64 && v!==-1) || !!rockPick);
   const picking = rockPicker();
   boardEl.style.setProperty('--hint', play ? tint(turn) : '#cbb8ff');
@@ -2177,7 +2206,7 @@ function render(){
     cb.classList.toggle('avail', !blk && !over);
     if (!over && prevBlock[p]!==null && prevBlock[p] && !blk) cardReadyFx(p);
     prevBlock[p]=blk;
-    cb.querySelector('.c-desc').textContent=C.desc;
+    cb.querySelector('.c-desc').textContent=descOf(C);
     cb.querySelector('.c-uses').textContent = usesLabel(p);
     { const w=cardWhen(p), el2=cb.querySelector('.c-when');
       el2.innerHTML = w.n==null ? `<span class="w-pre">${w.pre}</span>` : `<span class="w-pre">${w.pre}</span><b>${w.n}</b><span class="w-unit">ターン</span>`;
@@ -2188,9 +2217,9 @@ function render(){
     cb.classList.toggle('armed', aim===p || (!over && turn===p && (extra>0 || quake>0 || royal===p)));
     const PS=PASSIVES[cfg.el[p]];
     pb.querySelector('.p-name').textContent=PS.name;
-    pb.querySelector('.p-desc').textContent=PS.desc;
+    pb.querySelector('.p-desc').textContent=descOf(PS);
     pb.querySelector('.p-state').textContent=pasState(p);
-    pb.classList.toggle('awake', (cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph)) || (cfg.el[p]==='star' && isHushed(3-p)) || (cfg.el[p]==='king' && kings[p]>=0) || (cfg.el[p]==='dragon' && !!(pas[p]&&pas[p].rage)) || (cfg.el[p]==='ninja' && hidden.some(h=>h.owner===p)) || (cfg.el[p]==='steel' && steel.some(x=>x.owner===p && board[x.idx]===p)) || (cfg.el[p]==='oni' && !isHushed(p) && !((pas[p]||{}).rest>0) && oniFierce(board,p)));
+    pb.classList.toggle('awake', (cfg.el[p]==='light' && !!(pas[p]&&pas[p].seraph)) || (cfg.el[p]==='star' && isHushed(3-p)) || (cfg.el[p]==='king' && kings[p]>=0) || (cfg.el[p]==='dragon' && !!(pas[p]&&pas[p].rage)) || (cfg.el[p]==='ninja' && hidden.some(h=>h.owner===p)) || (cfg.el[p]==='steel' && steel.some(x=>x.owner===p && board[x.idx]===p)) || (cfg.el[p]==='oni' && rampage===p) || (cfg.el[p]==='king' && rebel[p]===1));
   }
   renderDraft();
   const st=$('status');
@@ -2211,7 +2240,7 @@ function render(){
   else if (extra>0) hot='雷帝：もう1手置ける';
   else if (quake>0) hot='岩石巨城：次に置いた石のまわりを押し出す';
   else if (royal===turn) hot='ロイヤルアーツ：置いたあと相手の手を指定';
-  st.innerHTML = `<span style="color:${tint(turn)};text-shadow:${E.glow}">${E.k}</span>のターン${who?`<small>${who}</small>`:''}${hot?`<small class="hot">${hot}</small>`:''}${e<=10?'<small>終盤戦</small>':[1,2].some(q=>cfg.el[q]==='king')?`<small>${PHASES[phaseOf(e)]}（空きマス${e}）</small>`:''}`;
+  st.innerHTML = `<span class="tn">ターン <b>${tn+1}</b><small>残り ${e}</small></span><span style="color:${tint(turn)};text-shadow:${E.glow}">${E.k}</span>の番${who?`<small>${who}</small>`:''}${hot?`<small class="hot">${hot}</small>`:''}${e<=10?'<small>終盤戦</small>':[1,2].some(q=>cfg.el[q]==='king')?`<small>${PHASES[phaseOf(e)]}（空きマス${e}）</small>`:''}`;
   st.className = 'status' + (e<=10 ? ' crit' : '');
 }
 const toastEl=$('toast'); let toastT;
@@ -2368,17 +2397,19 @@ function drawGhost(p){
 /* ---------- pure state transitions (shared by local play, CPU and online) ---------- */
 const initBoard = () => { const b=new Array(N).fill(-1); for (let i=0;i<64;i++) b[i]=0; b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
 const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], guards:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0, blind:0, pas:freshPas(),
-  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, steel:[], rust:[], rockPick:null, ev:[]});
+  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, steel:[], rust:[], rockPick:null, tn:0, rebel:{1:0,2:0}, fake:null, rampage:0, ev:[]});
 function curState(){
   return {board:board.slice(), turn, over, lastMove, burns:clone(burns), guards:clone(guards), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0, blind, pas:clone(pas),
     kings:{...kings}, hush:hush?{...hush}:null, royal, decree:decree?clone(decree):null, forced:forced?{...forced}:null, quake, curses:clone(curses), winner:0,
-    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, steel:clone(steel), rust:clone(rust), rockPick:rockPick?{...rockPick}:null, ev:[]};
+    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, steel:clone(steel), rust:clone(rust), rockPick:rockPick?{...rockPick}:null, tn, rebel:clone(rebel), rebelAt:clone(rebelAt), fake:fake?{...fake}:null, rampage, ev:[]};
 }
 const protS = S => protOf(S.guards, S.kings, S.hush, S.steel||[], S.rust||[]);
 const legalS = (S,p) => legal(S.board,p,S.burns,protS(S),S.hush);
 function addRocks(S){ const ring=[]; for (let i=64;i<N;i++) ring.push(i); for (const i of shuffle(ring).slice(0,3)) S.board[i]=0; }
 // seals, guards and curses count down each time their owner's opponent finishes a turn
 function endTurnS(S,ended){
+  S.tn=(S.tn||0)+1;
+  if (S.fake && S.fake.p===ended) S.fake=null;
   // 蒼炎 lines (owner 0) burn for two whole turns, whoever's they are
   S.burns.forEach(b=>{ if (b.kind==='blaze'){ if (b.fresh) b.fresh=false; else b.left--; } else if (b.owner!==ended) b.left--; }); S.burns=S.burns.filter(b=>b.left>0);
   S.hidden=(S.hidden||[]).filter(h=>h.owner===ended);
@@ -2403,6 +2434,15 @@ function startTurnS(S,x){
     if (!hushedS(S,x) && (S.used[x]||0)>0 && Math.random()<jinraiChance(S.pas[x])){ S.used[x]--; S.ev.push('jinrai:'+x); }
     S.pas[x].jin=0;
   }
+  if (cfg.el[x]==='oni' && !hushedS(S,x)){
+    const ps=S.pas[x]; ps.ramp=ps.ramp||[];
+    const e=counts(S.board)[2], ph=phaseOf(e);
+    if (!ps.ramp.includes(ph)){
+      // spread over the oni's turns left in this stage, certain on the last one
+      const left=Math.max(1, Math.ceil((e-(ph===0?40:ph===1?20:0))/2));
+      if (Math.random() < 1/left){ ps.ramp.push(ph); S.rampage=x; S.ev.push('rampage:'+x); }
+    }
+  }
   S.predict=null;
   if (cfg.el[o]==='time' && !hushedS(S,o)){
     const lm=legalS(S,x);
@@ -2422,8 +2462,14 @@ function checkRegicide(S){
       else if (v===3-k){ if (dr && dc) diag++; else orth++; }
     }
     if (n===8 && own===8){ S.over=true; S.winner=k; S.winReason='coronation'; S.ev.push('coronation:'+k); return true; }
-    // fallen: all four sides plus two of the four corners are enemy stones
-    if (orth===4 && diag>=2){ S.over=true; S.winner=3-k; S.winReason='regicide'; S.ev.push('regicide:'+k); return true; }
+    // 反乱: all four sides plus two corners are enemy stones. The first time is a warning; still in revolt after
+    // the king's next turn, or a second revolt later, and the castle falls
+    S.rebel=S.rebel||{1:0,2:0};
+    const cond=orth===4 && diag>=2, rb=S.rebel[k];
+    if (cond){
+      if (!rb){ S.rebel[k]=1; S.rebelAt=S.rebelAt||{}; S.rebelAt[k]=S.pas[k].turns; S.ev.push('rebel:'+k); }
+      else if (rb===2 || (rb===1 && S.pas[k].turns>((S.rebelAt||{})[k]??0))){ S.over=true; S.winner=3-k; S.winReason='regicide'; S.ev.push('regicide:'+k); return true; }
+    } else if (rb===1) S.rebel[k]=2;
   }
   return false;
 }
@@ -2474,7 +2520,10 @@ function fiveLine(b,p,changed){
 function starPassive(S,p,changed){
   if (cfg.el[p]!=='star' || hushedS(S,p) || S.hush) return;
   const run=fiveLine(S.board,p,changed);
-  if (run){ S.hush={p:3-p,left:2}; S.ev.push('hush:'+(3-p)+':'+run.join('.')); }
+  if (!run) return;
+  const ps=S.pas[p];
+  if ((ps.stars||0)<2){ ps.stars=(ps.stars||0)+1; S.ev.push('stars:'+p+':'+run.join('.')); return; }
+  S.hush={p:3-p,left:2}; S.ev.push('hush:'+(3-p)+':'+run.join('.'));
 }
 function placeS(S,idx,p){
   S.lastPlace={p, idx, before:S.board.slice()};
@@ -2487,23 +2536,14 @@ function placeS(S,idx,p){
     S.predict=null;
   }
   // 逆鱗: losing five or more stones at once enrages the dragon
-  if (cfg.el[3-p]==='dragon' && f.length>=(counts(S.board)[2]>LATE ? 4 : 5) && !hushedS(S,3-p) && !S.pas[3-p].rage){ S.pas[3-p].rage=true; S.ev.push('rage:'+(3-p)); }
+  if (cfg.el[3-p]==='dragon' && f.length>=(counts(S.board)[2]>LATE ? 4 : 6) && !hushedS(S,3-p) && !S.pas[3-p].rage){ S.pas[3-p].rage=true; S.ev.push('rage:'+(3-p)); }
   if (el==='dragon' && ps.rage && !quiet){
     const pr=protS(S), extra=[];
     for (const k of f){ const [r,c]=RC[k]; for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; const n=rr*8+cc; if (S.board[n]===3-p && !pr.some(g=>g.idx===n && g.owner===3-p) && !extra.includes(n)) extra.push(n); } }
     extra.forEach(n=>S.board[n]=p); f.push(...extra);
     ps.rage=false; S.ev.push('wrath:'+idx+':'+extra.join('.'));
   }
-  // 豪傑: while the oni is behind, each placement knocks down two more neighbours
-  if (el==='oni'){
-    if (ps.rest>0) ps.rest--;
-    else if (!quiet && oniFierce(S.lastPlace.before,p)){
-      const pr=protS(S), [r,c]=RC[idx], cand=[];
-      for (const [dr,dc] of D8){ const rr=r+dr, cc=c+dc; if (rr<0||rr>7||cc<0||cc>7) continue; const n=rr*8+cc; if (S.board[n]===3-p && !pr.some(g=>g.idx===n && g.owner===3-p)) cand.push(n); }
-      const extra=shuffle(cand).slice(0,GOUKETSU_N);
-      if (extra.length){ extra.forEach(n=>S.board[n]=p); f.push(...extra); S.ev.push('gouketsu:'+idx+':'+extra.join('.')); }
-    }
-  }
+  S.rampage=0;
   // 鋼の忠誠: a stone placed against steel rusts
   if (cfg.el[3-p]==='steel' && !hushedS(S,3-p)){
     const [r,c]=RC[idx];
@@ -2515,7 +2555,12 @@ function placeS(S,idx,p){
   if (!quiet){
     if (el==='light' && !ps.seraph && ps.flips>=SERAPH_N){ ps.seraph=true; S.ev.push('seraph:'+p); }
     if (el==='fire'){ S.guards.push({idx,owner:p,left:2}); S.ev.push('guard:'+idx); }
-    if (el==='dark' && f.length>=4){ S.blind=3-p; S.ev.push('ghost:'+(3-p)); }
+    if (el==='dark' && f.length>=4){
+      S.blind=3-p; S.ev.push('ghost:'+(3-p));
+      const real=legalS(S,3-p), pool=[];
+      for (let i=0;i<64;i++) if (S.board[i]===0 && !real.includes(i) && !S.burns.some(b=>b.idx===i)) pool.push(i);
+      if (pool.length) S.fake={idx:pick(pool), p:3-p};
+    }
     if (el==='thunder') ps.jin=(ps.jin||0)+f.length;
     if (el==='king' && S.kings[p]===-1){ S.kings[p]=idx; S.ev.push('crown:'+idx); }
     if (el==='ninja') S.hidden=[{idx, owner:p}];
@@ -2554,6 +2599,7 @@ async function commit(S){
   kings=S.kings ? {1:S.kings[1]??-1, 2:S.kings[2]??-1} : {1:-1,2:-1};
   hidden=clone(S.hidden||[]); lastPlace=S.lastPlace?clone(S.lastPlace):null; predict=S.predict?{...S.predict}:null;
   steel=clone(S.steel||[]); rust=clone(S.rust||[]);
+  tn=S.tn||0; rebel=S.rebel ? clone(S.rebel) : {1:0,2:0}; rebelAt=S.rebelAt ? clone(S.rebelAt) : {}; fake=S.fake && Number.isInteger(S.fake.idx) ? {...S.fake} : null; rampage=S.rampage===1||S.rampage===2 ? S.rampage : 0;
   { const had=!!rockPick; rockPick=S.rockPick && (S.rockPick.p===1||S.rockPick.p===2) ? {p:S.rockPick.p} : null;
     if (had && !rockPick && phase==='play'){ const rocks=[]; for (let i=64;i<N;i++) if (S.board[i]===0) rocks.push(i); if (rocks.length){ rocks.forEach(i=>cells[i].style.opacity='0'); setTimeout(()=>fxMotherEarth(rocks),300); } }
     syncRockPick(); }
@@ -2571,7 +2617,14 @@ async function commit(S){
   else if (over){ over=false; $('result').hidden=true; }
   updateAmbience(); render();
   saveResume();
-  maybeCPU(); drainNet();
+  maybeCPU(); maybeRampage(); drainNet();
+}
+// 豪傑: the oni's own device makes the wild move for it
+function maybeRampage(){
+  if (phase!=='play'||over||busy||!rampage||turn!==rampage) return;
+  if (online() && net.side!==turn) return;
+  const g=gen;
+  setTimeout(()=>{ if (g!==gen||busy||over||!rampage||turn!==rampage) return; const mv=movesFor(turn); if (mv.length) doMove(pick(mv)); }, 1300);
 }
 // a snapshot of the game in progress, so closing the page by mistake is not the end of it
 function saveResume(){
@@ -2862,6 +2915,27 @@ function rockChoose(i){
   sendState(S,['rocks',rockPick.p,i]);
   commit(S);
 }
+// the squares a range card would hit if aimed at square i
+function aoeCells(i){
+  if (!aim || !aimSel || !(i>=0 && i<64)) return [];
+  const k=aimSel.kind;
+  if (k==='oni' || (k==='dragon' && aimSel.mode==='sq')) return aimOk(i) ? sqCells(i) : [];
+  if (k==='dragon' && aimSel.stage===2 && aimOk(i)) return dragonLine(aimSel.first,i);
+  return [];
+}
+let aoeOn=[], lastPtrType='mouse';
+function showAoe(list){
+  aoeOn.forEach(i=>cells[i].classList.remove('aoe'));
+  aoeOn=list.slice(); const col=aim ? tint(aim) : '#fff';
+  aoeOn.forEach(i=>{ cells[i].style.setProperty('--aoe',col); cells[i].classList.add('aoe'); });
+}
+boardEl.addEventListener('pointerdown',e=>{ lastPtrType=e.pointerType||'mouse'; },true);
+boardEl.addEventListener('pointerover',e=>{
+  if (e.pointerType==='touch') return;
+  const c=e.target.closest && e.target.closest('.cell'); if (!c) return;
+  showAoe(aim ? aoeCells(cells.indexOf(c)) : []);
+});
+boardEl.addEventListener('pointerleave',()=>{ if (lastPtrType!=='touch') showAoe([]); });
 function cellClick(i){
   if (rockPick){ if (rockPicker() && i>=64) rockChoose(i); return; }
   if (decree){
@@ -2871,6 +2945,14 @@ function cellClick(i){
   if (aim){
     if (busy||over||!isLocalTurn(turn)||!aimOk(i)) return;
     const p=aim, k=aimSel.kind;
+    // on a phone: light up the range and ask before using it
+    const area=aoeCells(i);
+    if (area.length && lastPtrType==='touch' && !aimSel.confirmed){
+      showAoe(area);
+      askUser('範囲の確認','光っている範囲に使いますか？','使う','やめる').then(ok=>{ showAoe([]); if (ok && aim===p && aimSel){ aimSel.confirmed=true; cellClick(i); } });
+      return;
+    }
+    showAoe([]);
     if (k==='fire'||k==='oni'){ aim=0; aimSel=null; castCard(p,i); return; }
     if (k==='dragon' && aimSel.mode==='sq'){ aim=0; aimSel=null; castCard(p,[-1,...sqCells(i)]); return; }
     if (k==='steel'){
@@ -3034,7 +3116,7 @@ async function castCard(p, target, remoteS, remoteTargets){
     }
     else if (el==='oni'){
       const conv=oniBlock(S.board,target,p,pr); targets=[target,...conv];
-      conv.forEach(i=>S.board[i]=p); S.pas[p].rest=3;
+      conv.forEach(i=>S.board[i]=p);
     }
     else if (el==='steel'){
       targets=target.filter(i=>i>=0 && i<64 && S.board[i]===3-p && !pr.some(g=>g.idx===i && g.owner===3-p));
@@ -3241,7 +3323,7 @@ async function playCard(el,p,targets,myGen){
       cells[i].classList.remove('marked');
       if (board[i]>0 && !prot.some(g=>g.idx===i && g.owner===board[i])) vanish(i);
       for (let j=0;j<20*FXQ;j++) part({x:cx2+rnd(-10,10),y:cy2+rnd(-6,6),vx:rnd(-80,80),vy:rnd(-300,-80),g:-150,drag:.95,life:rnd(.45,.9),size:rnd(5,12),mode:'bfire'});
-      flames[i].hidden=false; flames[i].classList.remove('chain','clock'); flames[i].classList.add('blaze'); flames[i].innerHTML=''; flames[i].textContent='2';
+      flames[i].hidden=false; flames[i].classList.remove('chain','clock'); flames[i].classList.add('blaze'); flames[i].innerHTML=''; flames[i].textContent='3';
       sfx('dragon','flip',k);
     });
     await wait(1100);
@@ -3266,7 +3348,7 @@ async function playCard(el,p,targets,myGen){
         if (board[i]>0 && !prot.some(g=>g.idx===i && g.owner===board[i])) vanish(i);
         for (let j=0;j<26*FXQ;j++) part({x:cx2+rnd(-10,10),y:cy2+rnd(-6,6),vx:rnd(-80,80),vy:rnd(-300,-80),g:-150,drag:.95,life:rnd(.45,.9),size:rnd(5,12),mode:'bfire'});
         ring(cx2,cy2,{vr:240,life:.4,w:4,color:E.c1});
-        flames[i].hidden=false; flames[i].classList.remove('chain','clock'); flames[i].classList.add('blaze'); flames[i].innerHTML=''; flames[i].textContent='2';
+        flames[i].hidden=false; flames[i].classList.remove('chain','clock'); flames[i].classList.add('blaze'); flames[i].innerHTML=''; flames[i].textContent='3';
         shake(10); sfx('dragon','flip',k);
       }, d/L*dur);
     });
@@ -3291,7 +3373,7 @@ async function playCard(el,p,targets,myGen){
       await wait(diff.length*70+400);
     }
     const [x,y]=center(idx);
-    flames[idx].hidden=false; flames[idx].classList.remove('chain','blaze'); flames[idx].classList.add('clock'); flames[idx].innerHTML=''; flames[idx].textContent='1';
+    flames[idx].hidden=false; flames[idx].classList.remove('chain','blaze'); flames[idx].classList.add('clock'); flames[idx].innerHTML=''; flames[idx].textContent='2';
     ring(x,y,{vr:220,life:.6,w:4,color:E.c1});
     await wait(700);
     undim(800);
@@ -3359,6 +3441,10 @@ async function playEvents(ev){
     else if (k==='quake' && n>=0 && n<N) await fxQuake(n, extra||'');
     else if (k==='gouketsu' && n>=0 && n<N) await fxGouketsu(n, extra||'');
     else if (k==='rust' && n>=0 && n<N) await fxRust(n);
+    else if (k==='scare' && n>=0 && n<64) await fxScare(n, +extra===2?2:1);
+    else if (k==='rebel' && (n===1||n===2)) await fxRebel(n);
+    else if (k==='stars' && (n===1||n===2)) await fxStars(n, extra||'');
+    else if (k==='rampage' && (n===1||n===2)) await fxRampage(n);
   }
 }
 async function fxSeraph(p){
@@ -3402,7 +3488,7 @@ function paintSeal(i,b){
   f.classList.toggle('blaze', b.kind==='blaze');
   f.classList.toggle('clock', b.kind==='clock');
   if (isChain){ if (!f.querySelector('svg')) f.innerHTML=chainSvg(i); }
-  else { if (f.querySelector('svg')) f.innerHTML=''; f.textContent=b.left; }
+  else { if (f.querySelector('svg')) f.innerHTML=''; f.textContent=effLeft(b); }
 }
 async function fxChain(idx){
   const [x,y]=center(idx), r=boardEl.getBoundingClientRect(), col='#ffe9a0';
@@ -3509,7 +3595,7 @@ async function fxHush(victim, runTxt){
     }, 60+k*85));
     await wait(run.length*85+650);
   }
-  showBanner(E,'CONSTELLATION SEAL',`${C.name}の封印`,'PASSIVE & CARD SEALED · 2 TURNS');
+  showBanner(E,'CONSTELLATION SEAL',`${C.name}の封印`,'PASSIVE & CARD SEALED · 4 TURNS');
   sfx('star','ult');
   dim('radial-gradient(circle at 50% 40%, rgba(20,30,90,.55), rgba(0,0,15,.9))',300);
   drawConstellation(C, boardEl.getBoundingClientRect(), .1, 1.4);
@@ -3518,7 +3604,7 @@ async function fxHush(victim, runTxt){
   await wait(2400);
   undim(800);
   run.forEach(i=>cells[i].classList.remove('marked'));
-  toast(`${roleOf(victim)}のパッシブとカードを2ターン封印`);
+  toast(`${roleOf(victim)}のパッシブとカードを4ターン封印`);
 }
 async function fxCrown(idx){
   const E=ELS.king, [x,y]=center(idx);
@@ -3940,6 +4026,40 @@ async function fxTrap(idx,victim){
   el.animate([{transform:'translate(-50%,-50%) rotate(-10deg) scale(2.4)',opacity:0},{transform:'translate(-50%,-50%) rotate(-10deg) scale(.95)',opacity:1,offset:.22},{transform:'translate(-50%,-50%) rotate(-10deg) scale(1)',opacity:1,offset:.82},{transform:'translate(-50%,-50%) rotate(-10deg) scale(1)',opacity:0}],{duration:1700,easing:'cubic-bezier(.3,1.4,.5,1)'}); setTimeout(()=>el.remove(),1780);
   await wait(1300);
 }
+async function fxScare(idx,victim){
+  const [x,y]=center(idx), cw=cells[idx].getBoundingClientRect().width, E=ELS.dark;
+  for (let j=0;j<5;j++) part({x:x+rnd(-cw,cw),y:y+rnd(-cw,cw),vx:rnd(-40,40),vy:rnd(-60,-10),drag:1,life:1.6,size:cw*rnd(.5,.8),color:'#cfc2ff',mode:'ghost',wob:2,alpha:.6});
+  flash('#000',.6,400); flash(E.c1,.3,200); shake(16);
+  tone('sawtooth',90,40,.6,.15); nz('bandpass',2400,300,.5,.4,0,3); tone('sine',1400,300,.4,.08,.05);
+  const el=document.createElement('div'); el.className='stamp trap'; el.style.borderColor=E.c1; el.innerHTML=`<span style="color:#e8d8ff;text-shadow:0 0 20px #a259ff,0 4px 0 #14001e">スケア</span><small>偽りの置き場所だった！ ${ELS[cfg.el[victim]].k}はこの番を失う</small>`;
+  document.body.appendChild(el);
+  el.animate([{transform:'translate(-50%,-50%) rotate(-8deg) scale(2.4)',opacity:0},{transform:'translate(-50%,-50%) rotate(-8deg) scale(.95)',opacity:1,offset:.22},{transform:'translate(-50%,-50%) rotate(-8deg) scale(1)',opacity:1,offset:.82},{transform:'translate(-50%,-50%) rotate(-8deg) scale(1)',opacity:0}],{duration:1700}); setTimeout(()=>el.remove(),1780);
+  await wait(1300);
+}
+async function fxRebel(k){
+  const E=ELS.king, i=kings[k];
+  showBanner(E,'WARNING','反乱','REBELLION');
+  flash('#ff2a2a',.35,300); shake(18); bell(392,.8,.08); bell(370,.8,.07,.25);
+  if (i>=0 && i<64){ const [x,y]=center(i); for (let j=0;j<4;j++) ring(x,y,{vr:260+j*80,life:.8,w:5-j,color:j%2?'#ffd34d':'#ff2a2a'}); }
+  toast(`${roleOf(k)}の王の周りで反乱！ 次の番のあとも続くか、もう一度起きると王国が倒れる`);
+  await wait(2000);
+}
+async function fxStars(p, runTxt){
+  const E=ELS.star, run=(runTxt||'').split('.').map(Number).filter(i=>Number.isInteger(i)&&i>=0&&i<64);
+  if (run.length){ const [x1,y1]=center(run[0]), [x2,y2]=center(run[run.length-1]); LINES.push({x1,y1,x2,y2,t:0,delay:.05,life:1.6,draw:.4,color:'#cfe0ff',w:3}); }
+  run.forEach((i,k)=>setTimeout(()=>{ const [x,y]=center(i); part({x,y:y-8,vx:0,vy:-30,life:1.1,size:14,color:E.c3,mode:'glyph',ch:'☆'}); bell(1318.5*Math.pow(2,k/12),.35,.04); }, k*70));
+  const n=(pas[p]||{}).stars||0;
+  toast(n>=2 ? `${PASSIVES.star.name}：星が2つ集まった。次に並べると封印が発動する` : `${PASSIVES.star.name}：星が集まった（${n} / 2）`);
+  await wait(run.length*70+600);
+}
+async function fxRampage(k){
+  const E=ELS.oni, sr=$('side'+k).getBoundingClientRect();
+  showBanner(E,'PASSIVE',PASSIVES.oni.name,'RAMPAGE');
+  roar(.8); tone('sine',120,45,.4,.8); shake(20); flash('#ff1a1a',.3,300);
+  for (let j=0;j<60*FXQ;j++){ const a=rnd(0,TAU), sp=rnd(100,420); part({x:sr.left+sr.width/2,y:sr.top+60,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-80,drag:.93,life:rnd(.5,1),size:rnd(5,11),mode:'ofire'}); }
+  toast('荒れ狂う鬼が、勝手に石を置こうとしている！');
+  await wait(1500);
+}
 async function fxRage(d){
   const E=ELS.dragon, sr=$('side'+d).getBoundingClientRect(), x=sr.left+sr.width/2, y=sr.top+Math.min(60,sr.height/2);
   showBanner(E,'PASSIVE',PASSIVES.dragon.name,PASSIVES.dragon.sub);
@@ -4228,7 +4348,7 @@ function cpuCardChoice(p){
     if (!useLine && bq!==null && (qs>=4 || Math.random()<.4)) return {target:[-1,...sqCells(bq)]};
   } else if (el==='oni'){
     const {best,n}=oniBest(board,p,prot);
-    if (best>=0 && (n>=4 || e<=14 || Math.random()<.3)) return {target:best};
+    if (best>=0 && n>=ONI_MIN && (n>=7 || e<=20 || Math.random()<.4)) return {target:best};
   } else if (el==='steel'){
     const pool=steelPick(p).sort((a,b)=>W8(b)-W8(a)), t=pool.slice(0,Math.min(STEEL_N,pool.length));
     if (t.length>=2 && (t.some(isCorner) || e<=14 || Math.random()<.3)) return {target:t};
@@ -4240,7 +4360,7 @@ function cpuCardChoice(p){
   return null;
 }
 function maybeCPU(){
-  if (phase!=='play'||over||busy||aim||rockPick) return;
+  if (phase!=='play'||over||busy||aim||rockPick||rampage) return;
   const cs=cpuSide(); if (!cs) return;
   const myGen=gen;
   if (decree){
@@ -4302,7 +4422,7 @@ async function gameOver(){
    the code becomes the host's peer id, and both sides mirror the same document shape.
    The host (先手) settles the element draft and the coin toss. */
 const online = () => cfg.mode==='online';
-function isLocalTurn(p){ if (phase!=='play' || decree || rockPick) return false; return online() ? (!!net.kind && net.opp && p===net.side) : p!==cpuSide(); }
+function isLocalTurn(p){ if (phase!=='play' || decree || rockPick || rampage===p) return false; return online() ? (!!net.kind && net.opp && p===net.side) : p!==cpuSide(); }
 const inClaude = () => !!(window.claude && typeof window.claude.use==='function');
 const PEER_PREFIX='zokusei-othello-v1-';
 const STALE_MS = 30*60*1000;
@@ -4372,7 +4492,7 @@ function stateFields(S){
     pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice(),
     kings:{1:(S.kings&&S.kings[1])??-1, 2:(S.kings&&S.kings[2])??-1}, hush:S.hush?{...S.hush}:null, royal:S.royal||0,
     decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0, winReason:S.winReason||'',
-    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null, steel:clone(S.steel||[]), rust:clone(S.rust||[]), rockPick:S.rockPick?{...S.rockPick}:null};
+    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null, steel:clone(S.steel||[]), rust:clone(S.rust||[]), rockPick:S.rockPick?{...S.rockPick}:null, tn:S.tn||0, rebel:clone(S.rebel||{1:0,2:0}), rebelAt:clone(S.rebelAt||{}), fake:S.fake?{...S.fake}:null, rampage:S.rampage||0};
 }
 function sendState(S,act){
   if (!online() || !net.kind) return;
@@ -4423,7 +4543,9 @@ function onNet(d){
     if (inGame) toast(`${san(oppName())}が対戦に戻ってきました`);
     else { toast(net.host ? `${san(oppName())}が入室しました。コインで先手・後手を決めます` : `${oppName() ? san(oppName())+'の' : ''}部屋に入りました。コインで先手・後手を決めます`); showVs(); }
   }
-  if (!net.opp && hadOpp) toast(inGame ? '相手との接続が切れました。戻ってくるのを待っています' : '相手が退出しました');
+  if (d.left && typeof d.left==='object' && d.left.side===3-net.side && Math.abs(Date.now()-(d.left.at||0))<60000){ dissolveRoom('相手が退出したため、部屋を解散しました'); return; }
+  if (!net.opp && hadOpp){ toast(inGame ? '相手との接続が切れました' : '相手が退出しました'); startGrace(); }
+  if (net.opp) clearInterval(graceT);
   syncPhase(d);
   if ((d.seq||0) > net.seq && validDoc(d)){ net.seq=d.seq; net.queue.push(clone(d)); drainNet(); }
   paintNetStatus();
@@ -4543,7 +4665,7 @@ function loadPeer(){
   return peerLoad;
 }
 function cleanupPeer(){
-  clearTimeout(net.retryT); clearTimeout(net.joinT);
+  clearTimeout(net.retryT); clearTimeout(net.joinT); if (typeof graceT!=='undefined'){ clearInterval(graceT); graceT=0; }
   try { net.conn && net.conn.close(); } catch(e){}
   try { net.peer && net.peer.destroy(); } catch(e){}
   net.conn=null; net.peer=null;
@@ -4636,7 +4758,7 @@ function guestConnect(){
   conn.on('close',()=>{
     if (net.conn!==conn) return;
     net.conn=null;
-    if (net.kind==='p2p'){ net.opp=false; toast('相手との接続が切れました。戻ってくるのを待っています'); render(); retryGuest('close'); }
+    if (net.kind==='p2p'){ net.opp=false; toast('相手との接続が切れました'); render(); retryGuest('close'); startGrace(); }
   });
 }
 // keep knocking while the host is away (a first-time join gives up at once)
@@ -4648,7 +4770,7 @@ function retryGuest(why){
   }
   net.tries++;
   if (net.tries>40){ netMsg('相手が戻ってきませんでした。「退出」してから入り直してください。'); return; }
-  netMsg(`部屋 <strong>${pd.code}</strong>：部屋を作った人の復帰を待っています…`);
+  if (!graceT) netMsg(`部屋 <strong>${pd.code}</strong>：部屋を作った人の復帰を待っています…`);
   clearTimeout(net.retryT); net.retryT=setTimeout(guestConnect,4000);
 }
 
@@ -4664,7 +4786,27 @@ function leaveRoom(keepMsg){
 }
 $('host').addEventListener('click',()=>{ ac(); const c=readCode(); if(!c) return; inClaude() ? hostDb(c) : hostP2P(c); });
 $('join').addEventListener('click',()=>{ ac(); const c=readCode(); if(!c) return; inClaude() ? joinDb(c) : joinP2P(c); });
-$('leave').addEventListener('click',()=>{ clearResume(); leaveRoom(); newGame(); });
+$('leave').addEventListener('click',()=>{
+  clearResume();
+  // tell the other side first so their room closes too
+  if (net.kind && net.opp){ netWrite({left:{side:net.side, at:Date.now()}}); setTimeout(()=>{ leaveRoom(); newGame(); },350); }
+  else { leaveRoom(); newGame(); }
+});
+// a lost connection gets a minute to come back during a game; outside a game the room closes at once
+let graceT=0;
+function dissolveRoom(msg){ clearInterval(graceT); clearResume(); leaveRoom(true); newGame(); netMsg(msg); toast(msg); }
+function startGrace(){
+  clearInterval(graceT);
+  if (!net.kind) return;
+  if (phase!=='play' || over){ dissolveRoom('相手が退出したため、部屋を解散しました'); return; }
+  let left=60;
+  const tick=()=>{
+    if (!net.kind || net.opp){ clearInterval(graceT); return; }
+    netMsg(`相手との接続が切れました。あと<strong>${left}秒</strong>で戻らなければ部屋を解散します`);
+    if (left--<=0) dissolveRoom('相手が戻らなかったため、部屋を解散しました');
+  };
+  tick(); graceT=setInterval(tick,1000);
+}
 $('code').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/g,'').slice(0,4); });
 addEventListener('pagehide',()=>{ if (net.kind==='db' && net.ref && net.side) net.ref.update({seats:{[net.side]:''}, updated:Date.now()}).catch(()=>{}); try { net.peer && net.peer.destroy(); } catch(e){} });
 
@@ -4886,31 +5028,33 @@ function buildHelp(){
   body.innerHTML = `<ul class="h-rules">
     <li>対局の最初に<strong>コイントス</strong>をして、勝った人が<strong>先手か後手かを選びます</strong>。</li>
     <li>そのあと、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
-    <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。<strong>炎は自分の手番が3回終わったら使え、その後は5ターンに1回</strong>。<strong>雷は空きマスが残り${LATE+THUNDER_EARLY}以下</strong>、<strong>光と闇は残り${LATE}以下の後半</strong>から使えます。</li>
+    <li><strong>ターン</strong>は先手・後手あわせた全体の数です。どちらかが1手置く（またはパスする）と1ターン進みます。画面下に今のターンと残り（空きマスの数）が出ます。</li>
+    <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。カードの「解禁まで ○ターン」「残り ○ターン」も全体のターンで数えます。</li>
+    <li>炎のカードは自分の番が3回終わると使え、その後は10ターンごと。雷は空きマス${LATE+THUNDER_EARLY}以下、竜は${DRAGON_OPEN}以下、ほかの多くのカードは${LATE}以下から使えます。王は序盤（空きマス41以上）・中盤（21〜40）・終盤（20以下）に1回ずつ。</li>
+    <li>光・闇・星・竜・鬼・鋼のカードは、<strong>最後の16ターン（空きマス16以下）は使えません</strong>。忍のカードは空きマス27以上のあいだだけ使えます。</li>
+    <li>竜の<strong>暴虐</strong>は「直線」か「正方形（3×3）」のどちらか一方を1回だけ使えます。正方形や直線のカードは、狙うマスにカーソルを合わせると範囲が光ります（スマホでは選んだあとに確認が出ます）。</li>
     <li>岩属性は対局開始時に、外周のマスを1つ選んで岩を置きます（5秒以内。さらに2マスはランダム）。</li>
-    <li>竜の<strong>暴虐</strong>は「直線」と「正方形（3×3）」を1回ずつ使えます。片方を使うと、もう片方は5ターン使えません。</li>
-    <li>星と岩のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。<strong>王は序盤・中盤・終盤にそれぞれ1回ずつ</strong>使えます（空きマス41以上が序盤、21〜40が中盤、20以下が終盤）。</li>
-    <li>カードが使えるようになると、カードが光って知らせます。カードの「解禁まで ○ターン」「残り ○ターン」の<strong>ターンは自分の番の回数</strong>です。</li>
-    <li><strong>忍は自分の手番が3回終わってから前半のあいだだけ</strong>、<strong>竜は空きマス残り${DRAGON_OPEN}以下の中盤</strong>から使えます。</li>
-    <li><strong>鬼と鋼</strong>のカードも<strong>後半</strong>（空きマス残り${LATE}以下）から使えます。鋼の石は二度と裏返りません。</li>
+    <li>カードが使えるようになると、カードが光って知らせます。</li>
     <li>スマホでは、カードやパッシブを長押しすると詳しい説明が開きます。</li>
     <li>CPUの強さが魔導士以上だと、CPUがまれに<strong>時属性</strong>を使ってきます（プレイヤーは選べません）。</li>
     <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
-    <li>星の<strong>星座封印</strong>を受けると、2ターンのあいだパッシブもカードも使えません。</li>
+    <li>星の<strong>星座封印</strong>を受けると、4ターン（自分の番2回）のあいだパッシブもカードも使えません。</li>
     <li>パッシブスキルは条件を満たすと自動で発動します。</li>
-  </ul>` + ALL_ELS.map(k=>{
+  </ul>` + [...TITLE_ORDER,'time'].map(k=>{
     const E=ELS[k], C=CARDS[k], PS=PASSIVES[k];
     return `<section class="h-el" style="--ec:${E.c1}">
       <div class="hk">${E.k}</div>
       <div class="hn">${E.name}${k==='time'?'（CPU専用）':''}</div>
       <dl>
-        <dt>カード</dt><dd>${C.name}<br><small>${C.desc}${k==='fire'?'':`（${C.uses}回）`}</small></dd>
-        <dt>パッシブ</dt><dd>${PS.name}<br><small>${PS.desc}</small></dd>
+        <dt>カード</dt><dd>${C.name}<br><small>${descOf(C)}${k==='fire'?'':`（${C.uses}回）`}</small></dd>
+        <dt>パッシブ</dt><dd>${PS.name}<br><small>${descOf(PS)}</small></dd>
       </dl>
     </section>`;
   }).join('');
 }
 buildHelp();
+$('shortDesc').checked=!!cfg.shortDesc;
+$('shortDesc').addEventListener('change',e=>{ cfg.shortDesc=e.target.checked; saveCfg(); buildHelp(); render(); });
 let helpReturn=null;
 function openHelp(){ helpReturn=document.activeElement; $('helpBox').hidden=false; $('helpClose').focus(); }
 function closeHelp(){ $('helpBox').hidden=true; if (helpReturn && helpReturn.focus) helpReturn.focus(); }
@@ -4932,8 +5076,7 @@ for (const p of [1,2]){
       const s=pas[p]||{};
       const start=mode=>{ if (!mode || !canCard(p)) return; aim=p; aimSel={kind:'dragon', stage:1, first:-1, picks:[], mode}; render();
         toast(mode==='sq' ? '焼き払う正方形の中心マスを選んでください' : '蒼炎の起点となるマスを選んでください'); };
-      if (s.dLine) start('sq'); else if (s.dSq) start('line');
-      else askUser('暴虐', 'どちらの暴虐を使いますか？（使うと、もう片方は5ターン使えません）', '直線', '正方形', true).then(v=>start(v===true ? 'line' : v===false ? 'sq' : null));
+      askUser('暴虐', 'どちらの暴虐を使いますか？（使えるのはどちらか一方だけです）', '直線', '正方形', true).then(v=>start(v===true ? 'line' : v===false ? 'sq' : null));
       return;
     }
     if (el==='fire'||el==='ninja'||el==='oni'||el==='steel'){
@@ -5073,7 +5216,7 @@ function resumeGame(t){
   else joinP2P(t.code, t.shared);
 }
 $('tResume').addEventListener('click',()=>{ const t=loadResume(); if (!t){ paintResume(); return; } bgmStart(); wipe(()=>{ $('title').hidden=true; resumeGame(t); }); });
-['fire','thunder','rock','light','dark','star','steel','dragon','ninja','oni','king'].forEach((k,i)=>{ const s=document.createElement('span'); s.className='t-emb'; s.textContent=ELS[k].k; s.style.setProperty('--ec',ELS[k].c1); s.style.setProperty('--i',i); $('tEmblems').appendChild(s); });
+TITLE_ORDER.forEach((k,i)=>{ const s=document.createElement('span'); s.className='t-emb'; s.textContent=ELS[k].k; s.style.setProperty('--ec',ELS[k].c1); s.style.setProperty('--i',i); $('tEmblems').appendChild(s); });
 $('tCpu').addEventListener('click',()=>{ const o=$('tCpuOpts'); o.hidden=!o.hidden; paintTitle(); });
 document.querySelectorAll('#tCpuOpts [data-lv]').forEach(b=>b.addEventListener('click',()=>{ cfg.lv=+b.dataset.lv; saveCfg(); paintTitle(); }));
 $('tStart').addEventListener('click',()=>closeTitle('cpu2'));
@@ -5085,13 +5228,13 @@ paintTitle();
 
 function openModal(id){ $(id).hidden=false; uiSfx('open'); const f=$(id).querySelector('.gbtn'); if (f) f.focus(); }
 function closeModal(id){ if (!$(id).hidden){ $(id).hidden=true; uiSfx('close'); } }
-function closeModals(){ ['menu','settings','skillInfo','profile','favPick','friends','friendProf'].forEach(closeModal); }
+function closeModals(){ ['menu','settings','skillInfo','profile','favPick','friends','friendProf','news'].forEach(closeModal); }
 function showSkillInfo(p, kind){
   if (phase!=='play') return;
   const el=cfg.el[p], E=ELS[el], C = kind==='card' ? CARDS[el] : PASSIVES[el];
   $('siKind').textContent=`${roleOf(p)}・${E.name}　${kind==='card'?'必殺技カード':'パッシブ'}`;
   const nm=$('siName'); nm.textContent=C.name; nm.style.fontFamily=E.font||''; nm.style.color=tint(p);
-  $('siDesc').textContent=C.desc;
+  $('siDesc').textContent=descOf(C);
   const blk=kind==='card' ? cardBlock(p) : '';
   $('siState').textContent = kind==='card' ? `${usesLabel(p)}　${cardWhenText(p)}${blk && !cardTimeBlock(p) ? `　${blk}` : ''}` : pasState(p);
   $('skillInfo').querySelector('.m-panel').style.setProperty('--ec', tint(p));
@@ -5252,6 +5395,35 @@ window.claude?.hot?.snapshot?.(()=>({...curState(), phase, el:{...cfg.el}}));
 const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
+// what changed for battles, shown once on the first visit of a new version
+const APP_VER=25;
+const CHANGES={
+  25:[
+    'ターンの数え方を一新：先手・後手あわせた全体のターンで数えます（1手で1ターン）。画面下に今のターンが出ます。',
+    '光・闇・星・竜・鬼・鋼のカードは、最後の16ターンは使えなくなりました。',
+    '王：囲まれるとまず「反乱」の警告。次の自分の番のあとも続くか、2回目の反乱で負け。',
+    '闇：ゴーストパレードで相手に偽の置き場所が1つ出るように（選ぶと「スケア」で番を失う）。地獄門で奪う石が4枚に。',
+    '竜：暴虐は直線か正方形のどちらか一方だけ。逆鱗は後半6枚以上で発動。',
+    '星：星座封印は条件を2回満たしたあと、3回目から発動。',
+    '忍：神出鬼没は空きマス27以上のあいだ使えるように（4ターン延長）。',
+    '鬼：豪傑が「序盤・中盤・終盤に1回ずつ勝手に石を置く」に変更。鉄血粉砕は範囲に相手の石が6つ以上必要に。',
+    '範囲のあるカードは、狙うマスの範囲が光るように（スマホでは確認が出ます）。',
+    'ネット対戦で相手が退出すると、部屋が自動で解散します（対局中の通信切れは60秒待ちます）。',
+  ],
+};
+function showNews(){
+  const seen=+cfg.seenVer||0;
+  if (seen>=APP_VER) return;
+  cfg.seenVer=APP_VER; saveCfg();
+  if (!returning) return;
+  const items=[]; for (let v=Math.max(seen+1,APP_VER-3); v<=APP_VER; v++) (CHANGES[v]||[]).forEach(t=>items.push(t));
+  if (!items.length) return;
+  $('newsVer').textContent=`ver.${APP_VER} の対戦に関する変更`;
+  $('newsList').innerHTML=''; items.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; $('newsList').appendChild(li); });
+  openModal('news');
+}
+$('newsClose').addEventListener('click',()=>closeModal('news'));
+setTimeout(showNews,700);
 })();
 </script>
 
