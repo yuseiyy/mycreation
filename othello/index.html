@@ -877,7 +877,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.26</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.27</div>
   </div>
 </div>
 
@@ -1853,14 +1853,14 @@ const STAR_DIAG = 6;     // ...and this many on a diagonal
 const STEEL_N = 3;       // 堅牢の極意 takes this many stones
 const SERAPH_N = 25;     // 熾天使の契り wakes after this many flips
 const DRAGON_LOCK = 5;   // after one 暴虐, the other waits this many of the dragon's turns
-const END_LOCK = 16;     // these cards stop working for the last 16 turns
+const END_LOCK = 10;     // these cards stop working for the last 10 turns
 const LOCK_ELS = ['light','dark','star','dragon','oni','steel'];
 const NINJA_END = 26;    // 神出鬼没 works while more empty squares than this remain
 const ONI_MIN = 6;       // 鉄血粉砕 needs this many enemy stones in its 3x3
 const NINJA_OPEN = 3;     // 神出鬼没 unlocks after the ninja's third turn
 const DRAGON_OPEN = 44;  // 暴虐 unlocks in the midgame
 const TIME_OPEN = 36;    // 秒針自在 unlocks at the end of the midgame
-const LOCKTXT='最後の16ターン（空きマス16以下）は使えない。';
+const LOCKTXT='最後の10ターン（空きマス10以下）は使えない。';
 const CARDS = {
   light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。'+LOCKTXT, short:'相手の石をランダムに5枚消す。' },
   dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:4, desc:'闇のいざないで、相手の石をランダムに4枚（スケア1回ごとに+1枚）自分の色に変える。さらに相手の石2枚を封印し、4ターン（相手の番2回）のあいだ挟むための石として使えなくする。'+LOCKTXT, short:'相手の石をランダムに4枚（スケアごとに+1）奪う。さらに相手の石2枚を4ターン挟む石に使えなくする。' },
@@ -1961,7 +1961,7 @@ function cardTimeBlock(p){
     if (cardLeft(p)<=0) return '使い切りました';
     const at=cardOpenAt(el);
     if (e>at) return `解禁まで あと${e-at}ターン`;
-    if (LOCK_ELS.includes(el) && e<=END_LOCK) return '最後の16ターンは使えません';
+    if (LOCK_ELS.includes(el) && e<=END_LOCK) return `最後の${END_LOCK}ターンは使えません`;
   }
   return '';
 }
@@ -5036,7 +5036,7 @@ function buildHelp(){
     <li><strong>ターン</strong>は先手・後手あわせた全体の数です。どちらかが1手置く（またはパスする）と1ターン進みます。画面下に今のターンと残り（空きマスの数）が出ます。</li>
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。カードの「解禁まで ○ターン」「残り ○ターン」も全体のターンで数えます。</li>
     <li>炎のカードは自分の番が3回終わると使え、その後は10ターンごと。雷は空きマス${LATE+THUNDER_EARLY}以下、竜は${DRAGON_OPEN}以下、ほかの多くのカードは${LATE}以下から使えます。王は序盤（空きマス41以上）・中盤（21〜40）・終盤（20以下）に1回ずつ。</li>
-    <li>光・闇・星・竜・鬼・鋼のカードは、<strong>最後の16ターン（空きマス16以下）は使えません</strong>。忍のカードは空きマス27以上のあいだだけ使えます。</li>
+    <li>光・闇・星・竜・鬼・鋼のカードは、<strong>最後の10ターン（空きマス10以下）は使えません</strong>。忍のカードは空きマス27以上のあいだだけ使えます。</li>
     <li>竜の<strong>暴虐</strong>は「直線」か「正方形（3×3）」のどちらか一方を1回だけ使えます。正方形や直線のカードは、狙うマスにカーソルを合わせると範囲が光ります（スマホでは選んだあとに確認が出ます）。</li>
     <li>岩属性は対局開始時に、外周のマスを1つ選んで岩を置きます（5秒以内。さらに2マスはランダム）。</li>
     <li>カードが使えるようになると、カードが光って知らせます。</li>
@@ -5401,8 +5401,11 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=26;
+const APP_VER=27;
 const CHANGES={
+  27:[
+    '光・闇・星・竜・鬼・鋼のカードが使えなくなるのを、最後の16ターンから最後の10ターンに（6ターン長く使える）。',
+  ],
   26:[
     '闇：ゴーストパレードの「スケア」は番を失わせる効果ではなく、発動するたびに地獄門で奪う石を1枚増やす効果に（何度でも重なる）。',
     '鬼：豪傑の暴走は序盤に1回だけに。',
