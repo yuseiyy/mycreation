@@ -877,7 +877,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.27</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.28</div>
   </div>
 </div>
 
@@ -1880,7 +1880,7 @@ const PASSIVES = {
   dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の次の番は画面が真っ暗に（置ける場所だけ見える）。さらに本当は置けないマスが1つだけ置けるように見え、相手がそこを選ぶと「スケア」が発動し、地獄門で奪う石が1枚増える（何度でも重なる）。', short:'4枚以上返すと、相手の次の番は盤が見えなくなり、偽の置き場所が1つ出る。選ばれるたびに地獄門の枚数+1。' },
   fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'置いた石は4ターン（相手の番2回）のあいだ裏返らず、スキルも効かない。', short:'置いた石は4ターン裏返らない。' },
   thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分の番の始めに、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前の番に裏返した枚数×3%。', short:'番の始めに、確率で雷帝が1回分よみがえる。' },
-  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦か横に7つ、または斜めに6つ並ぶたびに星が集まる。2回集めたあと、3回目から並ぶたびに相手のパッシブとカードを4ターン（相手の番2回）封じる。', short:'縦横7・斜め6に並べるたびに星が集まり、3回目から相手のスキルを4ターン封じる。' },
+  star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦か横に7つ、または斜めに6つ並ぶと星が集まる。1回集めたあと、2回目から並ぶたびに相手のパッシブとカードを4ターン（相手の番2回）封じる。', short:'縦横7・斜め6に並べると星が集まり、2回目から相手のスキルを4ターン封じる。' },
   king:    { name:'威光の王家',       sub:'ROYAL MAJESTY',     desc:'最初に置いた石が王になり、決して裏返らない。王の上下左右4マスすべてと斜め4マスのうち2マスが相手の石になると「反乱」の警告。次の自分の番のあとも反乱が続いているか、一度おさまったあと再び反乱になると負け。まわり8マスすべてが味方になると勝ち。', short:'最初の石が王。囲まれると反乱、次の番までに鎮めないか、2回目の反乱で負け。味方で囲むと勝ち。' },
   rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'対局開始時に、盤の外周36マスから好きな1マスを選んで岩を置く（5秒以内）。さらに2マスにランダムで岩が現れる。岩には自分だけが石を置ける。', short:'開始時に外周へ岩を3つ（1つは自分で選ぶ）。岩には自分だけ置ける。' },
   ninja:   { name:'隠密と罠',         sub:'SHADOW TRAP',       desc:'置いた石は相手の次の番のあいだ相手から見えない。見えない石のマスに置こうとすると罠にかかり、その番を失う。', short:'置いた石は相手の次の番に見えない。そこに置こうとすると番を失う。' },
@@ -2027,7 +2027,7 @@ function pasState(p){
   if (el==='light') return s.seraph ? '覚醒中' : `${Math.min(SERAPH_N,s.flips||0)} / ${SERAPH_N}`;
   if (el==='fire') return '毎ターン発動';
   if (el==='thunder') return `次ターン ${Math.round(jinraiChance(s)*100)}%`;
-  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${turnsFor(hush.p,hush.left)}ターン）` : (s.stars||0)<2 ? `星 ${s.stars||0} / 2` : '星座封印 発動可能';
+  if (el==='star') return isHushed(3-p) ? `相手を封印中（あと${turnsFor(hush.p,hush.left)}ターン）` : (s.stars||0)<1 ? '1回並べると準備完了' : '星座封印 発動可能';
   if (el==='king') return kings[p]===-2 ? '王冠を失った' : kings[p]<0 ? '最初の石が王に' : rebel[p]===1 ? '反乱中！ 次の番で鎮めよ' : rebel[p]===2 ? '次の反乱で陥落' : '王 健在';
   if (el==='rock'){ let n=0; for (let i=64;i<N;i++) if (board[i]===0) n++; return `空いている岩 ${n}`; }
   if (el==='ninja') return hidden.some(h=>h.owner===p) ? '隠密中' : '置いた石を隠す';
@@ -2527,7 +2527,7 @@ function starPassive(S,p,changed){
   const run=fiveLine(S.board,p,changed);
   if (!run) return;
   const ps=S.pas[p];
-  if ((ps.stars||0)<2){ ps.stars=(ps.stars||0)+1; S.ev.push('stars:'+p+':'+run.join('.')); return; }
+  if ((ps.stars||0)<1){ ps.stars=(ps.stars||0)+1; S.ev.push('stars:'+p+':'+run.join('.')); return; }
   S.hush={p:3-p,left:2}; S.ev.push('hush:'+(3-p)+':'+run.join('.'));
 }
 function placeS(S,idx,p){
@@ -4054,7 +4054,7 @@ async function fxStars(p, runTxt){
   if (run.length){ const [x1,y1]=center(run[0]), [x2,y2]=center(run[run.length-1]); LINES.push({x1,y1,x2,y2,t:0,delay:.05,life:1.6,draw:.4,color:'#cfe0ff',w:3}); }
   run.forEach((i,k)=>setTimeout(()=>{ const [x,y]=center(i); part({x,y:y-8,vx:0,vy:-30,life:1.1,size:14,color:E.c3,mode:'glyph',ch:'☆'}); bell(1318.5*Math.pow(2,k/12),.35,.04); }, k*70));
   const n=(pas[p]||{}).stars||0;
-  toast(n>=2 ? `${PASSIVES.star.name}：星が2つ集まった。次に並べると封印が発動する` : `${PASSIVES.star.name}：星が集まった（${n} / 2）`);
+  toast(`${PASSIVES.star.name}：星が集まった。次に並べると封印が発動する`);
   await wait(run.length*70+600);
 }
 async function fxRampage(k){
@@ -5401,8 +5401,11 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=27;
+const APP_VER=28;
 const CHANGES={
+  28:[
+    '星：星座封印は条件を1回満たしたあと、2回目から発動するように。',
+  ],
   27:[
     '光・闇・星・竜・鬼・鋼のカードが使えなくなるのを、最後の16ターンから最後の10ターンに（6ターン長く使える）。',
   ],
