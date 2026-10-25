@@ -962,7 +962,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.30</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.31</div>
   </div>
 </div>
 
@@ -1188,9 +1188,10 @@ const ELS = {
   dream:   { k:'夢', name:'夢属性', ult:'夢幻泡影', sub:'PHANTASMAGORIA',          c1:'#ff9ad5', c2:'#fff0fa', c3:'#b48bff', aura:'rgba(255,150,210,0.75)',
              glow:'0 0 18px #ff9ad5, 0 0 60px #b48bff', fill:'linear-gradient(180deg,#fff6fc,#ffb8e2 40%,#d89aff 75%,#8ad8ff)' },
 };
-const EL_ORDER = ['dark','light','fire','thunder','star','king','rock','ninja','dragon','oni','steel','grass','moon','dream'];
+// the one order used wherever elements are lined up (title, draft, profile, skill guide, card lists)
+const EL_ORDER = ['fire','grass','thunder','rock','light','dark','moon','star','steel','dragon','ninja','oni','king','dream'];
 const ALL_ELS = [...EL_ORDER,'time'];
-const TITLE_ORDER = ['fire','thunder','rock','light','dark','star','steel','dragon','ninja','oni','king','grass','moon','dream'];   // 時 is only ever chosen by the CPU
+const TITLE_ORDER = EL_ORDER;   // 時 is only ever chosen by the CPU
 // banner lettering per element: font, sub-title font, and any extra shaping
 const LETTERING = {
   dark:    { font:'"Yuji Boku","Dela Gothic One",serif',             sfont:'"Creepster","Cinzel",serif', bf:'drop-shadow(0 5px 0 #1a0030) drop-shadow(0 0 16px #a259ff) drop-shadow(0 0 34px #000)', bt:'skewY(-2deg)' },
@@ -6132,7 +6133,7 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=30;
+const APP_VER=31;
 const CHANGES={
   30:[
     '月：今の月の形と次の月が、月属性のパネルに大きく出るように。月光がたまる置き場所は銀色の印に。玲瓏の段階を 0〜10／11〜20／21〜30／31〜 に。',
