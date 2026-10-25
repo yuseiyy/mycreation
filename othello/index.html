@@ -877,7 +877,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.25</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.26</div>
   </div>
 </div>
 
@@ -1863,7 +1863,7 @@ const TIME_OPEN = 36;    // 秒針自在 unlocks at the end of the midgame
 const LOCKTXT='最後の16ターン（空きマス16以下）は使えない。';
 const CARDS = {
   light:   { name:'神の審判',               sub:'DIVINE JUDGEMENT',   uses:1, n:5, desc:'天から降り注ぐ光が、相手の石をランダムに5枚消し去る。'+LOCKTXT, short:'相手の石をランダムに5枚消す。' },
-  dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:4, desc:'闇のいざないで、相手の石をランダムに4枚自分の色に変える。さらに相手の石2枚を封印し、4ターン（相手の番2回）のあいだ挟むための石として使えなくする。'+LOCKTXT, short:'相手の石をランダムに4枚奪う。さらに相手の石2枚を4ターン挟む石に使えなくする。' },
+  dark:    { name:'地獄門',                 sub:'GATE OF HELL',       uses:1, n:4, desc:'闇のいざないで、相手の石をランダムに4枚（スケア1回ごとに+1枚）自分の色に変える。さらに相手の石2枚を封印し、4ターン（相手の番2回）のあいだ挟むための石として使えなくする。'+LOCKTXT, short:'相手の石をランダムに4枚（スケアごとに+1）奪う。さらに相手の石2枚を4ターン挟む石に使えなくする。' },
   fire:    { name:'エターナルプロミネンス', sub:'ETERNAL PROMINENCE', uses:0,      desc:'マスを1つ選んで燃やす。相手はそのマスに6ターン（相手の番3回）置けない。10ターン（自分の番5回）ごとに使える。', short:'選んだマスに相手は6ターン置けない。10ターンごとに使える。' },
   thunder: { name:'雷帝',                   sub:'THUNDER EMPEROR',    uses:2,      desc:'このターン、石を2つ続けて置ける。', short:'このターン2回置ける。' },
   star:    { name:'流星群',                 sub:'METEOR SHOWER',      uses:1,      desc:'空きマス3つに流れ星が落ちて自分の石になる（挟めば裏返す）。さらに相手の石1枚をランダムに自分の色に変える。'+LOCKTXT, short:'空きマス3つに自分の石を置き、相手の石1枚を奪う。' },
@@ -1877,7 +1877,7 @@ const CARDS = {
 };
 const PASSIVES = {
   light:   { name:'熾天使の契り',     sub:"SERAPH'S COVENANT", desc:'裏返した数が合計25枚に達すると覚醒。以後、相手の置ける場所が2つ以上ある番は、置ける場所3つにつき1マス（最低1マス）を鎖で封じる。', short:'25枚返すと覚醒。以後、相手の置き場所を一部封じる。' },
-  dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の次の番は画面が真っ暗に（置ける場所だけ見える）。さらに本当は置けないマスが1つだけ置けるように見え、そこを選ぶと「スケア」で相手はその番を失う。', short:'4枚以上返すと、相手の次の番は盤が見えなくなり、偽の置き場所が1つ出る（選ぶと番を失う）。' },
+  dark:    { name:'ゴーストパレード', sub:'GHOST PARADE',      desc:'一度に4枚以上裏返すと、相手の次の番は画面が真っ暗に（置ける場所だけ見える）。さらに本当は置けないマスが1つだけ置けるように見え、相手がそこを選ぶと「スケア」が発動し、地獄門で奪う石が1枚増える（何度でも重なる）。', short:'4枚以上返すと、相手の次の番は盤が見えなくなり、偽の置き場所が1つ出る。選ばれるたびに地獄門の枚数+1。' },
   fire:    { name:'烈火出陣',         sub:'BLAZING SORTIE',    desc:'置いた石は4ターン（相手の番2回）のあいだ裏返らず、スキルも効かない。', short:'置いた石は4ターン裏返らない。' },
   thunder: { name:'迅雷',             sub:'SWIFT THUNDER',     desc:'自分の番の始めに、使った雷帝が稲妻とともに1回分よみがえる。確率は10%＋前の番に裏返した枚数×3%。', short:'番の始めに、確率で雷帝が1回分よみがえる。' },
   star:    { name:'星座封印',         sub:'CONSTELLATION SEAL', desc:'自分の石が縦か横に7つ、または斜めに6つ並ぶたびに星が集まる。2回集めたあと、3回目から並ぶたびに相手のパッシブとカードを4ターン（相手の番2回）封じる。', short:'縦横7・斜め6に並べるたびに星が集まり、3回目から相手のスキルを4ターン封じる。' },
@@ -1885,14 +1885,14 @@ const PASSIVES = {
   rock:    { name:'母なる大地',       sub:'MOTHER EARTH',      desc:'対局開始時に、盤の外周36マスから好きな1マスを選んで岩を置く（5秒以内）。さらに2マスにランダムで岩が現れる。岩には自分だけが石を置ける。', short:'開始時に外周へ岩を3つ（1つは自分で選ぶ）。岩には自分だけ置ける。' },
   ninja:   { name:'隠密と罠',         sub:'SHADOW TRAP',       desc:'置いた石は相手の次の番のあいだ相手から見えない。見えない石のマスに置こうとすると罠にかかり、その番を失う。', short:'置いた石は相手の次の番に見えない。そこに置こうとすると番を失う。' },
   dragon:  { name:'逆鱗',             sub:"DRAGON'S WRATH",    desc:'自分の石を一度に、前半（空きマス31以上）は4枚以上・後半は6枚以上裏返されると怒り状態になる。次に置いたとき、裏返した石の上下左右にいる相手の石も裏返す。', short:'一度に4枚（後半は6枚）以上返されると、次の一手で追加で返す。' },
-  oni:     { name:'豪傑',             sub:'MIGHTY BRUTE',      desc:'荒れ狂う鬼は力を制御できない。序盤・中盤・終盤にそれぞれ1回ずつ、ランダムな自分の番に、勝手にランダムな場所へ石を置いてしまう。', short:'序盤・中盤・終盤に1回ずつ、勝手にランダムな場所へ置いてしまう。' },
+  oni:     { name:'豪傑',             sub:'MIGHTY BRUTE',      desc:'荒れ狂う鬼は力を制御できない。序盤のランダムな自分の番に1回だけ、勝手にランダムな場所へ石を置いてしまう。', short:'序盤に1回だけ、勝手にランダムな場所へ置いてしまう。' },
   steel:   { name:'鋼の忠誠',         sub:'IRON LOYALTY',      desc:'相手が鋼の石の隣に石を置くと、その石は錆びつく。相手の次の番のあいだ、錆びた石は挟むための石として使えない。', short:'鋼の石の隣に置かれた石は、相手の次の番に挟む石に使えない。' },
   time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。', short:'相手の手を予測し、的中すると秒針自在が回復。' },
 };
 // the simple-wording switch in the skill guide
 const descOf = X => cfg.shortDesc && X.short ? X.short : X.desc;
 // every key is listed so an online state merge overwrites last game's values instead of keeping them
-const freshSide = () => ({flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99,stars:0,ramp:[]});
+const freshSide = () => ({flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99,stars:0,ramp:[],scare:0});
 const freshPas = () => ({1:freshSide(),2:freshSide()});
 const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
 const clone = o => JSON.parse(JSON.stringify(o));
@@ -1927,7 +1927,8 @@ function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1)
 function skillTargets(b,p,gs,el){
   const opp=3-p, os=[]; let oc=0;
   for (let i=0;i<64;i++) if (b[i]===opp){ oc++; if (!gs.some(g=>g.idx===i && g.owner===opp)) os.push(i); }
-  return {os, n:Math.min(CARDS[el].n||1, oc-1, os.length)};
+  const n0=(CARDS[el].n||1) + (el==='dark' ? ((pas[p]||{}).scare||0) : 0);
+  return {os, n:Math.min(n0, oc-1, os.length)};
 }
 // 鉄血粉砕: the opponent stones in the 3x3 block around a square
 function oniBlock(b,c,p,gs){
@@ -2032,9 +2033,9 @@ function pasState(p){
   if (el==='ninja') return hidden.some(h=>h.owner===p) ? '隠密中' : '置いた石を隠す';
   if (el==='dragon') return s.rage ? '逆鱗 発動中' : `${emptyCount()>LATE ? 4 : 6}枚返されると発動`;
   if (el==='time') return predict && predict.p===3-p ? '未来を見ている' : '相手の手を予測';
-  if (el==='oni') return PHASES.map((n,k)=>`${n[0]}${(s.ramp||[]).includes(k)?'×':'○'}`).join(' ');
+  if (el==='oni') return (s.ramp||[]).includes(0) ? '暴走済み' : emptyCount()>40 ? '序盤のどこかで暴走' : '暴走しなかった';
   if (el==='steel'){ const n=steel.filter(x=>x.owner===p && board[x.idx]===p).length; return n ? `鋼の石 ${n}つ` : '鋼の石の隣で発動'; }
-  return '4枚以上で発動';
+  return (s.scare||0) ? `地獄門 +${s.scare}枚` : '4枚以上で発動';
 }
 const W8 = i => i<64 ? WT[i] : 60;
 function aimOk(i){
@@ -2073,7 +2074,11 @@ function springTrap(idx){
   const p=turn, S=curState();
   const scare = fake && fake.p===p && fake.idx===idx;
   S.fake=null;
-  S.ev.push((scare ? 'scare:' : 'trap:')+idx+':'+p); S.extra=0; advanceS(S,p);
+  if (scare){
+    // the ghost only frightens: the turn goes on, and 地獄門 grows by one stone
+    const d=S.pas[3-p]; d.scare=(d.scare||0)+1;
+    S.ev.push('scare:'+idx+':'+p);
+  } else { S.ev.push('trap:'+idx+':'+p); S.extra=0; advanceS(S,p); }
   sendState(S,['trap',p,idx]);
   commit(S);
 }
@@ -2437,7 +2442,7 @@ function startTurnS(S,x){
   if (cfg.el[x]==='oni' && !hushedS(S,x)){
     const ps=S.pas[x]; ps.ramp=ps.ramp||[];
     const e=counts(S.board)[2], ph=phaseOf(e);
-    if (!ps.ramp.includes(ph)){
+    if (ph===0 && !ps.ramp.includes(0)){
       // spread over the oni's turns left in this stage, certain on the last one
       const left=Math.max(1, Math.ceil((e-(ph===0?40:ph===1?20:0))/2));
       if (Math.random() < 1/left){ ps.ramp.push(ph); S.rampage=x; S.ev.push('rampage:'+x); }
@@ -4031,7 +4036,7 @@ async function fxScare(idx,victim){
   for (let j=0;j<5;j++) part({x:x+rnd(-cw,cw),y:y+rnd(-cw,cw),vx:rnd(-40,40),vy:rnd(-60,-10),drag:1,life:1.6,size:cw*rnd(.5,.8),color:'#cfc2ff',mode:'ghost',wob:2,alpha:.6});
   flash('#000',.6,400); flash(E.c1,.3,200); shake(16);
   tone('sawtooth',90,40,.6,.15); nz('bandpass',2400,300,.5,.4,0,3); tone('sine',1400,300,.4,.08,.05);
-  const el=document.createElement('div'); el.className='stamp trap'; el.style.borderColor=E.c1; el.innerHTML=`<span style="color:#e8d8ff;text-shadow:0 0 20px #a259ff,0 4px 0 #14001e">スケア</span><small>偽りの置き場所だった！ ${ELS[cfg.el[victim]].k}はこの番を失う</small>`;
+  const el=document.createElement('div'); el.className='stamp trap'; el.style.borderColor=E.c1; el.innerHTML=`<span style="color:#e8d8ff;text-shadow:0 0 20px #a259ff,0 4px 0 #14001e">スケア</span><small>偽りの置き場所だった！ 地獄門で奪う石が1枚増えた</small>`;
   document.body.appendChild(el);
   el.animate([{transform:'translate(-50%,-50%) rotate(-8deg) scale(2.4)',opacity:0},{transform:'translate(-50%,-50%) rotate(-8deg) scale(.95)',opacity:1,offset:.22},{transform:'translate(-50%,-50%) rotate(-8deg) scale(1)',opacity:1,offset:.82},{transform:'translate(-50%,-50%) rotate(-8deg) scale(1)',opacity:0}],{duration:1700}); setTimeout(()=>el.remove(),1780);
   await wait(1300);
@@ -5396,8 +5401,12 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=25;
+const APP_VER=26;
 const CHANGES={
+  26:[
+    '闇：ゴーストパレードの「スケア」は番を失わせる効果ではなく、発動するたびに地獄門で奪う石を1枚増やす効果に（何度でも重なる）。',
+    '鬼：豪傑の暴走は序盤に1回だけに。',
+  ],
   25:[
     'ターンの数え方を一新：先手・後手あわせた全体のターンで数えます（1手で1ターン）。画面下に今のターンが出ます。',
     '光・闇・星・竜・鬼・鋼のカードは、最後の16ターンは使えなくなりました。',
