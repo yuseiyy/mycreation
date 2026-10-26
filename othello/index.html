@@ -966,7 +966,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.32</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.33</div>
   </div>
 </div>
 
@@ -5753,15 +5753,8 @@ function buildHelp(){
     <li>そのあと、それぞれ属性を1つ選びます。<strong>同じ属性がかぶったらコイン投げ</strong>で決め、負けた方は5秒以内に別の属性を選び直します。</li>
     <li><strong>ターン</strong>は先手・後手あわせた全体の数です。どちらかが1手置く（またはパスする）と1ターン進みます。画面下に今のターンと残り（空きマスの数）が出ます。</li>
     <li>必殺技カードは自分の番に1回だけ、石を置く前に使えます。カードの「解禁まで ○ターン」「残り ○ターン」も全体のターンで数えます。</li>
-    <li>炎のカードは自分の番が3回終わると使え、その後は10ターンごと。雷は空きマス${LATE+THUNDER_EARLY}以下、竜は${DRAGON_OPEN}以下、ほかの多くのカードは${LATE}以下から使えます。王は序盤（空きマス41以上）・中盤（21〜40）・終盤（20以下）に1回ずつ。</li>
-    <li>光・闇・星・竜・鬼・鋼のカードは、<strong>最後の10ターン（空きマス10以下）は使えません</strong>。忍のカードは空きマス27以上のあいだだけ使えます。</li>
-    <li>竜の<strong>暴虐</strong>は「直線」か「正方形（3×3）」のどちらか一方を1回だけ使えます。正方形や直線のカードは、狙うマスにカーソルを合わせると範囲が光ります（スマホでは選んだあとに確認が出ます）。</li>
-    <li>岩属性は対局開始時に、外周のマスを1つ選んで岩を置きます（5秒以内。さらに2マスはランダム）。</li>
-    <li>カードが使えるようになると、カードが光って知らせます。</li>
+    <li>正方形や直線など範囲のあるカードは、狙うマスにカーソルを合わせると範囲が光ります（スマホでは選んだあとに確認が出ます）。</li>
     <li>スマホでは、カードやパッシブを長押しすると詳しい説明が開きます。</li>
-    <li>CPUの強さが魔導士以上だと、CPUがまれに<strong>時属性</strong>を使ってきます（プレイヤーは選べません）。</li>
-    <li>光と闇のカードは、狙える相手の石が<strong>3枚以上</strong>あるときだけ使えます。狙う石は、効果が出る直前に印がつきます。</li>
-    <li>星の<strong>星座封印</strong>を受けると、4ターン（自分の番2回）のあいだパッシブもカードも使えません。</li>
     <li>パッシブスキルは条件を満たすと自動で発動します。</li>
   </ul>` + [...TITLE_ORDER,'time'].map(k=>{
     const E=ELS[k], C=CARDS[k], PS=PASSIVES[k];
@@ -6138,7 +6131,7 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=32;
+const APP_VER=33;
 const CHANGES={
   30:[
     '月：今の月の形と次の月が、月属性のパネルに大きく出るように。月光がたまる置き場所は銀色の印に。玲瓏の段階を 0〜10／11〜20／21〜30／31〜 に。',
