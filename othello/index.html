@@ -10,7 +10,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Kiwi+Maru:wght@500&family=Hina+Mincho&family=Hachi+Maru+Pop&family=Nosifer&family=Train+One&family=Orbitron:wght@900&family=Yuji+Syuku&family=Potta+One&family=DotGothic16&family=Cinzel+Decorative:wght@900&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&family=Reggae+One&family=RocknRoll+One&family=Kaisei+Decol:wght@700&family=Zen+Antique&family=Creepster&family=Black+Ops+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Zen+Maru+Gothic:wght@700&family=Rampart+One&family=Kiwi+Maru:wght@500&family=Hina+Mincho&family=Hachi+Maru+Pop&family=Nosifer&family=Train+One&family=Orbitron:wght@900&family=Yuji+Syuku&family=Potta+One&family=DotGothic16&family=Cinzel+Decorative:wght@900&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=Yuji+Boku&family=Shippori+Mincho+B1:wght@800&family=Reggae+One&family=RocknRoll+One&family=Kaisei+Decol:wght@700&family=Zen+Antique&family=Creepster&family=Black+Ops+One&display=swap">
 <style>
 /* Layout: one arena screen — two element "duelist" panels flank a carved stone board; FX canvas floats over everything. Single dark world by design. */
 :root{
@@ -803,6 +803,18 @@ body:not(.lobby) .on-title{display:none}
 .side,.status,#board,#skillInfo,#skillInfo *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea{-webkit-user-select:text;user-select:text}
 
+/* 風・愚 stones */
+.disc[data-el="wind"]{background:conic-gradient(from 0deg,#ffffff,#c8fff0 20%,#8ff0d8 40%,#4ab0c8 60%,#c8fff0 80%,#ffffff);box-shadow:0 0 0 1.5px #2a7a8a,0 0 12px #8ff0d888,0 3px 6px #000a,inset 0 -3px 8px #2a7a8a99,inset 0 2px 5px #ffffffcc;color:#0a4a5a}
+.disc[data-el="wind"]::after{opacity:.55;mix-blend-mode:normal}
+.aura[data-el="wind"]{inset:-14%;background:conic-gradient(from 0deg,transparent 0 20%,#c8fff0aa 28%,transparent 36% 58%,#8ff0d8aa 66%,transparent 74%);-webkit-mask:radial-gradient(circle,transparent 52%,#000 58%,transparent 72%);mask:radial-gradient(circle,transparent 52%,#000 58%,transparent 72%);animation:auraSpin 1.4s linear infinite}
+.disc[data-el="wind"][data-alt]{background:conic-gradient(from 0deg,#ffffff,#d8e8ff 25%,#88aaff 55%,#d8e8ff 80%,#ffffff);box-shadow:0 0 0 1.5px #2a4a8a,0 0 12px #88aaff88,0 3px 6px #000a}
+.disc[data-el="fool"]{background:conic-gradient(from 45deg,#ffb02e 0 25%,#a64dff 0 50%,#ffb02e 0 75%,#a64dff 0);box-shadow:0 0 0 2px #fff3d0,0 0 0 3px #3a1a5a,0 0 12px #ffb02e88,0 3px 6px #000a,inset 0 -3px 6px #0006;color:#fff}
+.disc[data-el="fool"]::after{opacity:.9;mix-blend-mode:normal;text-shadow:0 1px 2px #000}
+.aura[data-el="fool"]{inset:-12%;background:radial-gradient(circle at 20% 30%,#ffb02e 0 3%,transparent 4%),radial-gradient(circle at 80% 25%,#a64dff 0 3%,transparent 4%),radial-gradient(circle at 70% 80%,#ff4fa0 0 3%,transparent 4%),radial-gradient(circle at 25% 75%,#2ee6c8 0 3%,transparent 4%);animation:auraSpin 4s linear infinite}
+.disc[data-el="fool"][data-alt]{background:conic-gradient(from 45deg,#ff6ab8 0 25%,#2ee6c8 0 50%,#ff6ab8 0 75%,#2ee6c8 0)}
+.d-el[data-el="wind"]::before{background:conic-gradient(from 0deg,transparent,#8ff0d855,transparent 40%,#c8fff055,transparent 80%);animation:auraSpin 1.6s linear infinite}
+.d-el[data-el="fool"]::before{background:conic-gradient(from 45deg,#ffb02e33 0 25%,#a64dff33 0 50%,#ffb02e33 0 75%,#a64dff33 0);animation:auraSpin 6s linear infinite}
+
 /* profile */
 #settings .m-panel{max-height:calc(100vh - 32px);overflow:auto}
 .prof{display:grid;gap:8px;padding-bottom:8px;border-bottom:1px solid #ffffff10}
@@ -966,7 +978,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.33</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.34</div>
   </div>
 </div>
 
@@ -1189,11 +1201,15 @@ const ELS = {
              glow:'0 0 18px #dcd8ff, 0 0 60px #4a4aa8', fill:'linear-gradient(180deg,#ffffff,#e8e4ff 40%,#9a96d8 75%,#ffd27a)' },
   god:     { k:'神', name:'神属性', ult:'天地開闢', sub:'GENESIS',                c1:'#ffe9a0', c2:'#ffffff', c3:'#9ad8ff', aura:'rgba(255,240,180,0.9)',
              glow:'0 0 20px #fff6c8, 0 0 70px #ffd27a', fill:'linear-gradient(180deg,#ffffff,#fff6c8 30%,#ffd27a 55%,#ff9ad5 75%,#9ad8ff)' },
+  wind:    { k:'風', name:'風属性', ult:'天翔ける嵐', sub:'GALE TEMPEST',          c1:'#8ff0d8', c2:'#f0fffa', c3:'#4ab0c8', aura:'rgba(140,240,215,0.75)',
+             glow:'0 0 16px #8ff0d8, 0 0 50px #4ab0c8', fill:'linear-gradient(180deg,#ffffff,#c8fff0 40%,#8ff0d8 70%,#4ab0c8)' },
+  fool:    { k:'愚', name:'愚属性', ult:'道化の大行進', sub:"FOOL'S PARADE",        c1:'#ffb02e', c2:'#fff3d0', c3:'#a64dff', aura:'rgba(255,176,46,0.75)',
+             glow:'0 0 16px #ffb02e, 0 0 50px #a64dff', fill:'linear-gradient(135deg,#ffe08a 0 25%,#c88aff 25% 50%,#ffe08a 50% 75%,#c88aff 75%)' },
   dream:   { k:'夢', name:'夢属性', ult:'夢幻泡影', sub:'PHANTASMAGORIA',          c1:'#ff9ad5', c2:'#fff0fa', c3:'#b48bff', aura:'rgba(255,150,210,0.75)',
              glow:'0 0 18px #ff9ad5, 0 0 60px #b48bff', fill:'linear-gradient(180deg,#fff6fc,#ffb8e2 40%,#d89aff 75%,#8ad8ff)' },
 };
 // the one order used wherever elements are lined up (title, draft, profile, skill guide, card lists)
-const EL_ORDER = ['fire','grass','thunder','rock','light','dark','moon','star','steel','dragon','ninja','oni','king','dream'];
+const EL_ORDER = ['fire','grass','thunder','wind','rock','light','dark','moon','star','steel','dragon','ninja','oni','king','dream','fool'];
 const ALL_ELS = [...EL_ORDER,'time'];
 const TITLE_ORDER = EL_ORDER;   // 時 is only ever chosen by the CPU
 // banner lettering per element: font, sub-title font, and any extra shaping
@@ -1212,13 +1228,15 @@ const LETTERING = {
   steel:   { font:'"Train One","Dela Gothic One",sans-serif',        sfont:'"Orbitron","Black Ops One",sans-serif', bf:'drop-shadow(0 4px 0 #1a1e24) drop-shadow(0 0 14px #8fd0ff)', bt:'scaleY(1.04)' },
   grass:   { font:'"Kiwi Maru","Zen Kaku Gothic New",serif',         sfont:'"Cinzel Decorative","Cinzel",serif', bf:'drop-shadow(0 4px 0 #1a3a10) drop-shadow(0 0 16px #7be36a)' },
   moon:    { font:'"Hina Mincho","Shippori Mincho B1",serif',        sfont:'"Cinzel Decorative","Cinzel",serif', bf:'drop-shadow(0 3px 0 #0a0a26) drop-shadow(0 0 18px #e8e4ff)' },
+  wind:    { font:'"Zen Maru Gothic","Zen Kaku Gothic New",sans-serif', sfont:'"Cinzel Decorative","Cinzel",serif', bf:'drop-shadow(0 3px 0 #0a3a3a) drop-shadow(0 0 16px #8ff0d8)', bt:'skewX(-8deg)' },
+  fool:    { font:'"Rampart One","Dela Gothic One",sans-serif',      sfont:'"Creepster","Cinzel",serif', bf:'drop-shadow(0 4px 0 #3a1a5a) drop-shadow(0 0 14px #ffb02e)', bt:'rotate(-3deg)' },
   dream:   { font:'"Hachi Maru Pop","Zen Kaku Gothic New",sans-serif', sfont:'"Cinzel Decorative","Cinzel",serif', bf:'drop-shadow(0 3px 0 #4a1a4a) drop-shadow(0 0 18px #ff9ad5)' },
 };
 for (const k of ALL_ELS) Object.assign(ELS[k], LETTERING[k]);
 Object.assign(ELS.god, { font:'"Shippori Mincho B1","Hina Mincho",serif', sfont:'"Cinzel Decorative","Cinzel",serif', bf:'drop-shadow(0 4px 0 #3a2a0a) drop-shadow(0 0 24px #fff6c8) drop-shadow(0 0 50px #ffd27a)' });
 // when two elements look alike, the 後手 side's stones and accents take a shifted shade
 const CLASH=[['thunder','fire'],['thunder','light'],['fire','rock'],['dark','king'],['dark','star'],['king','star'],['dragon','star'],['king','time'],['ninja','time'],['dragon','time'],['fire','oni'],['light','steel'],['grass','ninja'],['moon','light'],['moon','steel'],['moon','star'],['dream','oni']];
-const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star:'#3ec9c9',king:'#ff5a7a',rock:'#b8b8b8',ninja:'#c7d84a',dragon:'#7a6cff',time:'#9ad0ff',oni:'#ff4da6',steel:'#7fb0ff',grass:'#d8e85a',moon:'#ffd27a',dream:'#8ad8ff',god:'#c8a0ff'};
+const ALTC={dark:'#5a7cff',light:'#dfe8ff',fire:'#ff3355',thunder:'#c8f520',star:'#3ec9c9',king:'#ff5a7a',rock:'#b8b8b8',ninja:'#c7d84a',dragon:'#7a6cff',time:'#9ad0ff',oni:'#ff4da6',steel:'#7fb0ff',grass:'#d8e85a',moon:'#ffd27a',dream:'#8ad8ff',god:'#c8a0ff',wind:'#c8e8ff',fool:'#ff6ab8'};
 
 /* ---------- state ---------- */
 let cfg = { el:{1:'dark',2:'light'}, mode:'cpu2', lv:2, sound:true };
@@ -1251,7 +1269,7 @@ let kings = {1:-1,2:-1}, hush = null, royal = 0, decree = null, forced = null, q
 let prevBlock = {1:null,2:null};
 let hidden = [], lastPlace = null, predict = null, aimSel = null, sneakyIdx = -1;
 let steel = [], rust = [], rockPick = null, rockT = 0, tn = 0, rebel = {1:0,2:0}, rebelAt = {}, fake = null, rampage = 0;
-let trees = [], sprouts = [], seeds = [], resow = null, tsukuyomi = null, kantan = null, dream = null, night = null, nightAct = '';
+let breeze = null, trees = [], sprouts = [], seeds = [], resow = null, tsukuyomi = null, kantan = null, dream = null, night = null, nightAct = '';
 const $ = id => document.getElementById(id);
 const boardEl = $('board'), stage = $('stage');
 const cells = [], discs = [];
@@ -1460,6 +1478,8 @@ function sfx(el, kind, i=0){
     else if (el==='time'){ tone('square',2400*up,2400,.02,.06); tone('square',1600*up,1600,.02,.06,.11); bell(1318.5*up,.5,.04,.05); }
     else if (el==='oni'){ tone('sine',130*up,46,.38,.62); nz('lowpass',420,70,.22,.42); tone('sawtooth',82*up,38,.22,.07); nz('bandpass',1200,400,.08,.15,0,2); }
     else if (el==='steel'){ clang(560*up,.075,0,.55); tone('square',95,50,.07,.08); nz('highpass',6000,3000,.04,.2); }
+    else if (el==='wind'){ nz('bandpass',900*up,2400,.18,.12,0,2); tone('sine',660*up,880,.15,.03); }
+    else if (el==='fool'){ tone('square',523.3*up,392,.12,.05); tone('triangle',784*up,784,.06,.03,.08); }
     else if (el==='god'){ bell(1046.5*up,1,.08); [523.3,659.3,784].forEach((f,k)=>pad(f*2*up,1.2,.025,.02*k,.06,'sine')); }
     else if (el==='grass'){ tone('triangle',330*up,300,.12,.08); nz('highpass',6000,3000,.12,.08); tone('sine',660*up,660,.15,.03,.03); }
     else if (el==='moon'){ bell(523.3*up,.9,.06); bell(783.99*up,.7,.03,.05); }
@@ -1497,6 +1517,8 @@ function sfx(el, kind, i=0){
     else if (el==='time'){ for (let k=0;k<14;k++) tone('square',k%2?1600:2400,k%2?1600:2400,.02,.06,k*(.16-k*.007)); [523.3,659.3,784,1046.5].forEach((f,k)=>bell(f,1.6,.06,1.3+k*.08)); nz('bandpass',300,3200,1.2,.15,0,1.5); }
     else if (el==='oni'){ for (let k=0;k<8;k++) tone('sine',k%2?150:100,46,.35,.7,k*.14); tone('sawtooth',55,28,2,.18,.9); nz('lowpass',2400,60,2,.7,1.1); }
     else if (el==='steel'){ [0,.18,.36].forEach((t,k)=>clang(200+k*60,.18,t,1.4)); nz('highpass',7000,2500,.9,.18,.5); tone('sine',48,22,1.8,.9,.9); nz('lowpass',2400,60,1.4,.6,.9); }
+    else if (el==='wind'){ nz('bandpass',200,2200,2.4,.3,0,.6); [587.3,659.3,784,880].forEach((f,k)=>tone('sine',f,f*1.02,.6,.04,.3+k*.2)); }
+    else if (el==='fool'){ [392,523.3,659.3,523.3,392,523.3,784].forEach((f,k)=>tone('square',f,f,.13,.05,k*.13)); tone('sawtooth',400,100,.5,.06,1); }
     else if (el==='god'){ [130.8,261.6,329.6,392,523.3,659.3,784,1046.5].forEach((f,k)=>{ pad(f,3.6,.05,k*.03,.6,'sine'); }); [1046.5,1318.5,1568,2093,2637].forEach((f,k)=>bell(f,1.6,.06,.4+k*.12)); }
     else if (el==='grass'){ nz('bandpass',800,300,2.4,.12,0,.6); [784,987.8,1174.7,1568].forEach((f,k)=>tone('sine',f,f*1.04,.25,.04,.3+k*.22)); [392,493.9,587.3,784].forEach((f,k)=>pad(f,2.6,.04,k*.1,.4,'triangle')); }
     else if (el==='moon'){ [440,523.3,587.3,659.3,783.99,880,1046.5].forEach((f,k)=>{ tone('triangle',f,f,.9,.06,k*.18); bell(f*2,.6,.02,k*.18+.02); }); pad(220,3,.05,0,.8,'sine'); }
@@ -1751,6 +1773,13 @@ function burst(el,x,y,pw=1,i=0){
     for(let j=0;j<6*n;j++){ const a=rnd(0,TAU), s=rnd(120,360)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-100,g:900,drag:.97,life:rnd(.5,.9),size:rnd(2.5,5),color:pick(['#e8eef5','#9aa8b8','#5b6878']),mode:'chunk',rot:rnd(0,TAU)}); }
     if (Math.random()<.5*pw) part({x,y,vx:rnd(-120,120),vy:rnd(-260,-140),g:700,drag:.98,life:rnd(.8,1.1),size:rnd(6,10)*Math.sqrt(pw),color:pick(['#c8d2de','#8a96a6']),mode:'gear',rot:rnd(0,TAU),spin:rnd(-8,8)});
     ring(x,y,{vr:340*pw,life:.35,w:4*pw,color:'#ffffff'}); ring(x,y,{vr:180*pw,life:.5,w:2,color:E.c3});
+  } else if (el==='wind'){
+    for(let j=0;j<20*n;j++){ const a=rnd(0,TAU), r=rnd(4,20); part({x:x+Math.cos(a)*r,y:y+Math.sin(a)*r,vx:-Math.sin(a)*280*pw,vy:Math.cos(a)*280*pw,drag:.92,life:rnd(.3,.6),size:rnd(1,2.2),color:pick(['#ffffff','#c8fff0','#8ff0d8']),mode:'spark'}); }
+    ring(x,y,{vr:260*pw,life:.4,w:3,color:E.c1}); if (Math.random()<.4) part({x,y,vx:rnd(200,400),vy:rnd(-60,0),drag:.97,life:.9,size:5,color:'#a8f07a',mode:'leaf',rot:0,spin:8});
+  } else if (el==='fool'){
+    confetti(x,y,18,pw);
+    if (Math.random()<.4*pw) part({x,y:y-10,vx:0,vy:-60,drag:.97,life:.8,size:18,color:pick(['#ffb02e','#a64dff']),mode:'glyph',ch:pick(['？','！','♣','♦']),rot:rnd(-.5,.5)});
+    ring(x,y,{vr:220*pw,life:.4,w:3,color:E.c3});
   } else if (el==='god'){
     BEAMS.push({x,y,w:rnd(30,44)*pw,life:.6,t:0,color:'#fff6c8'});
     for(let j=0;j<26*n;j++){ const a=rnd(0,TAU), s=rnd(100,420)*pw; part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,drag:.92,life:rnd(.5,1),size:rnd(1.5,3),color:pick(['#ffffff','#fff6c8','#ffd27a','#ff9ad5','#9ad8ff']),tw:8}); }
@@ -1948,6 +1977,18 @@ async function ultimate(el,x,y,top='CORNER BREAK'){
     for(let i=0;i<10*FXQ;i++){ const a=rnd(0,TAU), s=rnd(200,600); part({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-200,g:700,drag:.98,life:rnd(1,1.6),size:rnd(10,22),color:pick(['#c8d2de','#8a96a6']),mode:'gear',rot:rnd(0,TAU),spin:rnd(-6,6)}); }
     for (let k=0;k<3;k++) LINES.push({x1:-50+k*60,y1:H,x2:W*.6+k*60,y2:-50,t:0,delay:.1+k*.08,life:.8,draw:.3,color:'#ffffff',w:10-k*3});
     undim(1400);
+  } else if (el==='wind'){
+    dim('radial-gradient(circle at 50% 50%, rgba(40,90,90,.45), rgba(4,12,14,.9))',300);
+    emit(2.6,(dt,t)=>{ for (let j=0;j<20*FXQ;j++){ const a=t*12+j*.33, rr=10+((t*200+j*23)%(R*.6)); part({x:x+Math.cos(a)*rr*.6,y:y-((t*300+j*30)%(H*.9))+H*.1,vx:-Math.sin(a)*240,vy:-120,drag:.95,life:.7,size:rnd(1.2,3.2),color:pick(['#ffffff','#c8fff0','#8ff0d8','#4ab0c8']),mode:'spark'}); } shake(5); });
+    nz('bandpass',200,2000,2.6,.4,0,.6);
+    await wait(2400); flash('#e8fff8',.6,600); shake(30);
+    for(let i=0;i<4;i++) ring(x,y,{vr:500+i*260,life:1,w:8-i*1.5,color:i%2?E.c2:E.c1});
+    undim(1200);
+  } else if (el==='fool'){
+    for (let k=0;k<10;k++) setTimeout(()=>confetti(rnd(0,W),rnd(H*.1,H*.7),30,1.3), k*140);
+    [392,523.3,659.3,523.3,392,330,392,523.3].forEach((f,k)=>tone('square',f,f,.14,.05,k*.14));
+    await wait(1700); flash('#fff3d0',.5,500); shake(20);
+    for(let i=0;i<4;i++) ring(x,y,{vr:450+i*240,life:1,w:7-i*1.5,color:i%2?E.c3:E.c1});
   } else if (el==='god'){
     flash('#ffffff',.9,900);
     dim('radial-gradient(circle at 50% 20%, rgba(255,250,220,.3), rgba(40,30,0,.6))',300);
@@ -1998,7 +2039,7 @@ const auraEl=$('aura');
 let amb={el:null,level:0}, ambAcc=0;
 function updateAmbience(){
   const [a,w,e]=counts(board);
-  const lead = a===w ? 0 : (a>w?1:2);
+  const lead = a===w ? 0 : (cfg.el[1]==='fool'||cfg.el[2]==='fool') ? (a<w?1:2) : (a>w?1:2);
   const diff=Math.abs(a-w);
   let lv = (!lead || over) ? 0 : Math.max(0,Math.min(1,(26-e)/22)) * (0.45+0.55*Math.min(1,diff/14));
   amb = {el: lead?cfg.el[lead]:null, level: lv};
@@ -2059,6 +2100,10 @@ function spawnAmbient(el){
     if (Math.random()<.5) part({x:rnd(0,W),y:-5,vx:rnd(-60,60),vy:rnd(40,160),g:900,drag:.99,life:rnd(.8,1.4),size:rnd(.8,1.6),color:pick(['#ffffff','#ffd27a','#ffc04a']),mode:'spark'});
     else part({x,y,vx:ix*30+rnd(-10,10),vy:iy*30+rnd(-10,10),drag:.998,life:rnd(2,3),size:rnd(1,2.2),color:pick([E.c1,E.c2,E.c3]),tw:8});
     if (Math.random()<.01*amb.level) part({x:rnd(0,W),y:Math.random()<.5?-20:H+20,drag:1,life:4,size:Math.min(W,H)*rnd(.05,.09),color:'#3a4450',mode:'gear',rot:rnd(0,TAU),spin:rnd(-.8,.8)});
+  } else if (el==='wind'){
+    part({x:-10,y:rnd(0,H),vx:rnd(300,600),vy:rnd(-30,30),drag:1,life:rnd(1.5,2.5),size:rnd(1,2),color:pick(['#ffffff','#c8fff0']),mode:'spark'});
+  } else if (el==='fool'){
+    if (Math.random()<.5) part({x:rnd(0,W),y:-10,vx:rnd(-30,30),vy:rnd(60,140),g:60,drag:.99,life:rnd(2,3.5),size:rnd(2,4),color:pick(['#ffb02e','#a64dff','#ff4fa0','#2ee6c8']),mode:'chunk',rot:rnd(0,TAU),spin:rnd(-6,6)});
   } else if (el==='god'){
     part({x,y,vx:ix*30+rnd(-10,10),vy:iy*20-rnd(10,40),drag:.998,life:rnd(2.5,4),size:rnd(1.2,3),color:pick(['#ffffff','#fff6c8','#ffd27a','#9ad8ff']),tw:rnd(4,9)});
   } else if (el==='grass'){
@@ -2117,6 +2162,8 @@ const CARDS = {
   grass:   { name:'命の芽吹き',             sub:'SPROUT OF LIFE',     uses:1,      desc:'20ターン目から使える。角以外の空きマスを4つ選んで種を植える。種のマスには誰でも置ける（相手が置くと種は消える）。種は16ターン後に芽吹いて自分の石になる。自分が種のマスに置くと、新しい種を2つ手に入れ、10秒以内に好きな空きマス（角以外）へまける。', short:'20ターン目から。角以外の空きマス4つに種を植え、16ターン後に自分の石になる。自分で種のマスに置くと種が2つ増える。' },
   moon:    { name:'玲瓏',                   sub:'RADIANT JADE',       uses:1,      desc:'銀輪謳歌（満月・新月の取り方）で裏返した数によって効果が変わる。0〜10枚「朔」：ランダムな2×2のマスを月の石にする。11〜20枚「月夜見」：相手の番5回のあいだ、相手にも満月・新月の取り方を強い、それを使わない置き方をするたびに相手の石が1つ月の石になる。21〜30枚「繊月」：好きな属性のカードを1回使える。31枚以上「望月」：特殊勝利。', short:'月の取り方で返した数で変わる：0〜10 2×2を奪う／11〜20 相手に月の取り方を強いる（5回）／21〜30 好きな属性のカード／31〜 特殊勝利。' },
   dream:   { name:'胡蝶の夢',               sub:"BUTTERFLY'S DREAM",  uses:2,      desc:'10ターン目から使える（2回まで。使ったあと8ターンは使えない）。次の6ターン（お互い3回ずつ）を「夢うつつ」にする。夢うつつの間に裏返した合計が相手のほうが少なければ、相手は悪夢に落ちる。悪夢の相手の次の番3回は「スキップ」「適当に置かれる」「夢属性が置き場所を決める」が1回ずつランダムな順で起きる。', short:'10ターン目から2回（間に8ターン）。6ターンの夢で相手の返した数が少なければ、相手の番3回が「スキップ／適当打ち／こちらが置き場所を決める」になる。' },
+  wind:    { name:'薫風の調べ',             sub:'BREEZE SONG',        uses:1,      desc:'空きマス40以下（中盤）から使える。自分の番3回のあいだ、盤の回転で自分の石が動いた先で相手の石を挟んでいれば、その石を裏返す。', short:'中盤から。自分の番3回のあいだ、回転で挟んだ相手の石を裏返す。' },
+  fool:    { name:'ファニー',               sub:'FUNNY',              uses:2,      desc:'自分の番をスキップする（石を置かずに相手の番になる）。最後の6ターンは使えない。', short:'自分の番をスキップする。最後の6ターンは使えない。' },
   god:     { name:'ゼウス',                 sub:'ZEUS',               uses:15,     desc:'すべての属性のカードを、それぞれ1回ずつ使える。', short:'すべての属性のカードを1回ずつ使える。' },
   time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が次の番に選べなくなる。', short:'相手の直前の一手を取り消す。' },
 };
@@ -2135,13 +2182,15 @@ const PASSIVES = {
   grass:   { name:'繰り返す収穫',     sub:'ENDLESS HARVEST',   desc:'自分が置いた石が10ターンのあいだ裏返らないと、木に進化する。木は二度と裏返らず、スキルでも動かない。', short:'置いた石が10ターン裏返らなければ木になり、二度と裏返らない。' },
   moon:    { name:'銀輪謳歌',         sub:'SILVER MOON SONG',  desc:'月は自分の番4回（8ターン）で満ちて欠ける（上弦→満月→下弦→新月）。満月の番は、1マスの空白をまたいで挟める。新月の番は「L字」にも挟める：置いた石からまっすぐ相手の石が続き、その途中の相手の石で直角に曲がって、さらに相手の石が続いた先（曲がってすぐでもよい）に自分の石があれば、通った道の相手の石をすべて裏返す。', short:'満月の番は1マス空けて挟める。新月の番は途中で直角に曲がるL字でも挟める。' },
   dream:   { name:'邯鄲の夢',         sub:'DREAM OF HANDAN',   desc:'10ターンごとに、ランダムな相手の石1枚が、自分の番と相手の次の番のあいだだけ夢の中で自分の石になる。その間、相手はその石で挟めず、自分はその石で挟める。', short:'10ターンごとに、相手の石1枚がしばらく自分の石として挟むのに使える。' },
+  wind:    { name:'旋回周',           sub:'WHIRLING RINGS',    desc:'吹きすさぶ旋風で盤面が目まぐるしく変わる。毎ターン、中央の4×4のマスが反時計回りに1マスずつ回る。中盤（空きマス40以下）からは、そのまわりの一周（6×6の外側）も時計回りに回り始める。木と鋼の石は動かない。', short:'毎ターン中央4×4が反時計回り、中盤からはまわりの一周も時計回りに回る。' },
+  fool:    { name:'フールズサーカス', sub:"FOOL'S CIRCUS",     desc:'愚者はルールを理解していない。終局のとき、石が少ないほうが勝ちになる（相手も同じ）。愚が角を取ったとき、1度だけその角の石と相手のランダムな石を入れ替える。', short:'終局時に石が少ないほうの勝ち。角を取ったとき1度だけ相手の石と入れ替える。' },
   god:     { name:'天界',             sub:'HEAVEN',            desc:'終局のとき、角を3つ以上取っていなければ負け。', short:'終局時に角が3つ未満なら負け。' },
   time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。', short:'相手の手を予測し、的中すると秒針自在が回復。' },
 };
 // the simple-wording switch in the skill guide
 const descOf = X => cfg.shortDesc && X.short ? X.short : X.desc;
 // every key is listed so an online state merge overwrites last game's values instead of keeping them
-const freshSide = () => ({flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99,stars:0,ramp:[],scare:0,moonFlips:0,kanAt:0,dreamAt:-99,zeus:[]});
+const freshSide = () => ({foolSwap:false,flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99,stars:0,ramp:[],scare:0,moonFlips:0,kanAt:0,dreamAt:-99,zeus:[]});
 const freshPas = () => ({1:freshSide(),2:freshSide()});
 const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
 const clone = o => JSON.parse(JSON.stringify(o));
@@ -2169,7 +2218,7 @@ function usesLabel(p){
   if (el==='king'){ const d=royalDone(p), cur=phaseOf(emptyCount()); return PHASES.map((n,k)=>`${n[0]}${d.includes(k)?'×':k<cur?'－':'○'}`).join(' '); }
   return `残り ${cardLeft(p)} / ${cardOf(p).uses}`;
 }
-const cardOpenAt = el => el==='moon'||el==='god' ? 99 : el==='thunder' ? LATE+THUNDER_EARLY : el==='king' ? LATE+KING_EARLY : el==='dragon' ? DRAGON_OPEN : el==='time' ? TIME_OPEN : LATE;
+const cardOpenAt = el => el==='moon'||el==='god'||el==='fool' ? 99 : el==='wind' ? 40 : el==='thunder' ? LATE+THUNDER_EARLY : el==='king' ? LATE+KING_EARLY : el==='dragon' ? DRAGON_OPEN : el==='time' ? TIME_OPEN : LATE;
 const emptyCount = () => counts(board)[2];
 const roleOf = p => p===1 ? '先手' : '後手';
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -2219,6 +2268,7 @@ function cardTimeBlock(p){
     const at=cardOpenAt(el);
     if (e>at) return `解禁まで あと${e-at}ターン`;
     if (LOCK_ELS.includes(el) && e<=END_LOCK) return `最後の${END_LOCK}ターンは使えません`;
+    if (el==='fool' && e<=6) return '最後の6ターンは使えません';
   }
   return '';
 }
@@ -2272,6 +2322,7 @@ function cardWhen(p){
   const at=cardOpenAt(el);
   if (e>at) return W('解禁まで',e-at,false);
   if (LOCK_ELS.includes(el)) return e<=END_LOCK ? W('使用期間終了',null,false) : W('使用可能・残り',e-END_LOCK,true);
+  if (el==='fool') return e<=6 ? W('使用期間終了',null,false) : W('使用可能・残り',e-6,true);
   return W('使用可能',null,true);
 }
 const cardWhenText = p => { const w=cardWhen(p); return w.n==null ? w.pre : `${w.pre} ${w.n}ターン`; };
@@ -2293,6 +2344,8 @@ function pasState(p){
   if (el==='dragon') return s.rage ? '逆鱗 発動中' : `${emptyCount()>LATE ? 4 : 6}枚返されると発動`;
   if (el==='time') return predict && predict.p===3-p ? '未来を見ている' : '相手の手を予測';
   if (el==='god'){ const n=[0,7,56,63].filter(i=>board[i]===p).length; return `角 ${n} / 3`; }
+  if (el==='fool') return '少ないほうが勝ち'+(s.foolSwap ? '・入れ替え済み' : '・角で入れ替え');
+  if (el==='wind') return (emptyCount()<=40 ? '中央と外周が回転中' : '中央が回転中')+(breeze && breeze.p===p ? `・薫風 あと${breeze.left}回` : '');
   if (el==='grass'){ const n=trees.filter(x=>x.owner===p && board[x.idx]===p).length, nx=sprouts.filter(x=>x.owner===p && board[x.idx]===p).map(x=>TREE_GROW-(tn-x.at)); return `木 ${n}本`+(nx.length ? `・次の木まで あと${Math.max(1,Math.min(...nx))}ターン` : ''); }
   if (el==='moon'){ const t=s.turns||0; return `${turn===p ? 'いまは' : '次の番は'}${moonPhase(t).name}・月光${s.moonFlips||0}枚`; }
   if (el==='dream'){ if (dream) return `夢うつつ ${dream.flips[p]||0}対${dream.flips[3-p]||0}`; return tn>=10 ? `邯鄲まで あと${Math.max(1,10-(tn-(s.kanAt||0)))}ターン` : `邯鄲まで あと${10-tn}ターン`; }
@@ -2609,6 +2662,10 @@ function elementMote(el,x,y,n,spread){
       part({x:px,y:py,vx:rnd(-20,20),vy:rnd(-110,-40),g:-70,drag:.96,life:rnd(.3,.6),size:rnd(3,6),mode:'ofire'});
     } else if (el==='steel'){
       part({x:px,y:py,vx:rnd(-160,160),vy:rnd(-200,-40),g:900,drag:.97,life:rnd(.25,.5),size:rnd(.8,1.5),color:pick(['#ffffff','#ffd27a','#c8d4e2']),mode:'spark'});
+    } else if (el==='wind'){
+      part({x:px,y:py,vx:rnd(80,200),vy:rnd(-30,30),drag:.92,life:rnd(.2,.4),size:rnd(.8,1.6),color:pick(['#ffffff','#c8fff0']),mode:'spark'});
+    } else if (el==='fool'){
+      part({x:px,y:py,vx:rnd(-40,40),vy:rnd(-60,-10),g:200,drag:.97,life:rnd(.5,.9),size:rnd(1.5,3),color:pick(['#ffb02e','#a64dff','#ff4fa0','#2ee6c8']),mode:'chunk',rot:0,spin:8});
     } else if (el==='god'){
       part({x:px,y:py,vx:rnd(-30,30),vy:rnd(-60,-10),drag:.95,life:rnd(.5,1),size:rnd(1,2.4),color:pick(['#ffffff','#fff6c8','#ffd27a']),tw:14});
     } else if (el==='grass'){
@@ -2702,6 +2759,10 @@ function stoneFx(el,x,y,rad){
   } else if (el==='steel'){
     if (q<.12) part({x:x+rnd(-rad*.7,rad*.7),y:y+rnd(-rad*.7,rad*.7),drag:1,life:rnd(.4,.7),size:rnd(1.2,2.2),color:'#ffffff',tw:18});
     if (q<.04) for (let j=0;j<4;j++) part({x:x+rnd(-rad*.5,rad*.5),y:y-rad*.5,vx:rnd(-90,90),vy:rnd(-160,-40),g:900,drag:.97,life:rnd(.25,.45),size:rnd(.8,1.4),color:pick(['#fff3c0','#ffc04a']),mode:'spark'});
+  } else if (el==='wind'){
+    if (q<.15) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad),vx:rnd(60,120),vy:rnd(-10,10),drag:.95,life:rnd(.3,.5),size:rnd(.8,1.4),color:'#ffffff',mode:'spark'});
+  } else if (el==='fool'){
+    if (q<.04) part({x,y:y-rad,vx:rnd(-20,20),vy:-40,g:120,drag:.98,life:1,size:rnd(2,3),color:pick(['#ffb02e','#a64dff','#ff4fa0']),mode:'chunk',rot:0,spin:8});
   } else if (el==='god'){
     if (q<.3) part({x:x+rnd(-rad,rad),y:y+rnd(-rad,rad*.2),vx:0,vy:rnd(-40,-15),drag:.99,life:rnd(.8,1.4),size:rnd(1,2.2),color:pick(['#ffffff','#fff6c8','#ffd27a']),tw:10});
   } else if (el==='grass'){
@@ -2751,11 +2812,11 @@ function drawGhost(p){
 /* ---------- pure state transitions (shared by local play, CPU and online) ---------- */
 const initBoard = () => { const b=new Array(N).fill(-1); for (let i=0;i<64;i++) b[i]=0; b[27]=2; b[36]=2; b[28]=1; b[35]=1; return b; };
 const freshState = () => ({board:initBoard(), turn:1, over:false, lastMove:-1, burns:[], guards:[], used:{1:0,2:0}, extra:0, cardThisTurn:false, pass:0, blind:0, pas:freshPas(),
-  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, steel:[], rust:[], rockPick:null, tn:0, rebel:{1:0,2:0}, fake:null, rampage:0, trees:[], sprouts:[], seeds:[], resow:null, tsukuyomi:null, kantan:null, dream:null, night:null, nightAct:'', ev:[]});
+  kings:{1:-1,2:-1}, hush:null, royal:0, decree:null, forced:null, quake:0, curses:[], winner:0, hidden:[], lastPlace:null, predict:null, steel:[], rust:[], rockPick:null, tn:0, rebel:{1:0,2:0}, fake:null, rampage:0, breeze:null, trees:[], sprouts:[], seeds:[], resow:null, tsukuyomi:null, kantan:null, dream:null, night:null, nightAct:'', ev:[]});
 function curState(){
   return {board:board.slice(), turn, over, lastMove, burns:clone(burns), guards:clone(guards), used:{1:used[1]||0,2:used[2]||0}, extra, cardThisTurn, pass:0, blind, pas:clone(pas),
     kings:{...kings}, hush:hush?{...hush}:null, royal, decree:decree?clone(decree):null, forced:forced?{...forced}:null, quake, curses:clone(curses), winner:0,
-    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, steel:clone(steel), rust:clone(rust), rockPick:rockPick?{...rockPick}:null, tn, rebel:clone(rebel), rebelAt:clone(rebelAt), fake:fake?{...fake}:null, rampage, trees:clone(trees), sprouts:clone(sprouts), seeds:clone(seeds), resow:resow?{...resow}:null, tsukuyomi:tsukuyomi?{...tsukuyomi}:null, kantan:kantan?{...kantan}:null, dream:dream?clone(dream):null, night:night?clone(night):null, nightAct, ev:[]};
+    hidden:clone(hidden), lastPlace:lastPlace?clone(lastPlace):null, predict:predict?{...predict}:null, steel:clone(steel), rust:clone(rust), rockPick:rockPick?{...rockPick}:null, tn, rebel:clone(rebel), rebelAt:clone(rebelAt), fake:fake?{...fake}:null, rampage, breeze:breeze?{...breeze}:null, trees:clone(trees), sprouts:clone(sprouts), seeds:clone(seeds), resow:resow?{...resow}:null, tsukuyomi:tsukuyomi?{...tsukuyomi}:null, kantan:kantan?{...kantan}:null, dream:dream?clone(dream):null, night:night?clone(night):null, nightAct, ev:[]};
 }
 const protS = S => protOf(S.guards, S.kings, S.hush, S.steel||[], S.rust||[], {trees:S.trees||[], kantan:S.kantan, moon:moonModes(S)});
 const legalS = (S,p) => legal(S.board,p,S.burns,protS(S),S.hush);
@@ -2796,6 +2857,52 @@ function endTurnS(S,ended){
     const d=S.dream, v=3-d.p; S.dream=null;
     if ((d.flips[v]||0) < (d.flips[d.p]||0)){ S.night={p:v, pool:shuffle(['skip','random','dream'])}; S.ev.push('nightmare:'+v); }
     else S.ev.push('dreamend:'+d.p);
+  }
+  windTurn(S, ended);
+}
+// 旋回周: the centre 4x4 turns counter-clockwise one square per turn; from the midgame the ring around it turns clockwise
+const RING_C=[[2,2],[3,2],[4,2],[5,2],[5,3],[5,4],[5,5],[4,5],[3,5],[2,5],[2,4],[2,3]].map(([r,c])=>r*8+c);
+const RING_I=[[3,3],[4,3],[4,4],[3,4]].map(([r,c])=>r*8+c);
+const RING_6=[[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[2,6],[3,6],[4,6],[5,6],[6,6],[6,5],[6,4],[6,3],[6,2],[6,1],[5,1],[4,1],[3,1],[2,1]].map(([r,c])=>r*8+c);
+function rotateRing(ring, mp, fixed){
+  const mov=ring.filter(i=>!fixed.has(i)); if (mov.length<2) return;
+  for (let k=0;k<mov.length;k++) mp.set(mov[k], mov[(k+1)%mov.length]);
+}
+// move every square's contents (and everything that remembers a square) along a mapping
+function remapS(S, mp){
+  const m = i => mp.has(i) ? mp.get(i) : i;
+  const nb=S.board.slice(); for (const [a,b] of mp) nb[b]=S.board[a]; S.board=nb;
+  for (const list of [S.burns, S.guards, S.curses, S.hidden, S.rust, S.sprouts, S.seeds]) (list||[]).forEach(x=>{ x.idx=m(x.idx); });
+  for (const k of [1,2]) if (S.kings && S.kings[k]>=0) S.kings[k]=m(S.kings[k]);
+  if (S.kantan) S.kantan.idx=m(S.kantan.idx);
+  if (S.fake) S.fake.idx=m(S.fake.idx);
+  if (S.predict) S.predict.idx=m(S.predict.idx);
+  if (S.lastMove>=0) S.lastMove=m(S.lastMove);
+}
+function windTurn(S, ended){
+  const q = cfg.el[1]==='wind' ? 1 : cfg.el[2]==='wind' ? 2 : 0;
+  if (!q || hushedS(S,q) || S.over) return;
+  const fixed=new Set([...(S.steel||[]), ...(S.trees||[])].filter(x=>S.board[x.idx]===x.owner).map(x=>x.idx));
+  const mp=new Map(); rotateRing(RING_C,mp,fixed); rotateRing(RING_I,mp,fixed);
+  const outer = counts(S.board)[2] <= 40; if (outer) rotateRing(RING_6,mp,fixed);
+  const pairs=[...mp].filter(([a])=>S.board[a]>0);
+  remapS(S,mp);
+  if (pairs.length) S.ev.push('whirl:'+(outer?1:0)+':'+pairs.map(([a,b])=>a+'-'+b).join('.'));
+  // 薫風の調べ: a stone carried into a sandwich turns the stones it now holds
+  if (S.breeze && S.breeze.p===q){
+    const pr=protS(S), got=[];
+    for (const [,b] of pairs){
+      if (S.board[b]!==q) continue;
+      const [r,c]=RC[b];
+      for (const [dr,dc] of D8){
+        const tmp=[]; let rr=r+dr, cc=c+dc;
+        while (rr>=0&&rr<8&&cc>=0&&cc<8 && S.board[rr*8+cc]===3-q){ tmp.push(rr*8+cc); rr+=dr; cc+=dc; }
+        if (tmp.length && rr>=0&&rr<8&&cc>=0&&cc<8 && S.board[rr*8+cc]===q) for (const k of tmp) if (!pr.some(g=>g.idx===k && g.owner===3-q) && !got.includes(k)) got.push(k);
+      }
+    }
+    got.forEach(k=>{ S.board[k]=q; });
+    if (got.length) S.ev.push('breeze:'+q+':'+got.join('.'));
+    if (ended===q){ S.breeze.left--; if (S.breeze.left<=0) S.breeze=null; }
   }
 }
 // 世界樹ユグドラシル: seven trees of one side become one
@@ -2968,6 +3075,11 @@ function placeS(S,idx,p){
   const sd=(S.seeds||[]).find(x=>x.idx===idx);
   if (sd){ S.seeds=S.seeds.filter(x=>x!==sd); if (sd.owner===p){ S.resow={p, n:((S.resow&&S.resow.n)||0)+2}; S.ev.push('seedgain:'+idx); } else S.ev.push('seedlost:'+idx); }
   if (el==='grass') (S.sprouts=S.sprouts||[]).push({idx,owner:p,at:S.tn||0});
+  // フールズサーカス: the first corner the fool takes is traded for a random enemy stone
+  if (el==='fool' && isCorner(idx) && !ps.foolSwap && !quiet){
+    const pr=protS(S), pool=[]; for (let i=0;i<64;i++) if (S.board[i]===3-p && !pr.some(g=>g.idx===i && g.owner===3-p)) pool.push(i);
+    if (pool.length){ const j=pick(pool); S.board[idx]=3-p; S.board[j]=p; ps.foolSwap=true; S.ev.push('foolswap:'+idx+':'+j); }
+  }
   if (S.dream){ S.dream.flips[p]=(S.dream.flips[p]||0)+f.length; S.dream.moves[p]=(S.dream.moves[p]||0)+1; }
   ps.flips+=f.length; ps.turns++;
   if (!quiet){
@@ -3021,7 +3133,7 @@ async function commit(S){
   { const had=!!rockPick; rockPick=S.rockPick && (S.rockPick.p===1||S.rockPick.p===2) ? {p:S.rockPick.p} : null;
     if (had && !rockPick && phase==='play'){ const rocks=[]; for (let i=64;i<N;i++) if (S.board[i]===0) rocks.push(i); if (rocks.length){ rocks.forEach(i=>cells[i].style.opacity='0'); setTimeout(()=>fxMotherEarth(rocks),300); } }
     syncRockPick(); }
-  trees=clone(S.trees||[]); sprouts=clone(S.sprouts||[]); seeds=clone(S.seeds||[]);
+  trees=clone(S.trees||[]); sprouts=clone(S.sprouts||[]); seeds=clone(S.seeds||[]); breeze=S.breeze ? {...S.breeze} : null;
   { const had=!!resow; resow=S.resow && (S.resow.p===1||S.resow.p===2) ? {p:S.resow.p, n:Math.max(1,Math.min(20,S.resow.n|0))} : null; if (!!resow!==had) syncResow(); }
   tsukuyomi=S.tsukuyomi ? {...S.tsukuyomi} : null; kantan=S.kantan && Number.isInteger(S.kantan.idx) ? {...S.kantan} : null;
   dream=S.dream ? clone(S.dream) : null; night=S.night ? clone(S.night) : null; nightAct=['skip','random','dream'].includes(S.nightAct) ? S.nightAct : '';
@@ -3200,21 +3312,23 @@ function renderDraft(){
   $('coin').hidden = !(phase==='coin' || (phase==='order' && orderInfo));
   const grid=$('dGrid'); grid.hidden=!ch;
   grid.querySelectorAll('button').forEach(b=>{ b.disabled = b.dataset.el===excl; });
+  godTile.hidden = !(godShown && godFor && phase==='draft' && draftChooser()===godFor);
 }
 $('oFirst').addEventListener('click',()=>{ ac(); chooseOrder('first'); });
 $('oSecond').addEventListener('click',()=>{ ac(); chooseOrder('second'); });
-let godFor=0, godChance=.01, godShown='';
+let godFor=0, godChance=.01, godShown=false, godTaps=0, godTapT=0;
 const validPick = (k,side) => EL_ORDER.includes(k) || (k==='god' && godFor===side);
-{
+const godTile = (()=>{
   const b=document.createElement('button');
   b.type='button'; b.className='d-el god'; b.dataset.el='god'; b.style.setProperty('--ec',ELS.god.c1); b.hidden=true;
   b.innerHTML=`<span class="k">${ELS.god.k}</span><span class="n">${ELS.god.name}</span>`;
   b.addEventListener('click',()=>{ const c=draftChooser(); if (c && godFor===c){ ac(); choose(c,'god'); } });
-  $('dGrid').appendChild(b);
-}
+  return b;
+})();
 // a whirlwind tears open the draft and the god tile drops into it
 function revealGod(){
-  const b=$('dGrid').querySelector('.d-el.god'); b.hidden=false;
+  godShown=true; paintGodGlow();
+  const b=godTile; b.hidden=false; setTimeout(()=>b.scrollIntoView({block:'nearest',behavior:'smooth'}),50);
   const r=b.getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2;
   nz('bandpass',300,1800,2.2,.35,0,.6); tone('sawtooth',60,120,2,.08);
   emit(2.2,(dt,t)=>{ for (let j=0;j<10*FXQ;j++){ const a=t*14+j*.63, rr=20+((t*90+j*13)%180); part({x:x+Math.cos(a)*rr,y:y+90-((t*160+j*20)%260),vx:-Math.sin(a)*120,vy:-60,drag:.95,life:.6,size:rnd(1.5,3.5),color:pick(['#ffffff','#fff6c8','#9ad8ff','#c8ccd8'])}); } shake(4); });
@@ -3227,6 +3341,24 @@ EL_ORDER.forEach(k=>{
   b.innerHTML=`<span class="k">${E.k}</span><span class="n">${E.name}</span>`;
   b.addEventListener('click',()=>{ const c=draftChooser(); if (c){ ac(); choose(c,k); } });
   $('dGrid').appendChild(b);
+});
+$('dGrid').appendChild(godTile);
+// tapping your own ？ over and over: the last tile of the list starts to glow, and then something answers
+function paintGodGlow(){
+  const tiles=$('dGrid').querySelectorAll('.d-el:not(.god)'), last=tiles[tiles.length-1];
+  last.style.boxShadow = godTaps && !godShown ? `0 0 ${6+godTaps*3}px ${godTaps}px #fff6c8, inset 0 0 ${godTaps*2}px #fff6c8` : '';
+}
+for (const p of [1,2]) $('sig'+p).addEventListener('click',()=>{
+  if (phase!=='draft' || godFor || draftChooser()!==p || (online() && !net.kind)) return;
+  clearTimeout(godTapT); godTapT=setTimeout(()=>{ godTaps=0; paintGodGlow(); },1500);
+  godTaps++; paintGodGlow();
+  if (godTaps===3){ const t=$('dGrid').querySelectorAll('.d-el:not(.god)'); t[t.length-1].scrollIntoView({block:'nearest',behavior:'smooth'}); }
+  if (cfg.sound) tone('sine',600+godTaps*60,600+godTaps*60,.05,.02);
+  if (godTaps>=12){
+    godTaps=0; godFor=p;
+    if (online() && net.kind) netWrite({godFor:p, godAt:Date.now(), updated:Date.now()});
+    revealGod();
+  }
 });
 function startDraft(){
   clearDraftTimers();
@@ -3248,17 +3380,14 @@ function beginDraft(){
   const S=freshState();
   resetLocal(S);
   godFor = online() && net.kind && isResolver() && Math.random()<godChance ? (Math.random()<.5 ? 1 : 2) : 0;
-  godShown=''; syncGodTile();
+  godShown=false; godTaps=0; paintGodGlow(); syncGodTile();
   if (online() && net.kind){ net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'draft', picks:{1:'',2:''}, coin:null, godFor, godAt:Date.now(), updated:Date.now()}); }
   cpuDraftPick();
 }
 const newGame = startDraft;
-function syncGodTile(stamp){
-  const b=$('dGrid').querySelector('.d-el.god');
+function syncGodTile(){
   const mine = online() && net.kind && godFor && godFor===net.side && phase==='draft';
-  if (!mine){ b.hidden=true; return; }
-  const key=String(stamp||'')+godFor;
-  if (godShown!==key){ godShown=key; setTimeout(revealGod,400); } else b.hidden=false;
+  if (mine && !godShown){ godShown=true; setTimeout(revealGod,400); }
 }
 function cpuDraftPick(){
   const c=cpuSide();
@@ -3626,6 +3755,8 @@ async function castCard(p, target, remoteS, remoteTargets, asEl){
       targets=(target||[]).filter(i=>i>=0 && i<64 && !isCorner(i) && S.board[i]===0 && !(S.seeds||[]).some(x=>x.idx===i)).slice(0,SEEDS_N);
       S.seeds=(S.seeds||[]).concat(targets.map(i=>({idx:i,owner:p,at:S.tn||0})));
     }
+    else if (el==='fool'){ targets=[]; }
+    else if (el==='wind'){ targets=[]; S.breeze={p, left:3}; }
     else if (el==='dream'){ targets=[]; S.dream={p, start:S.tn||0, flips:{1:0,2:0}, moves:{1:0,2:0}}; S.pas[p].dreamAt=S.tn||0; }
     else if (el==='moon'){
       const k=moonTier(S.pas[p].moonFlips||0).k;
@@ -3649,7 +3780,9 @@ async function castCard(p, target, remoteS, remoteTargets, asEl){
     if (cfg.el[p]==='god' && el!=='god') S.pas[p].zeus=[...(S.pas[p].zeus||[]), el];
     S.used[p]=(S.used[p]||0)+1; S.cardThisTurn=true; S.pass=0;
     cleanupS(S);
-    if (!S.over && !checkRegicide(S) && !checkSpecial(S) && !legalS(S,p).length){
+    // ファニー: the fool simply skips its turn
+    if (el==='fool' && !S.over){ S.extra=0; advanceS(S,p); if (!S.over && S.turn!==p) S.pass=p; }
+    else if (!S.over && !checkRegicide(S) && !checkSpecial(S) && !legalS(S,p).length){
       S.extra=0; advanceS(S,p);
       if (!S.over && S.turn!==p && !S.pass) S.pass=p;
     }
@@ -3822,6 +3955,18 @@ async function playCard(el,p,targets,myGen){
     [[ax,ay],[bx2,by2]].forEach(([x,y])=>burst('ninja',x,y,1));
     await wait(500);
     undim(800);
+  } else if (el==='fool'){
+    const sr=$('side'+p).getBoundingClientRect(), x=sr.left+sr.width/2, y=sr.top+80;
+    confetti(x,y,80,1.4); for (let k=0;k<6;k++) setTimeout(()=>{ if (alive()) confetti(rnd(0,W),rnd(H*.2,H*.6),20); }, k*150);
+    [392,330,262,330,392,523.3].forEach((f,k)=>tone('square',f,f*.98,.12,.05,k*.13)); tone('sawtooth',300,120,.6,.05,.9);
+    popText(W/2,H*.42,'SKIP!','#ffb02e',64,1600);
+    await wait(1500);
+  } else if (el==='wind'){
+    dim('radial-gradient(circle at 50% 50%, rgba(40,90,90,.4), rgba(4,12,14,.88))',300);
+    const r2=boardEl.getBoundingClientRect(), cx2=r2.left+r2.width/2, cy2=r2.top+r2.height/2;
+    emit(2,(dt,t)=>{ for (let j=0;j<14*FXQ;j++){ const a=t*9+j*.45, rr=30+((t*120+j*17)%(r2.width*.6)); part({x:cx2+Math.cos(a)*rr,y:cy2+Math.sin(a)*rr*.8,vx:-Math.sin(a)*200,vy:Math.cos(a)*160,drag:.95,life:.6,size:rnd(1.2,3),color:pick(['#ffffff','#c8fff0','#8ff0d8','#4ab0c8']),mode:'spark'}); } if (Math.random()<.3) part({x:rnd(0,W),y:rnd(0,H),vx:rnd(300,600),vy:rnd(-40,40),drag:1,life:.8,size:rnd(4,7),color:pick(['#a8f07a','#ffe08a']),mode:'leaf',rot:rnd(0,TAU),spin:6}); });
+    nz('bandpass',300,1500,2,.25,0,.7);
+    await wait(2000); undim(800);
   } else if (el==='grass'){
     dim('radial-gradient(circle at 50% 60%, rgba(30,80,30,.45), rgba(5,15,5,.9))',300);
     for (let k=0;k<12;k++) setTimeout(()=>{ if (alive()){ const side=k%4; const [x0,y0,a]= side===0?[rnd(0,W),H,-Math.PI/2]:side===1?[rnd(0,W),0,Math.PI/2]:side===2?[0,rnd(0,H),0]:[W,rnd(0,H),Math.PI]; vine(x0,y0,rnd(200,380),a,k%2?'#7be36a':'#a8743a',4); } }, k*90);
@@ -3990,6 +4135,9 @@ async function playEvents(ev){
     else if (k==='stars' && (n===1||n===2)) await fxStars(n, extra||'');
     else if (k==='rampage' && (n===1||n===2)) await fxRampage(n);
     else if (k==='tree' && n>=0 && n<64) await fxTree(n);
+    else if (k==='whirl') await fxWhirl(n===1, extra||'');
+    else if (k==='breeze' && (n===1||n===2)) await fxBreeze(extra||'');
+    else if (k==='foolswap' && n>=0 && n<64) await fxFoolSwap(n, +extra);
     else if (k==='bloom' && n>=0 && n<64) await fxBloom(n);
     else if (k==='seedgain' && n>=0 && n<64){ toast(`${CARDS.grass.name}：種のマスに置いた！ 新しい種を2つまける`); bell(1046.5,.5,.05); bell(1318.5,.5,.05,.1); butterflies(0,0,0); await wait(400); }
     else if (k==='seedlost' && n>=0 && n<64){ const [x,y]=center(n); for (let j=0;j<10;j++) part({x,y,vx:rnd(-60,60),vy:rnd(-80,0),g:200,drag:.97,life:.8,size:rnd(3,5),color:'#a8743a',mode:'leaf',rot:rnd(0,TAU),spin:4}); toast('種が踏まれて消えた'); await wait(300); }
@@ -4764,6 +4912,34 @@ function moonlitFlip(i,k){
   ring(x,y,{vr:150,life:.6,w:2.5,color:'#ffd27a'});
   bell(1046.5*Math.pow(2,(k%6)/12),.6,.05);
 }
+// 旋回周: stones slide to their new squares, with a breath of wind
+async function fxWhirl(outer, txt){
+  const pairs=txt.split('.').map(t=>t.split('-').map(Number)).filter(([a,b])=>a>=0&&a<64&&b>=0&&b<64);
+  pairs.forEach(([a,b])=>{ const [ax,ay]=center(a), [bx,by]=center(b); discs[b].animate([{transform:`translate(${ax-bx}px,${ay-by}px)`},{transform:'none'}],{duration:340,easing:'cubic-bezier(.4,0,.2,1)'}); });
+  if (!cfg.lite){ const [cx2,cy2]=center(27).map((v,i)=>v+(i?0:0)); const w=cells[27].getBoundingClientRect().width;
+    for (let j=0;j<(outer?24:12)*FXQ;j++){ const a=rnd(0,TAU), r=w*rnd(.8,outer?3.2:2); part({x:cx2+w/2+Math.cos(a)*r,y:cy2+w/2+Math.sin(a)*r,vx:-Math.sin(a)*160,vy:Math.cos(a)*160,drag:.94,life:rnd(.3,.6),size:rnd(1,2),color:pick(['#ffffff','#c8fff0','#8ff0d8']),mode:'spark'}); } }
+  if (cfg.sound) nz('bandpass',500,1400,.3,.05,0,1.5);
+  await wait(360);
+}
+async function fxBreeze(txt){
+  const list=txt.split('.').map(Number).filter(i=>i>=0&&i<64);
+  list.forEach((i,k)=>setTimeout(()=>{ const [x,y]=center(i); ring(x,y,{vr:200,life:.5,w:3,color:'#8ff0d8'}); for (let j=0;j<10*FXQ;j++) part({x,y,vx:rnd(-120,120),vy:rnd(-120,120),drag:.9,life:rnd(.3,.6),size:rnd(1,2),color:'#ffffff',mode:'spark'}); discs[i].animate([{transform:'rotateY(90deg) scale(1.3)'},{transform:'none'}],{duration:380}); bell(1318.5*Math.pow(2,k/12),.4,.04); }, k*80));
+  if (list.length) toast(`${CARDS.wind.name}：風に運ばれた石が${list.length}枚を裏返した`);
+  await wait(list.length*80+300);
+}
+function confetti(x,y,n,spread=1){
+  for (let j=0;j<n*FXQ;j++){ const a=rnd(-Math.PI,0), sp=rnd(150,520)*spread; part({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,g:500,drag:.97,life:rnd(.8,1.6),size:rnd(2,4),color:pick(['#ffb02e','#a64dff','#ff4fa0','#2ee6c8','#fff3d0']),mode:'chunk',rot:rnd(0,TAU),spin:rnd(-12,12)}); }
+}
+async function fxFoolSwap(a,b){
+  const [ax,ay]=center(a), [bx,by]=center(b);
+  confetti(ax,ay,30); confetti(bx,by,30);
+  discs[a].animate([{transform:`translate(${bx-ax}px,${by-ay}px) scale(.6)`},{transform:'none'}],{duration:520,easing:'cubic-bezier(.5,0,.5,1)'});
+  discs[b].animate([{transform:`translate(${ax-bx}px,${ay-by}px) scale(.6)`},{transform:'none'}],{duration:520,easing:'cubic-bezier(.5,0,.5,1)'});
+  [523.3,392,523.3,659.3].forEach((f,k)=>tone('square',f,f,.1,.05,k*.12));
+  popText(ax,ay-30,'こうかん！','#ffb02e',24,1200);
+  toast(`${PASSIVES.fool.name}：取った角を、相手の石と入れ替えてしまった`);
+  await wait(800);
+}
 async function fxTsuku(i){
   const E=ELS.moon, [x,y]=center(i);
   BEAMS.push({x,y,w:30,life:.9,t:0,color:'#e8e4ff'}); ring(x,y,{vr:200,life:.6,w:3,color:E.c1});
@@ -5074,6 +5250,10 @@ function cpuCardChoice(p){
     if (e<=24 && Math.random()<.35) return {};
   } else if (el==='dream'){
     if (Math.random()<.35) return {};
+  } else if (el==='fool'){
+    if (Math.random()<.25) return {};
+  } else if (el==='wind'){
+    if (Math.random()<.35) return {};
   } else if (el==='time'){
     if (lastPlace && lastPlace.p===3-p){ let d=0; for (let i=0;i<64;i++) if (board[i]!==lastPlace.before[i]) d++; if (isCorner(lastPlace.idx) || d>=4 || Math.random()<.3) return {}; }
   } else {
@@ -5099,14 +5279,17 @@ function maybeCPU(){
     const c=cpuCardChoice(p);
     if (c){ castCard(p,c.target,null,null,c.borrow); return; }
     const mv=movesFor(p);
-    const m = mv.length===1 ? mv[0] : cpuPick(board,p);
+    // under フールズサーカス the CPU tries to keep its count down
+    const rev = cfg.el[1]==='fool' || cfg.el[2]==='fool';
+    const m = mv.length===1 ? mv[0] : rev ? mv.slice().sort((a,b)=>flipsFor(board,a,p).length-flipsFor(board,b,p).length || W8(a)-W8(b))[0] : cpuPick(board,p);
     if (m>=0) doMove(m);
   }, 600);
 }
 async function gameOver(){
   over=true; aim=0; updateAmbience(); render();
   const [a,w]=counts(board);
-  const win = winOverride || (a===w ? 0 : (a>w?1:2));
+  const rev = cfg.el[1]==='fool' || cfg.el[2]==='fool';
+  const win = winOverride || (a===w ? 0 : rev ? (a<w?1:2) : (a>w?1:2));
   const r=boardEl.getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2;
   const me = online() ? net.side : cfg.mode==='pvp' ? 0 : 3-cpuSide();
   const won = !!win && (me===0 || win===me);
@@ -5125,7 +5308,7 @@ async function gameOver(){
   const myGen=gen;
   if (win){
     const E=ELS[cfg.el[win]];
-    const why = winReason==='regicide' ? '王を討ち取った' : winReason==='coronation' ? '王国が民に満ちた' : winReason==='yggdrasil' ? '世界樹ユグドラシルが生まれた（自然の星）' : winReason==='mochizuki' ? '望月が満ちた' : winReason==='heaven' ? '神は天界を失った' : '';
+    const why = winReason==='regicide' ? '王を討ち取った' : winReason==='coronation' ? '王国が民に満ちた' : winReason==='yggdrasil' ? '世界樹ユグドラシルが生まれた（自然の星）' : winReason==='mochizuki' ? '望月が満ちた' : winReason==='heaven' ? '神は天界を失った' : rev ? 'フールズサーカス：石が少ないほうの勝ち' : '';
     $('resBig').innerHTML=`<span style="color:${tint(win)};text-shadow:${E.glow}">${E.k}</span>の勝利${why?`<br><small style="font-size:.4em">${why}</small>`:''}`;
     await ultimate(cfg.el[win],x,y,'VICTORY');
     if (myGen!==gen || !over) return;
@@ -5214,7 +5397,7 @@ function stateFields(S){
     pas:clone(S.pas||freshPas()), ev:(S.ev||[]).slice(),
     kings:{1:(S.kings&&S.kings[1])??-1, 2:(S.kings&&S.kings[2])??-1}, hush:S.hush?{...S.hush}:null, royal:S.royal||0,
     decree:S.decree?clone(S.decree):null, forced:S.forced?{...S.forced}:null, quake:S.quake||0, curses:clone(S.curses||[]), winner:S.winner||0, winReason:S.winReason||'',
-    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null, steel:clone(S.steel||[]), rust:clone(S.rust||[]), rockPick:S.rockPick?{...S.rockPick}:null, tn:S.tn||0, rebel:clone(S.rebel||{1:0,2:0}), rebelAt:clone(S.rebelAt||{}), fake:S.fake?{...S.fake}:null, rampage:S.rampage||0, trees:clone(S.trees||[]), sprouts:clone(S.sprouts||[]), seeds:clone(S.seeds||[]), resow:S.resow?{...S.resow}:null, tsukuyomi:S.tsukuyomi?{...S.tsukuyomi}:null, kantan:S.kantan?{...S.kantan}:null, dream:S.dream?clone(S.dream):null, night:S.night?clone(S.night):null, nightAct:S.nightAct||''};
+    hidden:clone(S.hidden||[]), lastPlace:S.lastPlace?clone(S.lastPlace):null, predict:S.predict?{...S.predict}:null, steel:clone(S.steel||[]), rust:clone(S.rust||[]), rockPick:S.rockPick?{...S.rockPick}:null, tn:S.tn||0, rebel:clone(S.rebel||{1:0,2:0}), rebelAt:clone(S.rebelAt||{}), fake:S.fake?{...S.fake}:null, rampage:S.rampage||0, breeze:S.breeze?{...S.breeze}:null, trees:clone(S.trees||[]), sprouts:clone(S.sprouts||[]), seeds:clone(S.seeds||[]), resow:S.resow?{...S.resow}:null, tsukuyomi:S.tsukuyomi?{...S.tsukuyomi}:null, kantan:S.kantan?{...S.kantan}:null, dream:S.dream?clone(S.dream):null, night:S.night?clone(S.night):null, nightAct:S.nightAct||''};
 }
 function sendState(S,act){
   if (!online() || !net.kind) return;
@@ -5240,7 +5423,8 @@ function syncPhase(d){
       if (isResolver() && orderInfo.stage==='choose') applyOrder(od.choice);
     }
   }
-  else if (ph==='draft' && phase!=='draft'){ clearDraftTimers(); phase='draft'; coinInfo=null; orderInfo=null; syncGodTile(d.godAt); }
+  else if (ph==='draft' && phase!=='draft'){ clearDraftTimers(); phase='draft'; coinInfo=null; orderInfo=null; godShown=false; syncGodTile(); }
+  else if (ph==='draft' && godFor) syncGodTile();
   else if (ph==='coin' && phase!=='coin' && d.coin && EL_ORDER.includes(d.coin.el)){
     phase='coin'; coinInfo={winner:d.coin.winner===2?2:1, loser:d.coin.winner===2?1:2, el:d.coin.el, stage:'spin'}; playCoin();
   }
@@ -6131,8 +6315,11 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=33;
+const APP_VER=34;
 const CHANGES={
+  34:[
+    '新属性「風」「愚」が登場。くわしくはスキル図鑑で。',
+  ],
   30:[
     '月：今の月の形と次の月が、月属性のパネルに大きく出るように。月光がたまる置き場所は銀色の印に。玲瓏の段階を 0〜10／11〜20／21〜30／31〜 に。',
     '草：命の芽吹きは20ターン目から、種は4つ（角には植えられない）、芽吹くのは16ターン後に。育っている石に、木になるまでの残りターンを表示。',
