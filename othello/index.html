@@ -803,6 +803,20 @@ body:not(.lobby) .on-title{display:none}
 .side,.status,#board,#skillInfo,#skillInfo *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea{-webkit-user-select:text;user-select:text}
 
+/* 旋回周 ring guide */
+#windRings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+#windRings .wr-line{fill:none;stroke:#c8fff0;stroke-width:3;stroke-linejoin:round;stroke-dasharray:8 10;filter:drop-shadow(0 0 4px #8ff0d8)}
+#windRings .on .wr-line{animation:wrFlow .9s linear infinite}
+#windRings .wr-arr{fill:#e8fffa;filter:drop-shadow(0 0 3px #4ab0c8)}
+#windRings .wr-out{opacity:.22}
+#windRings .wr-out .wr-arr{display:none}
+#windRings .wr-out.on{opacity:.85}
+#windRings .wr-out.on .wr-arr{display:inline}
+#windRings .wr-in .wr-line{stroke:#ffffff}
+@keyframes wrFlow{to{stroke-dashoffset:-18}}
+.cell.wz-in{box-shadow:inset 0 0 0 1px #8ff0d8aa,inset 0 0 14px #8ff0d844}
+.wz-mid .cell.wz-out{box-shadow:inset 0 0 0 1px #8ff0d866,inset 0 0 10px #8ff0d822}
+
 /* 風・愚 stones */
 .disc[data-el="wind"]{background:conic-gradient(from 0deg,#ffffff,#c8fff0 20%,#8ff0d8 40%,#4ab0c8 60%,#c8fff0 80%,#ffffff);box-shadow:0 0 0 1.5px #2a7a8a,0 0 12px #8ff0d888,0 3px 6px #000a,inset 0 -3px 8px #2a7a8a99,inset 0 2px 5px #ffffffcc;color:#0a4a5a}
 .disc[data-el="wind"]::after{opacity:.55;mix-blend-mode:normal}
@@ -978,7 +992,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.34</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.35</div>
   </div>
 </div>
 
@@ -2182,7 +2196,7 @@ const PASSIVES = {
   grass:   { name:'繰り返す収穫',     sub:'ENDLESS HARVEST',   desc:'自分が置いた石が10ターンのあいだ裏返らないと、木に進化する。木は二度と裏返らず、スキルでも動かない。', short:'置いた石が10ターン裏返らなければ木になり、二度と裏返らない。' },
   moon:    { name:'銀輪謳歌',         sub:'SILVER MOON SONG',  desc:'月は自分の番4回（8ターン）で満ちて欠ける（上弦→満月→下弦→新月）。満月の番は、1マスの空白をまたいで挟める。新月の番は「L字」にも挟める：置いた石からまっすぐ相手の石が続き、その途中の相手の石で直角に曲がって、さらに相手の石が続いた先（曲がってすぐでもよい）に自分の石があれば、通った道の相手の石をすべて裏返す。', short:'満月の番は1マス空けて挟める。新月の番は途中で直角に曲がるL字でも挟める。' },
   dream:   { name:'邯鄲の夢',         sub:'DREAM OF HANDAN',   desc:'10ターンごとに、ランダムな相手の石1枚が、自分の番と相手の次の番のあいだだけ夢の中で自分の石になる。その間、相手はその石で挟めず、自分はその石で挟める。', short:'10ターンごとに、相手の石1枚がしばらく自分の石として挟むのに使える。' },
-  wind:    { name:'旋回周',           sub:'WHIRLING RINGS',    desc:'吹きすさぶ旋風で盤面が目まぐるしく変わる。毎ターン、中央の4×4のマスが反時計回りに1マスずつ回る。中盤（空きマス40以下）からは、そのまわりの一周（6×6の外側）も時計回りに回り始める。木と鋼の石は動かない。', short:'毎ターン中央4×4が反時計回り、中盤からはまわりの一周も時計回りに回る。' },
+  wind:    { name:'旋回周',           sub:'WHIRLING RINGS',    desc:'吹きすさぶ旋風で盤面が目まぐるしく変わる。毎ターン、中央の2×2のマスが反時計回りに1マスずつ回る。中盤（空きマス40以下）からは、その2マス外側の一周（6×6の外周）も時計回りに回り始める。木と鋼の石は動かない。', short:'毎ターン中央2×2が反時計回り、中盤からは2マス外側の一周も時計回りに回る。' },
   fool:    { name:'フールズサーカス', sub:"FOOL'S CIRCUS",     desc:'愚者はルールを理解していない。終局のとき、石が少ないほうが勝ちになる（相手も同じ）。愚が角を取ったとき、1度だけその角の石と相手のランダムな石を入れ替える。', short:'終局時に石が少ないほうの勝ち。角を取ったとき1度だけ相手の石と入れ替える。' },
   god:     { name:'天界',             sub:'HEAVEN',            desc:'終局のとき、角を3つ以上取っていなければ負け。', short:'終局時に角が3つ未満なら負け。' },
   time:    { name:'未来視',           sub:'FORESIGHT',         desc:'相手の番になると次の一手を予測する。的中すると秒針自在が1回分よみがえる。', short:'相手の手を予測し、的中すると秒針自在が回復。' },
@@ -2520,7 +2534,33 @@ function altSide(){
 const tint = p => altSide()===p ? ALTC[cfg.el[p]] : ELS[cfg.el[p]].c1;
 function viewerSide(){ if (online()) return net.side||1; if (cfg.mode==='pvp') return turn; return 3-cpuSide(); }
 const blindView = () => phase==='play' && !over && !!blind && turn===blind && viewerSide()===blind;
+const windSvg = (()=>{ const v=document.createElementNS('http://www.w3.org/2000/svg','svg'); v.id='windRings'; boardEl.parentElement.appendChild(v); return v; })();
+let windKey='';
+function windRings(){
+  const q = cfg.el[1]==='wind' ? 1 : cfg.el[2]==='wind' ? 2 : 0;
+  const on = !!q && phase==='play' && !isHushed(q);
+  windSvg.style.display = on ? '' : 'none';
+  cells.forEach((c,i)=>{ if (i<64){ c.classList.toggle('wz-in', on && RING_I.includes(i)); c.classList.toggle('wz-out', on && RING_6.includes(i)); } });
+  if (!on){ windKey=''; return; }
+  const wr=boardEl.parentElement.getBoundingClientRect(), outer=emptyCount()<=40;
+  const C=i=>{ const r=cells[i].getBoundingClientRect(); return [r.left-wr.left+r.width/2, r.top-wr.top+r.height/2]; };
+  const key=[wr.width,wr.height,...C(0),...C(63),outer].map(v=>typeof v==='number'?v.toFixed(1):v).join(',');
+  boardEl.parentElement.classList.toggle('wz-mid', outer);
+  if (key===windKey) return; windKey=key;
+  const path=ring=>ring.map((i,k)=>{ const [x,y]=C(i); return (k?'L':'M')+x.toFixed(1)+' '+y.toFixed(1); }).join('')+'Z';
+  // arrowheads in the middle of the chosen segments, pointing the way the stones travel
+  const arrows=(ring,every,size)=>ring.map((i,k)=>{
+    if (k%every) return '';
+    const [x1,y1]=C(i), [x2,y2]=C(ring[(k+1)%ring.length]), mx=(x1+x2)/2, my=(y1+y2)/2, a=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+    return `<path d="M${size} 0L${-size*.8} ${-size*.75}L${-size*.4} 0L${-size*.8} ${size*.75}Z" transform="translate(${mx.toFixed(1)} ${my.toFixed(1)}) rotate(${a.toFixed(1)})"/>`;
+  }).join('');
+  const cw=cells[0].getBoundingClientRect().width;
+  windSvg.setAttribute('viewBox',`0 0 ${wr.width.toFixed(1)} ${wr.height.toFixed(1)}`);
+  windSvg.innerHTML = `<g class="wr-out${outer?' on':''}"><path class="wr-line" d="${path(RING_6)}"/><g class="wr-arr">${arrows(RING_6,5,cw*.2)}</g></g>`
+    + `<g class="wr-in on"><path class="wr-line" d="${path(RING_I)}"/><g class="wr-arr">${arrows(RING_I,1,cw*.2)}</g></g>`;
+}
 function render(){
+  windRings();
   const play = phase==='play';
   document.body.classList.toggle('lobby', !play && online() && !net.kind);
   const bv = blindView();
@@ -2860,8 +2900,7 @@ function endTurnS(S,ended){
   }
   windTurn(S, ended);
 }
-// 旋回周: the centre 4x4 turns counter-clockwise one square per turn; from the midgame the ring around it turns clockwise
-const RING_C=[[2,2],[3,2],[4,2],[5,2],[5,3],[5,4],[5,5],[4,5],[3,5],[2,5],[2,4],[2,3]].map(([r,c])=>r*8+c);
+// 旋回周: the centre 2x2 turns counter-clockwise one square per turn; from the midgame the ring around it turns clockwise
 const RING_I=[[3,3],[4,3],[4,4],[3,4]].map(([r,c])=>r*8+c);
 const RING_6=[[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[2,6],[3,6],[4,6],[5,6],[6,6],[6,5],[6,4],[6,3],[6,2],[6,1],[5,1],[4,1],[3,1],[2,1]].map(([r,c])=>r*8+c);
 function rotateRing(ring, mp, fixed){
@@ -2883,7 +2922,7 @@ function windTurn(S, ended){
   const q = cfg.el[1]==='wind' ? 1 : cfg.el[2]==='wind' ? 2 : 0;
   if (!q || hushedS(S,q) || S.over) return;
   const fixed=new Set([...(S.steel||[]), ...(S.trees||[])].filter(x=>S.board[x.idx]===x.owner).map(x=>x.idx));
-  const mp=new Map(); rotateRing(RING_C,mp,fixed); rotateRing(RING_I,mp,fixed);
+  const mp=new Map(); rotateRing(RING_I,mp,fixed);
   const outer = counts(S.board)[2] <= 40; if (outer) rotateRing(RING_6,mp,fixed);
   const pairs=[...mp].filter(([a])=>S.board[a]>0);
   remapS(S,mp);
@@ -3316,6 +3355,7 @@ function renderDraft(){
 }
 $('oFirst').addEventListener('click',()=>{ ac(); chooseOrder('first'); });
 $('oSecond').addEventListener('click',()=>{ ac(); chooseOrder('second'); });
+const GOD_TAPS=30;
 let godFor=0, godChance=.01, godShown=false, godTaps=0, godTapT=0;
 const validPick = (k,side) => EL_ORDER.includes(k) || (k==='god' && godFor===side);
 const godTile = (()=>{
@@ -3346,15 +3386,15 @@ $('dGrid').appendChild(godTile);
 // tapping your own ？ over and over: the last tile of the list starts to glow, and then something answers
 function paintGodGlow(){
   const tiles=$('dGrid').querySelectorAll('.d-el:not(.god)'), last=tiles[tiles.length-1];
-  last.style.boxShadow = godTaps && !godShown ? `0 0 ${6+godTaps*3}px ${godTaps}px #fff6c8, inset 0 0 ${godTaps*2}px #fff6c8` : '';
+  const g=godTaps*12/GOD_TAPS; last.style.boxShadow = godTaps && !godShown ? `0 0 ${(6+g*3).toFixed(1)}px ${g.toFixed(1)}px #fff6c8, inset 0 0 ${(g*2).toFixed(1)}px #fff6c8` : '';
 }
 for (const p of [1,2]) $('sig'+p).addEventListener('click',()=>{
   if (phase!=='draft' || godFor || draftChooser()!==p || (online() && !net.kind)) return;
-  clearTimeout(godTapT); godTapT=setTimeout(()=>{ godTaps=0; paintGodGlow(); },1500);
+  clearTimeout(godTapT); godTapT=setTimeout(()=>{ godTaps=0; paintGodGlow(); },1200);
   godTaps++; paintGodGlow();
-  if (godTaps===3){ const t=$('dGrid').querySelectorAll('.d-el:not(.god)'); t[t.length-1].scrollIntoView({block:'nearest',behavior:'smooth'}); }
-  if (cfg.sound) tone('sine',600+godTaps*60,600+godTaps*60,.05,.02);
-  if (godTaps>=12){
+  if (godTaps===8){ const t=$('dGrid').querySelectorAll('.d-el:not(.god)'); t[t.length-1].scrollIntoView({block:'nearest',behavior:'smooth'}); }
+  if (cfg.sound) tone('sine',600+godTaps*24,600+godTaps*24,.05,.02);
+  if (godTaps>=GOD_TAPS){
     godTaps=0; godFor=p;
     if (online() && net.kind) netWrite({godFor:p, godAt:Date.now(), updated:Date.now()});
     revealGod();
@@ -3377,10 +3417,12 @@ function startDraft(){
 function beginDraft(){
   clearDraftTimers();
   phase='draft'; picks={1:'',2:''}; coinInfo=null; orderInfo=null;
+  // a summoned god never carries over into the next match
+  godFor=0; godShown=false; godTaps=0; godTile.hidden=true;
   const S=freshState();
   resetLocal(S);
   godFor = online() && net.kind && isResolver() && Math.random()<godChance ? (Math.random()<.5 ? 1 : 2) : 0;
-  godShown=false; godTaps=0; paintGodGlow(); syncGodTile();
+  paintGodGlow(); syncGodTile(); renderDraft();
   if (online() && net.kind){ net.seq++; netWrite({...stateFields(S), act:null, seq:net.seq, phase:'draft', picks:{1:'',2:''}, coin:null, godFor, godAt:Date.now(), updated:Date.now()}); }
   cpuDraftPick();
 }
@@ -6315,8 +6357,11 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=34;
+const APP_VER=35;
 const CHANGES={
+  35:[
+    '風：旋回周で回るのは中央の2×2に（中盤からは6×6の外周も）。回るマスと向きを盤上に表示するように。',
+  ],
   34:[
     '新属性「風」「愚」が登場。くわしくはスキル図鑑で。',
   ],
