@@ -775,6 +775,8 @@ body:not(.lobby) .on-title{display:none}
 .disc[data-el="god"]::after{opacity:.6;mix-blend-mode:normal}
 .aura[data-el="god"]{inset:-24%;background:repeating-conic-gradient(#fff6c855 0 4deg,transparent 4deg 22deg);-webkit-mask:radial-gradient(circle,transparent 40%,#000 46%,transparent 72%);mask:radial-gradient(circle,transparent 40%,#000 46%,transparent 72%);animation:auraSpin 10s linear infinite}
 .disc[data-el="god"][data-alt]{background:radial-gradient(circle at 34% 28%,#ffffff 0%,#e8d8ff 45%,#a888e8 90%);box-shadow:0 0 0 2px #fff,0 0 0 3.5px #c8a0ff,0 0 18px #e8d8ff,0 3px 6px #000a}
+.d-el.rnd{--ec:#e8e0ff;border-style:dashed}
+.d-el.rnd .k{background:conic-gradient(from 0deg,#ff5a5a,#ffd23d,#7fd06a,#3dc8ff,#a86bff,#ff5a5a);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 8px #fff8)}
 .d-el.god{border-color:#ffd27a;box-shadow:0 0 24px #fff6c8,inset 0 0 18px #ffd27a66}
 .d-el.god::before{background:repeating-conic-gradient(#fff6c844 0 6deg,transparent 6deg 24deg);animation:auraSpin 6s linear infinite}
 /* 月 phase widget */
@@ -854,6 +856,8 @@ input,textarea{-webkit-user-select:text;user-select:text}
 .fr-k{grid-row:span 2;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--ec);font-family:var(--f-display);font-weight:400;font-size:19px;color:var(--ec);text-shadow:0 0 8px var(--ec)}
 .fr-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fr-sub{font-size:11px;color:var(--muted)}
+.fr-item.playing .fr-sub{color:#7fe0a0}
+.fr-watch{border-color:#7fe0a0;color:#c8ffd8}
 .fr-inv{flex:none;min-width:84px}
 .fp-name{font-family:var(--f-display);font-size:24px;color:#fff;overflow-wrap:anywhere}
 .fp-status{font-size:11px;color:var(--muted);min-height:1em}
@@ -992,7 +996,7 @@ html.lite .disc{filter:none!important}
       <div class="seg" style="--n:2"><button class="gbtn" id="tProf" type="button">プロフィール</button><button class="gbtn" id="tFriends" type="button">フレンド</button></div>
       <div class="seg" style="--n:2"><button class="gbtn" id="tGuide" type="button">スキル図鑑</button><button class="gbtn" id="tSettings" type="button">設定</button></div>
     </div>
-    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.35</div>
+    <div class="t-foot">タップすると効果音とBGMが流れます（設定で切り替え）<br>ver.36</div>
   </div>
 </div>
 
@@ -2152,7 +2156,7 @@ const SERAPH_N = 25;     // 熾天使の契り wakes after this many flips
 const DRAGON_LOCK = 5;   // after one 暴虐, the other waits this many of the dragon's turns
 const SEED_GROW = 16;    // seeds sprout after this many turns
 const TREE_GROW = 10;    // a grass stone left alone this long becomes a tree
-const GRASS_OPEN = 20, DREAM_OPEN = 10, DREAM_CD = 8, SEEDS_N = 4, TREES_WIN = 8;
+const FOOL_OPEN = 8, GRASS_OPEN = 20, DREAM_OPEN = 10, DREAM_CD = 8, SEEDS_N = 4, TREES_WIN = 8;
 const END_LOCK = 10;     // these cards stop working for the last 10 turns
 const LOCK_ELS = ['light','dark','star','dragon','oni','steel'];
 const NINJA_END = 26;    // 神出鬼没 works while more empty squares than this remain
@@ -2177,7 +2181,7 @@ const CARDS = {
   moon:    { name:'玲瓏',                   sub:'RADIANT JADE',       uses:1,      desc:'銀輪謳歌（満月・新月の取り方）で裏返した数によって効果が変わる。0〜10枚「朔」：ランダムな2×2のマスを月の石にする。11〜20枚「月夜見」：相手の番5回のあいだ、相手にも満月・新月の取り方を強い、それを使わない置き方をするたびに相手の石が1つ月の石になる。21〜30枚「繊月」：好きな属性のカードを1回使える。31枚以上「望月」：特殊勝利。', short:'月の取り方で返した数で変わる：0〜10 2×2を奪う／11〜20 相手に月の取り方を強いる（5回）／21〜30 好きな属性のカード／31〜 特殊勝利。' },
   dream:   { name:'胡蝶の夢',               sub:"BUTTERFLY'S DREAM",  uses:2,      desc:'10ターン目から使える（2回まで。使ったあと8ターンは使えない）。次の6ターン（お互い3回ずつ）を「夢うつつ」にする。夢うつつの間に裏返した合計が相手のほうが少なければ、相手は悪夢に落ちる。悪夢の相手の次の番3回は「スキップ」「適当に置かれる」「夢属性が置き場所を決める」が1回ずつランダムな順で起きる。', short:'10ターン目から2回（間に8ターン）。6ターンの夢で相手の返した数が少なければ、相手の番3回が「スキップ／適当打ち／こちらが置き場所を決める」になる。' },
   wind:    { name:'薫風の調べ',             sub:'BREEZE SONG',        uses:1,      desc:'空きマス40以下（中盤）から使える。自分の番3回のあいだ、盤の回転で自分の石が動いた先で相手の石を挟んでいれば、その石を裏返す。', short:'中盤から。自分の番3回のあいだ、回転で挟んだ相手の石を裏返す。' },
-  fool:    { name:'ファニー',               sub:'FUNNY',              uses:2,      desc:'自分の番をスキップする（石を置かずに相手の番になる）。最後の6ターンは使えない。', short:'自分の番をスキップする。最後の6ターンは使えない。' },
+  fool:    { name:'ファニー',               sub:'FUNNY',              uses:2,      desc:'8ターン目から使える。自分の番をスキップする（石を置かずに相手の番になる）。最後の6ターンは使えない。', short:'8ターン目から。自分の番をスキップする。最後の6ターンは使えない。' },
   god:     { name:'ゼウス',                 sub:'ZEUS',               uses:15,     desc:'すべての属性のカードを、それぞれ1回ずつ使える。', short:'すべての属性のカードを1回ずつ使える。' },
   time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が次の番に選べなくなる。', short:'相手の直前の一手を取り消す。' },
 };
@@ -2283,6 +2287,7 @@ function cardTimeBlock(p){
     if (e>at) return `解禁まで あと${e-at}ターン`;
     if (LOCK_ELS.includes(el) && e<=END_LOCK) return `最後の${END_LOCK}ターンは使えません`;
     if (el==='fool' && e<=6) return '最後の6ターンは使えません';
+    if (el==='fool' && tn<FOOL_OPEN) return `解禁まで あと${FOOL_OPEN-tn}ターン`;
   }
   return '';
 }
@@ -2336,7 +2341,7 @@ function cardWhen(p){
   const at=cardOpenAt(el);
   if (e>at) return W('解禁まで',e-at,false);
   if (LOCK_ELS.includes(el)) return e<=END_LOCK ? W('使用期間終了',null,false) : W('使用可能・残り',e-END_LOCK,true);
-  if (el==='fool') return e<=6 ? W('使用期間終了',null,false) : W('使用可能・残り',e-6,true);
+  if (el==='fool') return e<=6 ? W('使用期間終了',null,false) : tn<FOOL_OPEN ? W('解禁まで',FOOL_OPEN-tn,false) : W('使用可能・残り',e-6,true);
   return W('使用可能',null,true);
 }
 const cardWhenText = p => { const w=cardWhen(p); return w.n==null ? w.pre : `${w.pre} ${w.n}ターン`; };
@@ -2649,7 +2654,7 @@ function render(){
   if (!play){ st.innerHTML='属性を選択中<small>決まったら対局開始</small>'; st.className='status'; return; }
   const E=ELS[cfg.el[turn]];
   const who = online()
-    ? (!net.kind ? '合言葉で部屋に入ってください' : !net.opp ? '相手の参加を待っています' : turn===net.side ? 'あなたの番' : '相手の番')
+    ? (!net.kind ? '合言葉で部屋に入ってください' : net.spect ? '観戦中' : !net.opp ? '相手の参加を待っています' : turn===net.side ? 'あなたの番' : '相手の番')
     : cpuSide()===turn ? 'CPU思考中…' : (cfg.mode==='pvp' ? '' : 'あなたの番');
   let hot = '';
   if (resow) hot = resowPicker() ? `命の芽吹き：種をまく空きマスを選んでください（残り${resow.n-sowPicks.length}個・あと${sowLeft}秒）` : '草属性が種をまいています…';
@@ -3204,7 +3209,7 @@ function saveResume(){
   if (phase!=='play' || over) return;
   try {
     if (!online()) localStorage.setItem(RESUME_KEY, JSON.stringify({kind:'local', mode:cfg.mode, lv:cfg.lv, at:Date.now(), el:{...cfg.el}, d:{...curState(), phase:'play', el:{...cfg.el}}}));
-    else if (net.kind && net.side) localStorage.setItem(RESUME_KEY, JSON.stringify({kind:net.kind, code:net.code, side:net.side, host:!!net.host, me:ME, at:Date.now(), el:{...cfg.el}, shared:net.kind==='p2p' ? net.shared : null}));
+    else if (net.kind && net.side && !net.spect) localStorage.setItem(RESUME_KEY, JSON.stringify({kind:net.kind, code:net.code, side:net.side, host:!!net.host, me:ME, at:Date.now(), el:{...cfg.el}, shared:net.kind==='p2p' ? net.shared : null}));
   } catch(e){}
 }
 function clearResume(){ try { localStorage.removeItem(RESUME_KEY); } catch(e){} }
@@ -3236,7 +3241,7 @@ const isResolver = () => !online() || !!net.host;
 let orderInfo=null, orderT=null;
 const orderParties = () => online() ? ['host','guest'] : cfg.mode==='pvp' ? ['A','B'] : ['human','cpu'];
 const otherParty = x => { const [a,b]=orderParties(); return x===a ? b : a; };
-const isMyParty = x => online() ? (x==='host')===!!net.host : x!=='cpu';
+const isMyParty = x => online() ? !net.spect && (x==='host')===!!net.host : x!=='cpu';
 function partyName(x){
   if (x==='human') return myName()||'あなた';
   if (x==='cpu') return 'CPU';
@@ -3314,6 +3319,7 @@ function draftChooser(){
   if (phase==='coin' && coinInfo && coinInfo.stage==='choose' && localSide(coinInfo.loser) && picks[coinInfo.loser]===coinInfo.el) return coinInfo.loser;
   return 0;
 }
+let draftExcl='';
 function renderDraft(){
   const dr=$('draft');
   if (phase==='play' || over || (online() && !net.kind)){ dr.hidden=true; $('dOrder').hidden=true; return; }
@@ -3350,7 +3356,7 @@ function renderDraft(){
   dr.querySelector('.d-eyebrow').textContent = phase==='order' ? 'MATCH' : 'ELEMENT DRAFT';
   $('coin').hidden = !(phase==='coin' || (phase==='order' && orderInfo));
   const grid=$('dGrid'); grid.hidden=!ch;
-  grid.querySelectorAll('button').forEach(b=>{ b.disabled = b.dataset.el===excl; });
+  draftExcl=excl; grid.querySelectorAll('button').forEach(b=>{ b.disabled = b.dataset.el===excl; });
   godTile.hidden = !(godShown && godFor && phase==='draft' && draftChooser()===godFor);
 }
 $('oFirst').addEventListener('click',()=>{ ac(); chooseOrder('first'); });
@@ -3382,17 +3388,28 @@ EL_ORDER.forEach(k=>{
   b.addEventListener('click',()=>{ const c=draftChooser(); if (c){ ac(); choose(c,k); } });
   $('dGrid').appendChild(b);
 });
+const rndTile=(()=>{
+  const b=document.createElement('button'); b.type='button'; b.className='d-el rnd'; b.dataset.el='random';
+  b.innerHTML='<span class="k">？</span><span class="n">ランダム</span>';
+  b.addEventListener('click',()=>{
+    const c=draftChooser(); if (!c) return;
+    const k=pick(EL_ORDER.filter(x=>x!==draftExcl)); ac();
+    if (!(cfg.mode==='pvp' && !online())) toast(`ランダムで${ELS[k].name}に決まりました`);
+    choose(c,k);
+  });
+  $('dGrid').appendChild(b); return b;
+})();
 $('dGrid').appendChild(godTile);
 // tapping your own ？ over and over: the last tile of the list starts to glow, and then something answers
 function paintGodGlow(){
-  const tiles=$('dGrid').querySelectorAll('.d-el:not(.god)'), last=tiles[tiles.length-1];
+  const tiles=$('dGrid').querySelectorAll('.d-el:not(.god):not(.rnd)'), last=tiles[tiles.length-1];
   const g=godTaps*12/GOD_TAPS; last.style.boxShadow = godTaps && !godShown ? `0 0 ${(6+g*3).toFixed(1)}px ${g.toFixed(1)}px #fff6c8, inset 0 0 ${(g*2).toFixed(1)}px #fff6c8` : '';
 }
 for (const p of [1,2]) $('sig'+p).addEventListener('click',()=>{
   if (phase!=='draft' || godFor || draftChooser()!==p || (online() && !net.kind)) return;
   clearTimeout(godTapT); godTapT=setTimeout(()=>{ godTaps=0; paintGodGlow(); },1200);
   godTaps++; paintGodGlow();
-  if (godTaps===8){ const t=$('dGrid').querySelectorAll('.d-el:not(.god)'); t[t.length-1].scrollIntoView({block:'nearest',behavior:'smooth'}); }
+  if (godTaps===8){ const t=$('dGrid').querySelectorAll('.d-el:not(.god):not(.rnd)'); t[t.length-1].scrollIntoView({block:'nearest',behavior:'smooth'}); }
   if (cfg.sound) tone('sine',600+godTaps*24,600+godTaps*24,.05,.02);
   if (godTaps>=GOD_TAPS){
     godTaps=0; godFor=p;
@@ -3499,6 +3516,7 @@ function finishDraft(){
   revealFx();
 }
 function revealFx(){
+  if (online()) publishProfileSoon();
   toast(`${ELS[cfg.el[1]].k}（先手） vs ${ELS[cfg.el[2]].k}（後手）　対局開始！`);
   for (const p of [1,2]){
     const r=$('sig'+p).getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2, el=cfg.el[p];
@@ -5376,10 +5394,10 @@ const STALE_MS = 30*60*1000;
 let ME='';
 try { ME=sessionStorage.getItem('eo-me')||''; } catch(e){}
 if (!ME){ ME='t'+Math.random().toString(36).slice(2,10)+Date.now().toString(36); try{ sessionStorage.setItem('eo-me',ME); }catch(e){} }
-const net={kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],peer:null,conn:null,shared:null,readOnly:false,names:{},pending:null,tries:0,retryT:0,joinT:0};
+const net={spect:false,watchers:[],kind:null,ref:null,code:null,side:0,seq:0,opp:false,unsub:null,queue:[],peer:null,conn:null,shared:null,readOnly:false,names:{},pending:null,tries:0,retryT:0,joinT:0};
 const oppName = () => cleanName((net.names||{})[3-net.side]);
 function nameOf(p){
-  if (online()) return !net.side ? '' : net.side===p ? (myName()||'あなた') : (oppName()||'相手');
+  if (online()) return net.spect ? (cleanName((net.names||{})[p])||'名前なし') : !net.side ? '' : net.side===p ? (myName()||'あなた') : (oppName()||'相手');
   return cpuSide()===p ? 'CPU' : cfg.mode==='pvp' ? `プレイヤー${(p===1)===((cfg.pvpFirst||'A')==='A') ? 'A' : 'B'}` : (myName()||'あなた');
 }
 const san = n => n ? `${n}さん` : '相手';
@@ -5422,6 +5440,7 @@ function deepMerge(t,s){
   return t;
 }
 async function netWrite(patch){
+  if (net.spect) return;
   if (net.kind==='db' && net.ref){
     try { await net.ref.update(patch); }
     catch(e){
@@ -5431,6 +5450,7 @@ async function netWrite(patch){
   } else if (net.kind==='p2p' && net.shared){
     deepMerge(net.shared,patch);
     if (net.conn && net.conn.open) net.conn.send({t:'patch',p:patch});
+    relayWatchers(patch);
   }
 }
 function stateFields(S){
@@ -5479,7 +5499,7 @@ function syncPhase(d){
 function onNet(d){
   if (!net.kind || !d) return;
   // the coin may have put the host second: sides follow hostSide
-  if (d.hostSide===1 || d.hostSide===2) net.side = net.host ? d.hostSide : 3-d.hostSide;
+  if (!net.spect && (d.hostSide===1 || d.hostSide===2)) net.side = net.host ? d.hostSide : 3-d.hostSide;
   const seats=d.seats||{};
   net.seats=seats;
   if (seats[net.side] && seats[net.side]!==ME){ netMsg('この席にほかの人が入りました。別の数字で部屋を作ってください。'); leaveRoom(true); return; }
@@ -5488,6 +5508,7 @@ function onNet(d){
   net.names = d.names && typeof d.names==='object' ? d.names : {};
   onFriendNet(d);
   const inGame = d.phase==='play' || phase==='play';
+  if (net.spect){ syncPhase(d); if ((d.seq||0) > net.seq && validDoc(d)){ net.seq=d.seq; net.queue.push(clone(d)); drainNet(); } paintNetStatus(); if (!busy) render(); return; }
   if (net.opp && !hadOpp){
     if (inGame) toast(`${san(oppName())}が対戦に戻ってきました`);
     else { toast(net.host ? `${san(oppName())}が入室しました。コインで先手・後手を決めます` : `${oppName() ? san(oppName())+'の' : ''}部屋に入りました。コインで先手・後手を決めます`); showVs(); }
@@ -5526,6 +5547,11 @@ function applyRemote(d){
 }
 function paintNetStatus(){
   if (!net.kind) return;
+  if (net.spect){
+    const n=k=>esc(cleanName((net.names||{})[k])||'名前なし');
+    netMsg(`部屋 <strong>${net.code}</strong> を観戦中：<strong>${n(1)}</strong>（先手）と <strong>${n(2)}</strong>（後手）。観戦をやめるときは「退出」を押してください。`);
+    return;
+  }
   const tail = phase==='play' ? `（<strong>${ELS[cfg.el[net.side]].k}</strong>）` : '';
   netMsg(net.opp
     ? `部屋 <strong>${net.code}</strong> で対戦中。対戦相手：<strong>${esc(oppName()||'名前なし')}</strong>　あなたは${roleOf(net.side)}${tail}です。`
@@ -5654,7 +5680,10 @@ async function hostP2P(code, restore, tries=0){
         conn.send({t:'state', d:net.shared});
         onNet(net.shared);
       } else if (msg.t==='patch' && net.conn===conn && msg.p && typeof msg.p==='object'){
-        deepMerge(net.shared,msg.p); onNet(net.shared);
+        deepMerge(net.shared,msg.p); relayWatchers(msg.p); onNet(net.shared);
+      } else if (msg.t==='watch'){
+        if (!net.watchers.includes(conn)){ net.watchers.push(conn); conn.on('close',()=>{ net.watchers=net.watchers.filter(w=>w!==conn); }); }
+        conn.send({t:'state', d:net.shared});
       }
     });
     conn.on('close',()=>{ if (net.conn===conn){ net.conn=null; if (net.shared){ net.shared.seats[net.shared.hostSide===2?1:2]=''; onNet(net.shared); } } });
@@ -5723,13 +5752,65 @@ function retryGuest(why){
   clearTimeout(net.retryT); net.retryT=setTimeout(guestConnect,4000);
 }
 
+function relayWatchers(patch){
+  if (!net.host || !net.watchers || !net.watchers.length) return;
+  net.watchers=net.watchers.filter(w=>w.open);
+  net.watchers.forEach(w=>{ try { w.send({t:'patch',p:patch}); } catch(e){} });
+}
+/* spectating a friend's room */
+function startWatch(code){
+  closeModals();
+  const go=()=>{ $('title').hidden=true; setMode('online'); $('code').value=code; inClaude() ? watchDb(code) : watchP2P(code); };
+  if (!$('title').hidden) wipe(go); else go();
+}
+function enterWatch(d){
+  d.burns=d.burns||[]; d.guards=d.guards||[]; d.used=d.used||{1:0,2:0}; d.pas=d.pas||freshPas(); d.ev=[];
+  net.names = d.names && typeof d.names==='object' ? d.names : {};
+  phase=''; syncPhase(d); resetLocal(d); paintOnline(); paintNetStatus(); render();
+  toast('観戦を始めました');
+}
+async function watchDb(code){
+  const db=await getDb();
+  if (!db){ netMsg('観戦は、claude.ai にサインインしてこのページを開いたときに使えます。'); return; }
+  netMsg('部屋を探しています…');
+  try {
+    const ref=db.doc('games/'+code), s=await ref.get(), d=s.exists ? s.data() : null;
+    if (!d || !validDoc(d) || Date.now()-(d.updated||0)>STALE_MS || !(d.seats && d.seats[1] && d.seats[2])){ netMsg('この部屋はいま観戦できません（対戦が終わったか、まだ始まっていません）。'); return; }
+    Object.assign(net,{kind:'db',ref,code,side:0,host:false,opp:true,queue:[],seq:d.seq||0,spect:true});
+    enterWatch(d);
+    net.unsub=ref.onSnapshot(x=>{ if (!x.exists){ netMsg('部屋がなくなりました。'); return; } onNet(x.data()); }, ()=>{ netMsg('通信が切れました。「退出」してから、もう一度観戦してください。'); });
+  } catch(e){ netMsg('部屋を見つけられませんでした。少し待ってからもう一度試してください。'); }
+}
+async function watchP2P(code){
+  netMsg('部屋を探しています…');
+  if (!await loadPeer()){ netMsg('通信の準備ができませんでした。インターネット接続を確かめてください。'); return; }
+  const peer=new Peer(); net.peer=peer; paintOnline();
+  const fail=m=>{ if (net.peer!==peer) return; netMsg(m); cleanupPeer(); };
+  peer.on('error',e=>fail(e.type==='peer-unavailable' ? 'この部屋はいま観戦できません（対戦が終わったようです）。' : `接続できませんでした（${e.type}）。`));
+  peer.on('open',()=>{
+    const conn=peer.connect(PEER_PREFIX+code,{reliable:true}); net.conn=conn;
+    const to=setTimeout(()=>{ if (!net.spect) fail('部屋に接続できませんでした。少し待ってからもう一度試してください。'); },10000);
+    conn.on('open',()=>conn.send({t:'watch'}));
+    conn.on('data',msg=>{
+      if (!msg || typeof msg!=='object' || net.conn!==conn) return;
+      if (msg.t==='state' && validDoc(msg.d)){
+        clearTimeout(to);
+        const d=clone(msg.d); net.shared=clone(d);
+        Object.assign(net,{kind:'p2p',code,side:0,host:false,opp:true,queue:[],seq:d.seq||0,spect:true});
+        enterWatch(d);
+      } else if (msg.t==='patch' && net.shared && msg.p && typeof msg.p==='object'){ deepMerge(net.shared,msg.p); onNet(net.shared); }
+    });
+    conn.on('close',()=>{ if (net.conn===conn && net.spect){ net.conn=null; netMsg('対戦していた部屋が閉じました。'); toast('観戦していた部屋が閉じました'); } });
+  });
+}
 function leaveRoom(keepMsg){
   if (net.kind==='db'){
     if (net.unsub) net.unsub();
     if (net.ref && net.side) net.ref.update({seats:{[net.side]:''}, updated:Date.now()}).catch(()=>{});
   }
   cleanupPeer();
-  Object.assign(net,{kind:null,ref:null,code:null,side:0,host:false,seq:0,opp:false,unsub:null,queue:[],shared:null,names:{},cards:{},seats:{},pending:null,tries:0});
+  Object.assign(net,{kind:null,ref:null,code:null,side:0,host:false,seq:0,opp:false,unsub:null,queue:[],shared:null,names:{},cards:{},seats:{},pending:null,tries:0,spect:false,watchers:[]});
+  publishProfileSoon();
   paintFriendBtns();
   if (!keepMsg) paintOnline(); else { $('code').disabled=false; $('host').hidden=false; $('join').hidden=false; $('leave').hidden=true; }
 }
@@ -5779,6 +5860,9 @@ function cleanCard(c){
   return {id, name:cleanName(c.name), fav:EL_ORDER.includes(c.fav)?c.fav:'', wins:num(c.wins), plays:num(c.plays)};
 }
 const myCard = () => ({id:myFid, name:myName(), fav:prof.fav, wins:{...prof.wins}, plays:{...prof.plays}});
+// the room a friend can watch: only while a match with two players is on
+const myRoom = () => net.kind && !net.spect && net.opp && net.code && phase==='play' && !over ? {code:net.code, at:Date.now()} : null;
+setInterval(()=>{ if (myRoom()) publishProfile(); },60000);
 const isFriend = id => prof.friends.some(f=>f.id===id);
 const friendById = id => prof.friends.find(f=>f.id===id);
 const totalWins = c => EL_ORDER.reduce((t,k)=>t+((c.wins||{})[k]||0),0);
@@ -5850,7 +5934,7 @@ function peerTalk(fid,msg,wantReply,ms=6000){
     const go=()=>{
       c=pr.connect(PEER_PREFIX+'u-'+fid,{reliable:true});
       c.on('open',()=>{ c.send(msg); if (!wantReply) setTimeout(()=>fin(true),600); });
-      c.on('data',d=>{ if (wantReply && d && d.t==='prof') fin(d.p); });
+      c.on('data',d=>{ if (wantReply && d && d.t==='prof') fin(d.p ? {...d.p, room:d.room||null} : null); });
     };
     pr.on('error',e=>{ if (e.type==='peer-unavailable' && !done) fin(null); });
     if (pr.open) go(); else pr.on('open',go);
@@ -5885,7 +5969,7 @@ async function startInbox(){
     conn.on('data',msg=>{
       if (!msg || typeof msg!=='object') return;
       if (msg.t==='invite') onInvite({from:msg.from, code:msg.code, at:Date.now()}, ()=>{});
-      else if (msg.t==='prof?') conn.send({t:'prof', p:myCard()});
+      else if (msg.t==='prof?') conn.send({t:'prof', p:myCard(), room:myRoom()});
     });
   });
   pr.on('disconnected',()=>{ try { if (!pr.destroyed) pr.reconnect(); } catch(e){} });
@@ -5896,16 +5980,22 @@ let pubT=0;
 async function publishProfile(){
   if (!inClaude()) return;
   const db=await getDb(); if (!db) return; await fidReady();
-  try { await db.doc('profiles/'+myFid).set({...myCard(), updated:Date.now()}); } catch(e){}
+  try { await db.doc('profiles/'+myFid).set({...myCard(), room:myRoom(), updated:Date.now()}); } catch(e){}
 }
 function publishProfileSoon(){ clearTimeout(pubT); pubT=setTimeout(publishProfile,1500); }
+// a room is fresh for three minutes after the last heartbeat
+function withRoom(c, r){
+  if (!c) return null;
+  const ok = r && typeof r==='object' && /^\d{4}$/.test(String(r.code||'')) && Math.abs(Date.now()-(+r.at||0)) < 3*60*1000;
+  return Object.assign(c, {room: ok ? String(r.code) : ''});
+}
 async function fetchProfile(id){
   if (inClaude()){
     const db=await getDb(); if (!db) return null;
-    try { const s=await db.doc('profiles/'+id).get(); return s && s.exists ? cleanCard(s.data()) : null; } catch(e){ return null; }
+    try { const s=await db.doc('profiles/'+id).get(); return s && s.exists ? withRoom(cleanCard(s.data()), s.data().room) : null; } catch(e){ return null; }
   }
   const p=await peerTalk(id,{t:'prof?'},true,5000);
-  return p ? cleanCard(p) : null;
+  return p ? withRoom(cleanCard(p), p.room) : null;
 }
 
 /* friend list, a friend's profile, inviting */
@@ -5924,12 +6014,33 @@ function paintFriends(){
     row.querySelector('.fr-name').textContent=f.name||'名前なし';
     row.querySelector('.fr-sub').textContent=`通算 ${totalWins(f)}勝`;
     row.querySelector('.fr-main').addEventListener('click',()=>openFriendProf(f.id));
+    row.dataset.fid=f.id;
     if (frMode==='invite'){
       const b=document.createElement('button'); b.className='gbtn fr-inv'; b.type='button'; b.textContent='招待';
       b.addEventListener('click',()=>sendInvite(f,b)); row.appendChild(b);
     }
     list.appendChild(row);
   });
+  if (frMode==='list') checkPlaying();
+}
+// ask every friend whether they are in a match right now
+let frCheck=0;
+async function checkPlaying(){
+  const my=++frCheck;
+  await Promise.all(prof.friends.map(async f=>{
+    const c=await fetchProfile(f.id);
+    if (my!==frCheck || $('friends').hidden) return;
+    const row=$('frList').querySelector(`.fr-item[data-fid="${CSS.escape(f.id)}"]`); if (!row) return;
+    const sub=row.querySelector('.fr-sub');
+    if (c && c.id===f.id){ const {room,...card}=c; refreshFriend(card); }
+    if (c && c.room && !(net.kind && net.code===c.room)){
+      sub.textContent=`通算 ${totalWins(c)}勝・対戦中`; row.classList.add('playing');
+      if (!row.querySelector('.fr-watch')){
+        const b=document.createElement('button'); b.className='gbtn fr-inv fr-watch'; b.type='button'; b.textContent='観戦';
+        b.addEventListener('click',()=>{ ac(); startWatch(c.room); }); row.appendChild(b);
+      }
+    }
+  }));
 }
 async function sendInvite(f,btn){
   if (!(net.kind && net.host && !net.opp)){ toast('部屋を作って相手を待っているときに招待できます'); return; }
@@ -6357,8 +6468,13 @@ const hot=window.claude?.hot;
 hot?.ready ? hot.ready(start) : start(hot?.data ?? {});
 startInbox();
 // what changed for battles, shown once on the first visit of a new version
-const APP_VER=35;
+const APP_VER=36;
 const CHANGES={
+  36:[
+    '愚：ファニーは8ターン目から使えるように。',
+    'フレンドが対戦中なら、フレンド一覧の「観戦」で見られるように。',
+    '属性選択に「ランダム」を追加。',
+  ],
   35:[
     '風：旋回周で回るのは中央の2×2に（中盤からは6×6の外周も）。回るマスと向きを盤上に表示するように。',
   ],
