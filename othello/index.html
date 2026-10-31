@@ -2181,7 +2181,7 @@ const CARDS = {
   moon:    { name:'玲瓏',                   sub:'RADIANT JADE',       uses:1,      desc:'銀輪謳歌（満月・新月の取り方）で裏返した数によって効果が変わる。0〜10枚「朔」：ランダムな2×2のマスを月の石にする。11〜20枚「月夜見」：相手の番5回のあいだ、相手にも満月・新月の取り方を強い、それを使わない置き方をするたびに相手の石が1つ月の石になる。21〜30枚「繊月」：好きな属性のカードを1回使える。31枚以上「望月」：特殊勝利。', short:'月の取り方で返した数で変わる：0〜10 2×2を奪う／11〜20 相手に月の取り方を強いる（5回）／21〜30 好きな属性のカード／31〜 特殊勝利。' },
   dream:   { name:'胡蝶の夢',               sub:"BUTTERFLY'S DREAM",  uses:2,      desc:'10ターン目から使える（2回まで。使ったあと8ターンは使えない）。次の6ターン（お互い3回ずつ）を「夢うつつ」にする。夢うつつの間に裏返した合計が相手のほうが少なければ、相手は悪夢に落ちる。悪夢の相手の次の番3回は「スキップ」「適当に置かれる」「夢属性が置き場所を決める」が1回ずつランダムな順で起きる。', short:'10ターン目から2回（間に8ターン）。6ターンの夢で相手の返した数が少なければ、相手の番3回が「スキップ／適当打ち／こちらが置き場所を決める」になる。' },
   wind:    { name:'薫風の調べ',             sub:'BREEZE SONG',        uses:1,      desc:'空きマス40以下（中盤）から使える。自分の番3回のあいだ、盤の回転で自分の石が動いた先で相手の石を挟んでいれば、その石を裏返す。', short:'中盤から。自分の番3回のあいだ、回転で挟んだ相手の石を裏返す。' },
-  fool:    { name:'ファニー',               sub:'FUNNY',              uses:2,      desc:'8ターン目から使える。自分の番をスキップする（石を置かずに相手の番になる）。最後の6ターンは使えない。', short:'8ターン目から。自分の番をスキップする。最後の6ターンは使えない。' },
+  fool:    { name:'ファニー',               sub:'FUNNY',              uses:2,      desc:'8ターン目から使える。自分の番をスキップする（石を置かずに相手の番になる）。2回続けては使えない。最後の6ターンは使えない。', short:'8ターン目から。自分の番をスキップする。2回続けては使えない。最後の6ターンは使えない。' },
   god:     { name:'ゼウス',                 sub:'ZEUS',               uses:15,     desc:'すべての属性のカードを、それぞれ1回ずつ使える。', short:'すべての属性のカードを1回ずつ使える。' },
   time:    { name:'秒針自在',               sub:'HANDS OF TIME',      uses:1,      desc:'相手の直前の一手を巻き戻す。そのマスは相手が次の番に選べなくなる。', short:'相手の直前の一手を取り消す。' },
 };
@@ -2208,7 +2208,7 @@ const PASSIVES = {
 // the simple-wording switch in the skill guide
 const descOf = X => cfg.shortDesc && X.short ? X.short : X.desc;
 // every key is listed so an online state merge overwrites last game's values instead of keeping them
-const freshSide = () => ({foolSwap:false,flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99,stars:0,ramp:[],scare:0,moonFlips:0,kanAt:0,dreamAt:-99,zeus:[]});
+const freshSide = () => ({foolSwap:false,funnyAt:-99,flips:0,turns:0,seraph:false,fireAt:-99,jin:0,royal:[],cornerDecree:false,rage:false,rest:0,dLine:false,dSq:false,dAt:-99,stars:0,ramp:[],scare:0,moonFlips:0,kanAt:0,dreamAt:-99,zeus:[]});
 const freshPas = () => ({1:freshSide(),2:freshSide()});
 const jinraiChance = s => Math.min(1, .1 + .03*((s&&s.jin)||0));
 const clone = o => JSON.parse(JSON.stringify(o));
@@ -2288,6 +2288,7 @@ function cardTimeBlock(p){
     if (LOCK_ELS.includes(el) && e<=END_LOCK) return `最後の${END_LOCK}ターンは使えません`;
     if (el==='fool' && e<=6) return '最後の6ターンは使えません';
     if (el==='fool' && tn<FOOL_OPEN) return `解禁まで あと${FOOL_OPEN-tn}ターン`;
+    if (el==='fool' && tn-(s.funnyAt??-99)<=2) return '2回続けては使えません';
   }
   return '';
 }
@@ -2341,7 +2342,7 @@ function cardWhen(p){
   const at=cardOpenAt(el);
   if (e>at) return W('解禁まで',e-at,false);
   if (LOCK_ELS.includes(el)) return e<=END_LOCK ? W('使用期間終了',null,false) : W('使用可能・残り',e-END_LOCK,true);
-  if (el==='fool') return e<=6 ? W('使用期間終了',null,false) : tn<FOOL_OPEN ? W('解禁まで',FOOL_OPEN-tn,false) : W('使用可能・残り',e-6,true);
+  if (el==='fool') return e<=6 ? W('使用期間終了',null,false) : tn<FOOL_OPEN ? W('解禁まで',FOOL_OPEN-tn,false) : tn-(s.funnyAt??-99)<=2 && cardLeft(p)>0 ? W('連続では使えない',null,false) : W('使用可能・残り',e-6,true);
   return W('使用可能',null,true);
 }
 const cardWhenText = p => { const w=cardWhen(p); return w.n==null ? w.pre : `${w.pre} ${w.n}ターン`; };
@@ -3815,7 +3816,7 @@ async function castCard(p, target, remoteS, remoteTargets, asEl){
       targets=(target||[]).filter(i=>i>=0 && i<64 && !isCorner(i) && S.board[i]===0 && !(S.seeds||[]).some(x=>x.idx===i)).slice(0,SEEDS_N);
       S.seeds=(S.seeds||[]).concat(targets.map(i=>({idx:i,owner:p,at:S.tn||0})));
     }
-    else if (el==='fool'){ targets=[]; }
+    else if (el==='fool'){ targets=[]; S.pas[p].funnyAt=S.tn||0; }
     else if (el==='wind'){ targets=[]; S.breeze={p, left:3}; }
     else if (el==='dream'){ targets=[]; S.dream={p, start:S.tn||0, flips:{1:0,2:0}, moves:{1:0,2:0}}; S.pas[p].dreamAt=S.tn||0; }
     else if (el==='moon'){
@@ -6471,7 +6472,7 @@ startInbox();
 const APP_VER=36;
 const CHANGES={
   36:[
-    '愚：ファニーは8ターン目から使えるように。',
+    '愚：ファニーは8ターン目から使えるように。2回続けては使えないように。',
     'フレンドが対戦中なら、フレンド一覧の「観戦」で見られるように。',
     '属性選択に「ランダム」を追加。',
   ],
